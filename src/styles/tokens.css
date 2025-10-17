@@ -1,0 +1,75 @@
+/* Design Tokens: Single source of truth.
+   Contrast guidance:
+   - Use white text (#FFFFFF) on primary backgrounds (var(--color-primary)).
+   - Use dark text (var(--color-text)) on accent backgrounds (var(--color-accent)).
+   Aim for WCAG AA contrast (>= 4.5:1 normal text). */
+
+:root {
+  color-scheme: light dark; /* Allow native UI adapt */
+  /* Light Theme Semantic Colors */
+  --color-bg: #FFFFFF;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F5F7FA;
+  --color-border: #E3E8EF;
+  --color-text: #0B1F33;
+  --color-text-inverse: #FFFFFF;
+  --color-muted: #6B7A90;
+  --color-brand: #2F70EF;
+  /* Alias primary -> brand for clarity across components */
+  --color-primary: var(--color-brand);
+  --color-accent: #4111A4;
+  --color-danger: #D92D20;
+  --color-overlay: rgba(0,0,0,0.4);
+
+  /* Typography */
+  --font-sans: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --fs-12: 12px; --fs-14: 14px; --fs-16: 16px; --fs-18: 18px; --fs-20: 20px; --fs-24: 24px;
+  --lh-tight: 1.2; --lh-normal: 1.5;
+  --fw-regular: 400; --fw-medium: 500; --fw-semibold: 600; --fw-bold: 700;
+
+  /* Spacing */
+  --sp-4: 4px; --sp-8: 8px; --sp-12: 12px; --sp-16: 16px; --sp-24: 24px; --sp-32: 32px;
+
+  /* Shape & Shadows */
+  --radius: 12px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+}
+
+/* Dark theme overrides using data attribute (manual override) */
+[data-theme="dark"] {
+  --color-bg: #0F1720;
+  --color-surface: #0F1720;
+  --color-surface-alt: #1C2732;
+  --color-border: #2A3947;
+  --color-text: #F1F5F9;
+  --color-text-inverse: #0B1F33;
+  --color-muted: #A3B2C2;
+  --color-brand: #3D82FF;
+  --color-primary: var(--color-brand);
+  --color-accent: #5A27C9;
+  --color-danger: #F97066;
+  --color-overlay: rgba(0,0,0,0.6);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.5);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.6);
+}
+
+/* Automatic dark fallback if system prefers and user has not manually chosen (no data-theme) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-bg: #0F1720;
+    --color-surface: #0F1720;
+    --color-surface-alt: #1C2732;
+    --color-border: #2A3947;
+    --color-text: #F1F5F9;
+    --color-text-inverse: #0B1F33;
+    --color-muted: #A3B2C2;
+    --color-brand: #3D82FF;
+    --color-primary: var(--color-brand);
+    --color-accent: #5A27C9;
+    --color-danger: #F97066;
+    --color-overlay: rgba(0,0,0,0.6);
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.5);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.6);
+  }
+}
