@@ -1,0 +1,37 @@
+[
+  {
+    "name": "feature",
+    "color": "2ea44f",
+    "description": "New capability"
+  },
+  {
+    "name": "bug",
+    "color": "d73a4a",
+    "description": "Defect"
+  },
+  {
+    "name": "chore",
+    "color": "90caf9",
+    "description": "Maintenance task"
+  },
+  {
+    "name": "docs",
+    "color": "0366d6",
+    "description": "Documentation change"
+  },
+  {
+    "name": "a11y",
+    "color": "6f42c1",
+    "description": "Accessibility improvement"
+  },
+  {
+    "name": "perf",
+    "color": "f9d923",
+    "description": "Performance optimization"
+  },
+  {
+    "name": "security",
+    "color": "8b0000",
+    "description": "Security-related change"
+  }
+]
