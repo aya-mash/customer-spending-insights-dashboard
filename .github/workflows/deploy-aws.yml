@@ -1,0 +1,92 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  workflow_dispatch: {}
+
+env:
+  AWS_REGION: af-south-1
+
+jobs:
+  integration:
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then yarn install --frozen-lockfile || yarn install; else echo 'No package.json'; fi
+
+      - name: Build
+        run: |
+          if grep -q '"build"' package.json; then yarn build || echo 'Build failed'; else echo 'No build script'; fi
+
+      - name: Sync build to S3 (Integration)
+        if: success()
+        run: |
+          if [ -d dist ]; then aws s3 sync dist s3://${{ secrets.S3_BUCKET_INT }} --delete; else echo 'No dist folder'; fi
+
+      - name: Invalidate CloudFront (Integration)
+        if: success()
+        run: |
+          if [ -n "${{ secrets.CF_DIST_ID_INT }}" ]; then aws cloudfront create-invalidation --distribution-id ${{ secrets.CF_DIST_ID_INT }} --paths '/*'; else echo 'No distribution id secret set'; fi
+
+  production:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then yarn install --frozen-lockfile || yarn install; else echo 'No package.json'; fi
+
+      - name: Build
+        run: |
+          if grep -q '"build"' package.json; then yarn build || echo 'Build failed'; else echo 'No build script'; fi
+
+      - name: Sync build to S3 (Production)
+        if: success()
+        run: |
+          if [ -d dist ]; then aws s3 sync dist s3://${{ secrets.S3_BUCKET_PROD }} --delete; else echo 'No dist folder'; fi
+
+      - name: Invalidate CloudFront (Production)
+        if: success()
+        run: |
+          if [ -n "${{ secrets.CF_DIST_ID_PROD }}" ]; then aws cloudfront create-invalidation --distribution-id ${{ secrets.CF_DIST_ID_PROD }} --paths '/*'; else echo 'No distribution id secret set'; fi

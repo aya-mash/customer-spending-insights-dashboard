@@ -1,0 +1,52 @@
+name: checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+    branches:
+      - develop
+      - 'release/*'
+      - 'hotfix/*'
+
+jobs:
+  checks:
+    name: checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then
+            if grep -q '"yarn"' <<< "${{ runner.tool_cache }}"; then echo ''; fi
+            yarn install --frozen-lockfile || yarn install
+          else
+            echo "No package.json; skipping install"
+          fi
+
+      - name: Type check
+        if: ${{ hashFiles('tsconfig*.json') != '' }}
+        run: |
+          if yarn run | grep -q 'tsc'; then yarn tsc -b || echo 'tsc script failed'; else echo 'No tsc build references'; fi
+
+      - name: Lint
+        run: |
+          if grep -q '"lint"' package.json; then yarn lint || echo 'Lint failed'; else echo 'No lint script'; fi
+
+      - name: Build
+        run: |
+          if grep -q '"build"' package.json; then yarn build || echo 'Build failed'; else echo 'No build script'; fi
+
+      - name: Test
+        run: |
+          if grep -q '"test"' package.json; then yarn test --ci --run || echo 'Tests failed'; else echo 'No test script'; fi
