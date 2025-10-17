@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="32" viewBox="0 0 128 32" role="img" aria-label="Spending Insights Logo Dark">
+  <defs>
+    <linearGradient id="gradD" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3D82FF" />
+      <stop offset="100%" stop-color="#5A27C9" />
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="32" height="32" rx="8" fill="url(#gradD)" />
+  <path d="M10 22v-8h4v8h-4zm6 0v-12h4v12h-4zm6 0v-6h4v6h-4z" fill="#FFFFFF" />
+  <text x="40" y="22" font-family="system-ui,Segoe UI,Roboto" font-size="16" font-weight="600" fill="#F1F5F9">Spending↗</text>
+</svg>
