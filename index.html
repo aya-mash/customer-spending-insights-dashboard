@@ -2,11 +2,28 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/favicon.svg" />
+  <meta name="theme-color" content="#2F70EF" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>customer-spending-insights-dashboard</title>
   </head>
   <body>
+    <script>
+      (function(){
+        try {
+          var key='theme-choice';
+          var stored=localStorage.getItem(key);
+          if(stored && stored!=='system') {
+            document.documentElement.dataset.theme = stored;
+          } else {
+            delete document.documentElement.dataset.theme;
+          }
+        } catch(e) {
+          console.warn('Theme init failed', e);
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
