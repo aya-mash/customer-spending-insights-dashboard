@@ -49,5 +49,10 @@
     "vitest": "^3.2.4",
     "yarn": "^1.22.22"
   },
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "yarn@1.22.22",
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
 }
