@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('contrast widget opens and calculates ratio', async ({ page }) => {
   await page.goto('/?contrastWidget=1');
-  const fab = page.getByRole('button', { name: /open contrast checker/i });
+  const fab = page.getByRole('button', { name: /toggle contrast checker/i });
   await fab.click();
   const dialog = page.getByRole('dialog', { name: /contrast checker/i });
   await expect(dialog).toBeVisible();

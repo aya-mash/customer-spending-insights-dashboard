@@ -7,34 +7,49 @@
 :root {
   color-scheme: light dark; /* Allow native UI adapt */
   /* Light Theme Semantic Colors */
-  --color-bg: #FFFFFF;
-  --color-surface: #FFFFFF;
-  --color-surface-alt: #F5F7FA;
-  --color-border: #E3E8EF;
-  --color-text: #0B1F33;
-  --color-text-inverse: #FFFFFF;
-  --color-muted: #6B7A90;
-  --color-brand: #2F70EF;
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f5f7fa;
+  --color-border: #e3e8ef;
+  --color-text: #0b1f33;
+  --color-text-inverse: #ffffff;
+  --color-muted: #6b7a90;
+  --color-brand: #2f70ef;
   /* Alias primary -> brand for clarity across components */
   --color-primary: var(--color-brand);
-  --color-accent: #4111A4;
-  --color-danger: #D92D20;
-  --color-overlay: rgba(0,0,0,0.4);
+  --color-accent: #4111a4;
+  --color-danger: #d92d20;
+  --color-overlay: rgba(0, 0, 0, 0.4);
 
   /* Typography */
-  --font-sans: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  --fs-12: 12px; --fs-14: 14px; --fs-16: 16px; --fs-18: 18px; --fs-20: 20px; --fs-24: 24px;
-  --lh-tight: 1.2; --lh-normal: 1.5;
-  --fw-regular: 400; --fw-medium: 500; --fw-semibold: 600; --fw-bold: 700;
+  --font-sans: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "Noto Sans", sans-serif;
+  --fs-12: 12px;
+  --fs-14: 14px;
+  --fs-16: 16px;
+  --fs-18: 18px;
+  --fs-20: 20px;
+  --fs-24: 24px;
+  --lh-tight: 1.2;
+  --lh-normal: 1.5;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
 
   /* Spacing */
-  --sp-4: 4px; --sp-8: 8px; --sp-12: 12px; --sp-16: 16px; --sp-24: 24px; --sp-32: 32px;
+  --sp-4: 4px;
+  --sp-8: 8px;
+  --sp-12: 12px;
+  --sp-16: 16px;
+  --sp-24: 24px;
+  --sp-32: 32px;
 
   /* Shape & Shadows */
   --radius: 12px;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
-  --shadow-md: 0 4px 12px rgba(0,0,0,.08);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,.12);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
   --radius-8: 8px;
   --radius-12: 12px;
   --radius-16: 16px;
@@ -42,75 +57,118 @@
   --transition-medium: 200ms;
   --brand-primary: var(--color-brand);
   --brand-accent: var(--color-accent);
-  --brand-success: #12A15E;
-  --brand-warning: #FFD24A;
+  --brand-success: #12a15e;
+  --brand-warning: #ffd24a;
   --brand-danger: var(--color-danger);
+
+  /* Layout Dimensions */
+  --header-height: 64px;
+  --bottom-bar-height: 56px;
+  --sidebar-width: 248px;
+  --sidebar-width-collapsed: 72px;
+  --panel-gap: 20px;
+
+  /* Layering Scale */
+  --z-base: 0;
+  --z-bottom-bar: 40;
+  --z-header: 50;
+  --z-overlay: 300; /* generic backdrop */
+  --z-sidebar: 350;
+  --z-settings: 400;
+  --z-fab: 1000;
+  --z-panel: 1010;
+
+  /* Motion & Easing */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --transition-fast: 120ms;
+  --transition-medium: 200ms;
+  --transition-slow: 320ms;
+
+  /* Focus */
+  --focus-ring-color: var(--color-accent);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* Backdrop */
+  --backdrop-color: rgba(0, 0, 0, 0.4);
 }
 
 /* Explicit light override (mirrors :root, keeps parity with dark block) */
 [data-theme="light"] {
-  --color-bg: #FFFFFF;
-  --color-surface: #FFFFFF;
-  --color-surface-alt: #F5F7FA;
-  --color-border: #E3E8EF;
-  --color-text: #0B1F33;
-  --color-text-inverse: #FFFFFF;
-  --color-muted: #6B7A90;
-  --color-brand: #2F70EF;
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f5f7fa;
+  --color-border: #e3e8ef;
+  --color-text: #0b1f33;
+  --color-text-inverse: #ffffff;
+  --color-muted: #6b7a90;
+  --color-brand: #2f70ef;
   --color-primary: var(--color-brand);
-  --color-accent: #4111A4;
-  --color-danger: #D92D20;
-  --color-overlay: rgba(0,0,0,0.4);
-  --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
-  --shadow-md: 0 4px 12px rgba(0,0,0,.08);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,.12);
+  --color-accent: #4111a4;
+  --color-danger: #d92d20;
+  --color-overlay: rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
   --brand-primary: var(--color-brand);
   --brand-accent: var(--color-accent);
-  --brand-success: #12A15E;
-  --brand-warning: #FFD24A;
+  --brand-success: #12a15e;
+  --brand-warning: #ffd24a;
   --brand-danger: var(--color-danger);
+  --header-height: 64px;
+  --bottom-bar-height: 56px;
+  --sidebar-width: 248px;
+  --sidebar-width-collapsed: 72px;
+  --panel-gap: 20px;
 }
 
 /* Dark theme overrides using data attribute (manual override) */
 [data-theme="dark"] {
-  --color-bg: #0F1720;
-  --color-surface: #0F1720;
-  --color-surface-alt: #1C2732;
-  --color-border: #2A3947;
-  --color-text: #F1F5F9;
-  --color-text-inverse: #F1F5F9;
-  --color-muted: #A3B2C2;
-  --color-brand: #3D82FF;
+  --color-bg: #0f1720;
+  --color-surface: #0f1720;
+  --color-surface-alt: #1c2732;
+  --color-border: #2a3947;
+  --color-text: #f1f5f9;
+  --color-text-inverse: #f1f5f9;
+  --color-muted: #a3b2c2;
+  --color-brand: #3d82ff;
   --color-primary: var(--color-brand);
-  --color-accent: #5A27C9;
-  --color-danger: #F97066;
-  --color-overlay: rgba(0,0,0,0.6);
-  --shadow-sm: 0 1px 2px rgba(0,0,0,.5);
-  --shadow-md: 0 4px 12px rgba(0,0,0,.6);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,.7);
+  --color-accent: #5a27c9;
+  --color-danger: #f97066;
+  --color-overlay: rgba(0, 0, 0, 0.6);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.7);
   --brand-primary: var(--color-brand);
   --brand-accent: var(--color-accent);
-  --brand-success: #2ECC71;
-  --brand-warning: #F4BF50;
+  --brand-success: #2ecc71;
+  --brand-warning: #f4bf50;
   --brand-danger: var(--color-danger);
+  --header-height: 64px;
+  --bottom-bar-height: 56px;
+  --sidebar-width: 248px;
+  --sidebar-width-collapsed: 72px;
+  --panel-gap: 20px;
+  --backdrop-color: rgba(0, 0, 0, 0.6);
 }
 
 /* Automatic dark fallback if system prefers and user has not manually chosen (no data-theme) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --color-bg: #0F1720;
-    --color-surface: #0F1720;
-    --color-surface-alt: #1C2732;
-    --color-border: #2A3947;
-    --color-text: #F1F5F9;
-    --color-text-inverse: #F1F5F9;
-    --color-muted: #A3B2C2;
-    --color-brand: #3D82FF;
+    --color-bg: #0f1720;
+    --color-surface: #0f1720;
+    --color-surface-alt: #1c2732;
+    --color-border: #2a3947;
+    --color-text: #f1f5f9;
+    --color-text-inverse: #f1f5f9;
+    --color-muted: #a3b2c2;
+    --color-brand: #3d82ff;
     --color-primary: var(--color-brand);
-    --color-accent: #5A27C9;
-    --color-danger: #F97066;
-    --color-overlay: rgba(0,0,0,0.6);
-    --shadow-sm: 0 1px 2px rgba(0,0,0,.5);
-    --shadow-md: 0 4px 12px rgba(0,0,0,.6);
+    --color-accent: #5a27c9;
+    --color-danger: #f97066;
+    --color-overlay: rgba(0, 0, 0, 0.6);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
   }
 }

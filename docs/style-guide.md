@@ -44,3 +44,11 @@ Brand colors are inspired by public references for demo purposes. They do not re
 
 ### Single Source of Truth
 All token definitions live in: `src/styles/tokens.css`. Application styles must reference these CSS variables directly—no duplication, no magic numbers.
+
+### Accessible Loading Pattern
+For any data-fetching section or route-level lazy boundary:
+- Wrap skeletons/placeholders in a container with `aria-busy="true"`.
+- Provide a specific `aria-label` like `"Loading overview data"` or `"Loading charts"`.
+- Prefer `getByLabelText` in tests to assert presence pre-resolution.
+- Avoid redundant live region spam; use `aria-live="polite"` only if intermediate status updates occur.
+- Reuse the same label string in Suspense fallbacks to keep semantics consistent.
