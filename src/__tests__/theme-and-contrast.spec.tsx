@@ -4,45 +4,50 @@ import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from '../App';
 
-function renderApp(path='/', search='') {
+function renderApp(path = '/') {
   const qc = new QueryClient();
-  const ui = (
+  return render(
     <QueryClientProvider client={qc}>
-      <MemoryRouter initialEntries={[path + search]}>
+      <MemoryRouter initialEntries={[path]}>
         <App />
       </MemoryRouter>
     </QueryClientProvider>
   );
-  return render(ui);
 }
 
-describe('Theme default and toggle', () => {
-  it('defaults to light (no data-theme attribute)', () => {
+describe('Theme with SettingsDrawer', () => {
+  it('defaults to system (no data-theme attribute and no localStorage key)', () => {
     const { container } = renderApp('/');
     expect(container.ownerDocument.documentElement.dataset.theme).toBeUndefined();
+    expect(localStorage.getItem('theme-choice')).toBeNull();
   });
-  it('toggles to dark and back', () => {
-    const { getByRole, container } = renderApp('/');
-    const btn = getByRole('button', { name: /switch to dark theme/i });
-    fireEvent.click(btn);
+  it('selecting Dark sets data-theme and localStorage, selecting System clears both', () => {
+    const { getByRole, getByTestId, container } = renderApp('/');
+  const settingsBtn = getByRole('button', { name: /^settings$/i });
+    fireEvent.click(settingsBtn);
+    const darkBtn = getByTestId('mode-dark');
+    fireEvent.click(darkBtn);
     expect(container.ownerDocument.documentElement.dataset.theme).toBe('dark');
-    // aria label should update
-    expect(btn).toHaveAttribute('aria-label', 'Switch to light theme');
-  fireEvent.click(btn);
-  expect(container.ownerDocument.documentElement.dataset.theme).toBeUndefined();
+    expect(localStorage.getItem('theme-choice')).toBe('dark');
+    const systemBtn = getByTestId('mode-system');
+    fireEvent.click(systemBtn);
+    expect(container.ownerDocument.documentElement.dataset.theme).toBeUndefined();
+    expect(localStorage.getItem('theme-choice')).toBeNull();
+  });
+  it('selecting Light sets explicit data-theme="light" and persists', () => {
+    const { getByRole, getByTestId, container } = renderApp('/');
+  const settingsBtn = getByRole('button', { name: /^settings$/i });
+    fireEvent.click(settingsBtn);
+    const lightBtn = getByTestId('mode-light');
+    fireEvent.click(lightBtn);
+    expect(container.ownerDocument.documentElement.dataset.theme).toBe('light');
+    expect(localStorage.getItem('theme-choice')).toBe('light');
   });
 });
 
 describe('Contrast widget gating', () => {
-  it('is hidden without devtools flag', () => {
-    const { queryByLabelText } = renderApp('/');
-    expect(queryByLabelText(/contrast checker/i)).toBeNull();
-  });
-  it('appears with devtools flag', () => {
-    const { getByRole } = renderApp('/', '?devtools=1');
-    const fab = getByRole('button', { name: /toggle contrast checker/i });
-    expect(fab).toBeTruthy();
-    fireEvent.click(fab);
-    expect(getByRole('dialog', { name: /contrast checker/i })).toBeTruthy();
+  it('is hidden in test environment (dev only feature)', () => {
+    const { queryByRole } = renderApp('/');
+    expect(queryByRole('button', { name: /toggle contrast checker/i })).toBeNull();
   });
 });

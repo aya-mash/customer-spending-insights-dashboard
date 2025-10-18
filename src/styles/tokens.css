@@ -34,6 +34,41 @@
   --radius: 12px;
   --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
   --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,.12);
+  --radius-8: 8px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --transition-fast: 150ms;
+  --transition-medium: 200ms;
+  --brand-primary: var(--color-brand);
+  --brand-accent: var(--color-accent);
+  --brand-success: #12A15E;
+  --brand-warning: #FFD24A;
+  --brand-danger: var(--color-danger);
+}
+
+/* Explicit light override (mirrors :root, keeps parity with dark block) */
+[data-theme="light"] {
+  --color-bg: #FFFFFF;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F5F7FA;
+  --color-border: #E3E8EF;
+  --color-text: #0B1F33;
+  --color-text-inverse: #FFFFFF;
+  --color-muted: #6B7A90;
+  --color-brand: #2F70EF;
+  --color-primary: var(--color-brand);
+  --color-accent: #4111A4;
+  --color-danger: #D92D20;
+  --color-overlay: rgba(0,0,0,0.4);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,.12);
+  --brand-primary: var(--color-brand);
+  --brand-accent: var(--color-accent);
+  --brand-success: #12A15E;
+  --brand-warning: #FFD24A;
+  --brand-danger: var(--color-danger);
 }
 
 /* Dark theme overrides using data attribute (manual override) */
@@ -43,7 +78,7 @@
   --color-surface-alt: #1C2732;
   --color-border: #2A3947;
   --color-text: #F1F5F9;
-  --color-text-inverse: #0B1F33;
+  --color-text-inverse: #F1F5F9;
   --color-muted: #A3B2C2;
   --color-brand: #3D82FF;
   --color-primary: var(--color-brand);
@@ -52,6 +87,12 @@
   --color-overlay: rgba(0,0,0,0.6);
   --shadow-sm: 0 1px 2px rgba(0,0,0,.5);
   --shadow-md: 0 4px 12px rgba(0,0,0,.6);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,.7);
+  --brand-primary: var(--color-brand);
+  --brand-accent: var(--color-accent);
+  --brand-success: #2ECC71;
+  --brand-warning: #F4BF50;
+  --brand-danger: var(--color-danger);
 }
 
 /* Automatic dark fallback if system prefers and user has not manually chosen (no data-theme) */
@@ -62,7 +103,7 @@
     --color-surface-alt: #1C2732;
     --color-border: #2A3947;
     --color-text: #F1F5F9;
-    --color-text-inverse: #0B1F33;
+    --color-text-inverse: #F1F5F9;
     --color-muted: #A3B2C2;
     --color-brand: #3D82FF;
     --color-primary: var(--color-brand);
