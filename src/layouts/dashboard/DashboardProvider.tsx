@@ -5,7 +5,7 @@ import type { DashboardContextValue, DashboardConfig } from '../../app/types/das
 
 const DashboardContext = createContext<DashboardContextValue | undefined>(undefined);
 
-export function DashboardProvider({ config, children }: Readonly<{ config: DashboardConfig; children: React.ReactNode }>) {
+export function DashboardProvider({ config, children }: Readonly<{ config: DashboardConfig; children?: React.ReactNode }>) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(!!config.options?.defaultSidebarCollapsed);
   const { pathname } = useLocation();
   const currentTitle = pageTitleForPath(pathname);

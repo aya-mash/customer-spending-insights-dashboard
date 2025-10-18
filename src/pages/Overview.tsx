@@ -9,7 +9,7 @@ export function Overview() {
     <section aria-labelledby="overview-heading">
       <h2 id="overview-heading">Overview</h2>
       {isInitialLoading && (
-        <div className="overview-grid" aria-label="Loading overview data">
+        <div className="overview-grid" aria-label="Loading overview data" aria-live="polite" aria-busy="true">
           <SummaryCardPlaceholder />
           <QuickActionsPlaceholder />
           <GoalsListPlaceholder />

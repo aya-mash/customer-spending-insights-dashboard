@@ -5,8 +5,9 @@ import { Header } from './Header.tsx';
 import { Sidebar } from './Sidebar.tsx';
 import { BottomBar } from './BottomBar.tsx';
 import { useNavigationTimings } from '../../hooks/useNavigationTimings';
+import { Outlet } from 'react-router-dom';
 
-export function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export function DashboardLayout() {
   const { options } = useDashboard();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const settingsBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -25,7 +26,9 @@ export function DashboardLayout({ children }: Readonly<{ children: React.ReactNo
       )} />
       <div className="dashboard-body">
         <Sidebar />
-        <main id="main-content" className="dashboard-main" role="main" tabIndex={-1}>{children}</main>
+        <main id="main-content" className="dashboard-main" role="main" tabIndex={-1}>
+          <Outlet />
+        </main>
       </div>
       <BottomBar />
       <SettingsDrawer open={settingsOpen} onClose={() => { setSettingsOpen(false); settingsBtnRef.current?.focus(); }} />
