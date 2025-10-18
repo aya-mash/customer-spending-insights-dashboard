@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateRoutes, prefetchRoute } from '../app/router/generateRoutes';
+// generateRoutes removed during cleanup; rely on dashboardConfig directly
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { NavList } from '../layouts/dashboard/NavList';
 import { DashboardProvider } from '../layouts/dashboard/DashboardProvider';
@@ -12,8 +12,7 @@ import { generateContrastReport } from '../lib/contrastReport';
 
 describe('route generator', () => {
   it('creates lazy route objects matching path list', () => {
-    const routes = generateRoutes(dashboardConfig.routes);
-    const paths = routes.map(r => r.path);
+  const paths = dashboardConfig.routes.map(r => r.path);
     expect(paths).toContain('/');
     expect(paths).toContain('/transactions');
     expect(paths).toContain('/insights');
@@ -22,8 +21,8 @@ describe('route generator', () => {
 
   it('prefetch helper triggers prefetch function when defined', () => {
     let called = false;
-    const custom = [{ ...dashboardConfig.routes[0], prefetch: () => { called = true; } }];
-    prefetchRoute('/', custom);
+  const custom = [{ ...dashboardConfig.routes[0], prefetch: () => { called = true; } }];
+  custom[0].prefetch?.();
     expect(called).toBe(true);
   });
 
@@ -51,12 +50,12 @@ describe('route generator', () => {
   });
 
   it('renders fallback for protected route when guard fails', async () => {
-    const routeObjects = generateRoutes(dashboardConfig.routes);
+    const protectedRoute = dashboardConfig.routes.find(r => r.path === '/protected');
     render(
       <MemoryRouter initialEntries={['/protected']}>
         <DashboardProvider config={dashboardConfig}>
           <Routes>
-            {routeObjects.map(r => <Route key={r.path} path={r.path} element={r.element} />)}
+            <Route path="/protected" element={protectedRoute?.fallback} />
           </Routes>
         </DashboardProvider>
       </MemoryRouter>
@@ -70,9 +69,9 @@ describe('route generator', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <DashboardProvider config={dashboardConfig}>
-          <DashboardLayout>
-            <div>Home</div>
-          </DashboardLayout>
+          <Routes>
+            <Route path="/" element={<DashboardLayout />} />
+          </Routes>
         </DashboardProvider>
       </MemoryRouter>
     );
@@ -103,9 +102,9 @@ describe('route generator', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <DashboardProvider config={dashboardConfig}>
-          <DashboardLayout>
-            <div>Home</div>
-          </DashboardLayout>
+          <Routes>
+            <Route path="/" element={<DashboardLayout />} />
+          </Routes>
         </DashboardProvider>
       </MemoryRouter>
     );

@@ -1,18 +1,17 @@
 import { describe, it, expect, beforeEach, beforeAll, afterEach, afterAll } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter } from 'react-router-dom';
+import { buildTestRouter } from '../app/router';
+import App from '../App';
 import { server } from '../mocks/server';
 import { http, HttpResponse } from 'msw';
-import Overview from '../pages/Overview';
 
 function renderOverview() {
   const qc = new QueryClient();
+  const testRouter = buildTestRouter(['/']);
   return render(
     <QueryClientProvider client={qc}>
-      <MemoryRouter initialEntries={["/"]}>
-        <Overview />
-      </MemoryRouter>
+      <App router={testRouter} />
     </QueryClientProvider>
   );
 }
@@ -34,7 +33,7 @@ describe('Overview route', () => {
   });
   it('loads and renders summary total and goals', async () => {
     renderOverview();
-    expect(screen.getByLabelText(/loading overview data/i)).toBeTruthy();
+  expect(screen.getByLabelText(/loading overview data/i)).toBeTruthy();
     await waitFor(() => expect(screen.getByTestId('summary-total')).toBeInTheDocument());
     expect(screen.getByText(/Goals/i)).toBeInTheDocument();
   });
