@@ -16,9 +16,10 @@ function renderWithProviders(path: string) {
 }
 
 describe('App Shell Routing', () => {
-  it('renders header title', () => {
+  it('renders dynamic header title (Overview on root)', () => {
     const { getByRole } = renderWithProviders('/');
-    expect(getByRole('heading', { name: /spending insights/i })).toBeTruthy();
+    // Header should show current page title Overview
+    expect(getByRole('heading', { name: /overview/i })).toBeTruthy();
   });
   it('renders Overview page', async () => {
     const { findByRole } = renderWithProviders('/');
