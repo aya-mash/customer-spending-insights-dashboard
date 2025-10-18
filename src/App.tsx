@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { AppLayout } from './layouts/AppLayout';
+import { DashboardProvider } from './layouts/dashboard/DashboardProvider';
+import { DashboardLayout } from './layouts/dashboard/DashboardLayout';
+import { dashboardConfig } from './app/config/dashboard.config';
 import { lazy, Suspense } from 'react';
 const Overview = lazy(() => import('./pages/Overview').then(m => ({ default: m.default })));
 const Transactions = lazy(() => import('./pages/Transactions').then(m => ({ default: m.default })));
@@ -13,7 +15,8 @@ import { ErrorFallback } from './pages/ErrorFallback';
 function App() {
   return (
     <ErrorBoundary fallback={<ErrorFallback />}>
-      <AppLayout>
+      <DashboardProvider config={dashboardConfig}>
+        <DashboardLayout>
         <Suspense fallback={<div aria-busy="true">Loading...</div>}>
           <Routes>
           <Route path="/" element={<Overview />} />
@@ -24,7 +27,8 @@ function App() {
           </Routes>
         </Suspense>
         <ContrastCheckerDev />
-      </AppLayout>
+        </DashboardLayout>
+      </DashboardProvider>
     </ErrorBoundary>
   );
 }

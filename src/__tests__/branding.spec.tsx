@@ -16,12 +16,14 @@ function renderApp(path='/' ) {
 }
 
 describe('Branding assets', () => {
-  it('renders logo image and swaps with theme', () => {
-    const { getByAltText, getByRole } = renderApp('/');
+  it('renders logo image and swaps with theme via settings drawer', () => {
+    const { getByAltText, getByRole, getByTestId } = renderApp('/');
     const img = getByAltText(/spending insights/i) as HTMLImageElement;
     expect(img.src).toMatch(/logo-light\.svg/);
-    const toggle = getByRole('button', { name: /switch to dark theme/i });
-    fireEvent.click(toggle);
+  const settingsBtn = getByRole('button', { name: /^settings$/i });
+    fireEvent.click(settingsBtn);
+    const darkBtn = getByTestId('mode-dark');
+    fireEvent.click(darkBtn);
     expect(img.src).toMatch(/logo-dark\.svg/);
   });
   it('includes favicon link', () => {

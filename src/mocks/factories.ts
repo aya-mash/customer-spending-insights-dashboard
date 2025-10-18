@@ -1,17 +1,18 @@
 import { seededRandom, pick, randomFloat, randomInt, generateId } from './util';
 import type {
-  CustomerProfileResponse,
-  SpendingSummaryResponse,
-  SpendingCategoriesResponse,
-  SpendingTrendsResponse,
-  TransactionsResponse,
-  SpendingGoalsResponse,
+  Profile as CustomerProfileResponse,
+  SpendingSummary as SpendingSummaryResponse,
+  CategoryBreakdown as SpendingCategoriesResponse,
+  SpendingTrends as SpendingTrendsResponse,
+  TransactionsPage as TransactionsResponse,
+  GoalsResponse as SpendingGoalsResponse,
   FiltersResponse,
-  TransactionItem,
-  SpendingCategoryItem,
-  SpendingGoalItem,
-  MonthlyTrendItem,
-} from '../types/api';
+  Transaction as TransactionItem,
+  CategoryItem as SpendingCategoryItem,
+  GoalItem as SpendingGoalItem,
+  MonthlyTrendPoint as MonthlyTrendItem,
+  PeriodPreset,
+} from '../data/models';
 
 const CATEGORY_DEFS = [
   { name: 'Groceries', color: '#FF6B6B', icon: 'shopping-cart' },
@@ -35,7 +36,7 @@ export function makeProfile(customerId: string): CustomerProfileResponse {
   };
 }
 
-export function makeSpendingSummary(period: string): SpendingSummaryResponse {
+export function makeSpendingSummary(period: PeriodPreset): SpendingSummaryResponse {
   const seed = hashString(period);
   const rnd = seededRandom(seed);
   const totalSpent = randomFloat(2000, 6000, rnd);
@@ -55,7 +56,7 @@ export function makeSpendingSummary(period: string): SpendingSummaryResponse {
   };
 }
 
-export function makeSpendingCategories(period: string, start?: string, end?: string): SpendingCategoriesResponse {
+export function makeSpendingCategories(period: PeriodPreset, start?: string, end?: string): SpendingCategoriesResponse {
   const seed = hashString(period + (start || '') + (end || ''));
   const rnd = seededRandom(seed);
   const categories: SpendingCategoryItem[] = CATEGORY_DEFS.map(def => {
