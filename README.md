@@ -73,6 +73,44 @@ Visit http://localhost:5173
 - Skeleton loader component (`AsyncSection`) keeps layout stable; replaces with live content using an aria-live region.
 - Minimal JS for initial paint; assets adapt (logo, favicon) to current theme to avoid layout shift.
 
+## Using the Dashboard Layout
+The refactored shell exposes a provider + layout pair:
+
+`DashboardProvider` supplies config (branding, navigation, routes, slots, options). `DashboardLayout` renders Header, Sidebar (desktop), BottomBar (mobile), and wraps page content.
+
+### Rollback Instructions
+If you need to revert to the pre-dashboard single layout implementation:
+1. Replace the contents of `src/App.tsx` with the prior simple route shell (remove `DashboardProvider` and `DashboardLayout` wrappers, render routes directly).
+2. Delete the `src/layouts/dashboard/` directory and remove any imports referencing it.
+3. Remove `dashboard.css` import from `main.tsx` and delete `src/styles/dashboard.css`.
+4. Remove dashboard-specific tokens only if unused elsewhere (keep base theme tokens to avoid breaking styling).
+5. Delete new types from `src/app/types/dashboard.ts` if they are no longer referenced (or keep if planning future re-introduction).
+6. Update `dashboard.config.ts` to original route list or delete it and inline routes where they were previously defined.
+7. Run `yarn lint` and `yarn test` to confirm no stale references remain.
+8. Clean up README sections referencing "Dashboard Layout" to avoid misleading documentation.
+
+To reapply the dashboard later, restore the layout directory and wrap your routes with `DashboardProvider` and `DashboardLayout` again. Keep the contrast tooling as optional by gating with `import.meta.env.DEV`.
+
+### Contrast Report CLI
+Run a lightweight contrast check on key color pairs:
+```powershell
+node ./scripts/contrast-report.mjs
+```
+Extend `pairs` inside `scripts/contrast-report.mjs` to add more token combinations.
+
+Config lives in `src/app/config/dashboard.config.ts` and follows types in `src/app/types/dashboard.ts`:
+BrandingConfig: `{ title, logo?, homeUrl? }`  
+RouteConfig: `{ path, label, component: () => import(...), prefetch?, canActivate? }`  
+NavigationItem: discriminated union (`page | group | divider`).  
+Options: `{ brandVariant: 'capitec' | 'neutral', sidebarWidth, defaultSidebarCollapsed }`.
+
+To add a new page:
+1. Create page file under `src/pages/`.
+2. Append a `RouteConfig` entry + matching navigation item.
+3. (Optional) add a `prefetch` function for hover/focus warming.
+
+Brand variants adapt tokens only—components never hardcode hex values.
+
 ## Future Improvements
 - Integrate real charts (e.g. Recharts or Visx) behind additional lazy boundaries.
 - Lighthouse CI & performance budget enforcement.
