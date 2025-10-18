@@ -74,6 +74,33 @@ Visit http://localhost:5173
 - Skeleton loader component (`AsyncSection`) keeps layout stable; replaces with live content using an aria-live region.
 - Minimal JS for initial paint; assets adapt (logo, favicon) to current theme to avoid layout shift.
 
+## Routing Architecture
+All application routing is defined centrally in `src/app/router.tsx` using `createBrowserRouter`. Pages are declared in `dashboard.config.ts` as a list of `RouteConfig` objects:
+
+`{ path, label, component: () => import('...'), prefetch?, canActivate? }`
+
+Key points:
+- Lazy loading: Each route component is wrapped with `React.lazy` and a Suspense fallback that includes `aria-busy="true"` and a route-specific `aria-label` when helpful (e.g. Overview route has `"Loading overview data"`).
+- Guards: Optional `canActivate` may return boolean or Promise<boolean>. Pending async guard states render a labeled busy indicator (`Checking access…`).
+- Provider composition: The router root wraps `DashboardLayout` with `DashboardProvider` so hooks relying on location/navigation context never mount outside a Router.
+- Error boundary: `errorElement` uses `ErrorFallback` for route-level errors.
+
+### Test Router Helper
+Unit tests that need navigation or location context use the memory router helper:
+
+`buildTestRouter(initialEntries?: string[])` returns a `createMemoryRouter` instance preconfigured with the same route list & provider composition. Pass this into `<App router={testRouter} />` to avoid duplicate `<Router>` nesting.
+
+This pattern ensures tests exercise the full layout shell (header, sidebar, bottom bar) while still allowing deterministic initial route entries.
+
+## Accessible Loading Fallbacks
+Suspense fallbacks and initial data fetch placeholders follow a consistent pattern:
+- Include `aria-busy="true"` on the container.
+- Provide a descriptive `aria-label` (e.g. `"Loading overview data"`, `"Loading charts"`) instead of generic "Loading" so screen reader users understand context.
+- Use a polite live region (`aria-live="polite"`) only when incremental updates will announce; for simple skeleton-to-content swap, labeling + busy state is sufficient.
+- Test queries prefer `getByLabelText` for these containers to assert presence before data resolves.
+
+Guideline: When adding a new page with a data-heavy initial load, supply a scoped label: `aria-label="Loading {page} data"` and reuse the `aria-busy` pattern for parity and testability.
+
 ## Using the Dashboard Layout
 The refactored shell exposes a provider + layout pair:
 

@@ -5,8 +5,9 @@ import type { DashboardContextValue, DashboardConfig } from '../../app/types/das
 
 const DashboardContext = createContext<DashboardContextValue | undefined>(undefined);
 
-export function DashboardProvider({ config, children }: Readonly<{ config: DashboardConfig; children: React.ReactNode }>) {
+export function DashboardProvider({ config, children }: Readonly<{ config: DashboardConfig; children?: React.ReactNode }>) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(!!config.options?.defaultSidebarCollapsed);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
   const { pathname } = useLocation();
   const currentTitle = pageTitleForPath(pathname);
   const augmentedConfig = useMemo(() => ({
@@ -20,7 +21,9 @@ export function DashboardProvider({ config, children }: Readonly<{ config: Dashb
     ...augmentedConfig,
     sidebarCollapsed,
     toggleSidebar: () => setSidebarCollapsed(c => !c),
-  }), [augmentedConfig, sidebarCollapsed]);
+    mobileSidebarOpen,
+    setMobileSidebarOpen: (open: boolean) => setMobileSidebarOpen(open),
+  }), [augmentedConfig, sidebarCollapsed, mobileSidebarOpen]);
   return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;
 }
 
