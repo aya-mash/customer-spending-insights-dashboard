@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
-import { ThemeToggle } from '../components/ThemeToggle';
 import { Logo } from '../components/Logo';
 
 function prefetch(page: string) {
@@ -30,7 +29,7 @@ export function AppLayout({ children }: Readonly<AppLayoutProps>) {
             </ul>
           </nav>
           <div className="grow-spacer" />
-          <ThemeToggle />
+          {/* ThemeToggle removed in favor of SettingsDrawer placed in Dashboard layout */}
         </div>
       </header>
       <main id="main-content" className="app-main" role="main">
