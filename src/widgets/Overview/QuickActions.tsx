@@ -13,7 +13,7 @@ export function QuickActions() {
   const { message, push } = useTransientMessage();
   function trigger(action: string) { push(`${action} not implemented in demo`); }
   return (
-    <section className="overview-quick-actions" aria-labelledby="qa-heading">
+  <section className="overview-quick-actions" aria-labelledby="qa-heading">
       <h3 id="qa-heading" className="visually-hidden">Quick actions</h3>
       <div className="actions-row">
         <button type="button" onClick={()=>trigger('Transfer')} className="btn-primary" aria-label="Transfer funds">Transfer</button>

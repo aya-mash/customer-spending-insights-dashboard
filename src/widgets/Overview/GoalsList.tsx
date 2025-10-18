@@ -14,7 +14,7 @@ interface GoalsListProps { readonly goals?: GoalsResponse }
 export function GoalsList({ goals }: GoalsListProps) {
   if (!goals) {
     return (
-      <section className="overview-goals" aria-labelledby="goals-heading">
+  <section className="overview-goals" aria-labelledby="goals-heading">
         <h3 id="goals-heading" className="goals-title">Goals</h3>
         <p>Loading goals…</p>
       </section>
@@ -22,7 +22,7 @@ export function GoalsList({ goals }: GoalsListProps) {
   }
   if (!goals.goals.length) return <p>No goals yet</p>;
   return (
-    <section className="overview-goals" aria-labelledby="goals-heading">
+  <section className="overview-goals" aria-labelledby="goals-heading">
       <h3 id="goals-heading" className="goals-title">Goals</h3>
       <ul className="goals-list">
         {goals.goals.map(g => <GoalRow key={g.id} goal={g} />)}
