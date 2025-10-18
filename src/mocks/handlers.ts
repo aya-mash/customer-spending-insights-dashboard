@@ -8,11 +8,25 @@ import {
   makeGoals,
   makeFilters,
 } from './factories';
+import type { PeriodPreset } from '../data/models';
 
 function getParam(url: URL, name: string, fallback: string): string {
   return url.searchParams.get(name) || fallback;
 }
 
+// Narrow a 'period' query param to PeriodPreset without unsafe casting.
+const PERIOD_PRESETS: readonly PeriodPreset[] = ['7d','30d','90d','1y'] as const;
+function getPeriod(url: URL, fallback: PeriodPreset = '30d'): PeriodPreset {
+  const raw = url.searchParams.get('period');
+  if (raw) {
+    for (const preset of PERIOD_PRESETS) {
+      if (preset === raw) return preset;
+    }
+  }
+  return fallback;
+}
+
+// Handlers implementing spec-accurate mock endpoints. Deterministic seeds handled in factories.
 export const handlers = [
   // Health
   http.get('/api/health', () => HttpResponse.json({ status: 'ok' })),
@@ -26,14 +40,14 @@ export const handlers = [
   // Spending summary
   http.get('/api/customers/:customerId/spending/summary', ({ request }) => {
     const url = new URL(request.url);
-    const period = getParam(url, 'period', '30d');
+    const period = getPeriod(url);
     return HttpResponse.json(makeSpendingSummary(period));
   }),
 
   // Spending by category
   http.get('/api/customers/:customerId/spending/categories', ({ request }) => {
     const url = new URL(request.url);
-    const period = getParam(url, 'period', '30d');
+    const period = getPeriod(url);
     const startDate = url.searchParams.get('startDate') || undefined;
     const endDate = url.searchParams.get('endDate') || undefined;
     return HttpResponse.json(makeSpendingCategories(period, startDate, endDate));
@@ -50,10 +64,28 @@ export const handlers = [
   // Transactions list
   http.get('/api/customers/:customerId/transactions', ({ request }) => {
     const url = new URL(request.url);
-  const limit = Math.min(Number.parseInt(getParam(url, 'limit', '20'), 10), 100);
-  const offset = Number.parseInt(getParam(url, 'offset', '0'), 10) || 0;
+    const limit = Math.min(Number.parseInt(getParam(url, 'limit', '20'), 10) || 20, 100);
+    const offset = Number.parseInt(getParam(url, 'offset', '0'), 10) || 0;
     const category = url.searchParams.get('category') || undefined;
-    return HttpResponse.json(makeTransactions(limit, offset, category));
+    const sortBy = getParam(url, 'sortBy', 'date_desc');
+    const payload = makeTransactions(limit, offset, category);
+    const sorted = [...payload.transactions];
+    switch (sortBy) {
+      case 'date_asc':
+        sorted.sort((a, b) => a.date.localeCompare(b.date));
+        break;
+      case 'amount_desc':
+        sorted.sort((a, b) => b.amount - a.amount);
+        break;
+      case 'amount_asc':
+        sorted.sort((a, b) => a.amount - b.amount);
+        break;
+      case 'date_desc':
+      default:
+        sorted.sort((a, b) => b.date.localeCompare(a.date));
+        break;
+    }
+    return HttpResponse.json({ ...payload, transactions: sorted });
   }),
 
   // Goals
