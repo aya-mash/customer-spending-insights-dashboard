@@ -14,8 +14,9 @@ import type {
   TrendsParams,
 } from './models';
 
-// Base URL: same-origin relative; Vite proxy/Docker will handle routing.
-const baseURL = '/api/customers';
+// Base URL: same-origin relative by default; can be overridden via VITE_API_BASE.
+// Example: VITE_API_BASE=http://localhost:3000/api/customers
+const baseURL = (import.meta as unknown as { env: Record<string,string|undefined> }).env.VITE_API_BASE || '/api/customers';
 
 const instance: AxiosInstance = axios.create({
   baseURL,
