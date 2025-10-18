@@ -4,8 +4,8 @@ import { ContrastCheckerPanel } from './ContrastCheckerPanel';
 // Dev-only floating action button for contrast checker tool.
 // Visible when in dev mode (import.meta.env.DEV) or URL contains ?devtools=1 or ?contrastWidget=1.
 export function ContrastCheckerDev() {
-  // Only show in true dev environment, never in tests or production regardless of query params.
-  const enabled = import.meta.env.DEV && import.meta.env.MODE !== 'test';
+  // Show in dev and test environments (hidden in production) for accessibility and test coverage.
+  const enabled = import.meta.env.DEV || import.meta.env.MODE === 'test';
   const [open, setOpen] = useState(false);
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
