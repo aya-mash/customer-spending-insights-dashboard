@@ -24,7 +24,6 @@ pnpm-debug.log*
 # Dependency Lock (optional)
 # NOTE: Keeping lock files ignored removes deterministic installs.
 # If you decide to lock dependencies, delete these lines and commit lock files.
-yarn.lock
 package-lock.json
 pnpm-lock.yaml
 
@@ -79,7 +78,6 @@ trace.zip
 ###############################
 # Misc Generated
 ###############################
-*.lock
 *.cache
 .eslintcache
 .parcel-cache
