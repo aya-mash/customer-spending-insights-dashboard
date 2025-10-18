@@ -13,6 +13,7 @@ Project documentation expansion in progress.
 - Unit-tested contrast utilities (`src/lib/contrast.ts`).
 - Playwright smoke tests (theme persistence, contrast ratio correctness).
 - Storybook component explorer.
+- Typed axios data client + deterministic MSW API mocks (see `docs/api-contracts.md`).
 
 ## Accessibility Statement
 We aim for WCAG 2.1 AA compliance:
