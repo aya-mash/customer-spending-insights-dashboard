@@ -1,16 +1,25 @@
 import { useEffect, useState } from 'react';
 
-function getTheme(): 'dark' | 'light' {
-  return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+function resolveLogo(): string {
+  const themeAttr = document.documentElement.dataset.theme; // 'light' | 'dark' | undefined (system)
+  const prefersDark = typeof matchMedia === 'function' && matchMedia('(prefers-color-scheme: dark)').matches;
+  let effective: 'light' | 'dark';
+  if (themeAttr === 'dark') effective = 'dark';
+  else if (themeAttr === 'light') effective = 'light';
+  else effective = prefersDark ? 'dark' : 'light';
+  return effective === 'dark' ? '/logo-dark.svg' : '/logo-light.svg';
 }
 
 export function Logo() {
-  const [theme, setTheme] = useState<'dark' | 'light'>(getTheme());
+  const [src, setSrc] = useState(resolveLogo());
   useEffect(() => {
-    const handler = () => setTheme(getTheme());
-    document.addEventListener('themechange', handler);
-    return () => document.removeEventListener('themechange', handler);
+    function onThemeChange() {
+      setSrc(resolveLogo());
+    }
+    document.addEventListener('themechange', onThemeChange);
+    return () => document.removeEventListener('themechange', onThemeChange);
   }, []);
-  const src = theme === 'dark' ? '/logo-dark.svg' : '/logo-light.svg';
-  return <img src={src} alt="Spending Insights" className="app-logo" />;
+  return (
+    <img src={src} alt="Spending Insights" className="app-logo" />
+  );
 }

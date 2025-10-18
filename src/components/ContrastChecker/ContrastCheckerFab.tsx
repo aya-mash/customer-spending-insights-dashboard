@@ -1,14 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { ContrastCheckerPanel } from './ContrastCheckerPanel';
 
 // Dev-only floating action button for contrast checker tool.
 // Visible when in dev mode (import.meta.env.DEV) or URL contains ?devtools=1 or ?contrastWidget=1.
 export function ContrastCheckerDev() {
-  const { search } = useLocation();
-  const params = new URLSearchParams(search);
-  const queryEnabled = params.get('devtools') === '1' || params.get('contrastWidget') === '1';
-  const enabled = (import.meta.env.DEV || queryEnabled);
+  // Only show in true dev environment, never in tests or production regardless of query params.
+  const enabled = import.meta.env.DEV && import.meta.env.MODE !== 'test';
   const [open, setOpen] = useState(false);
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -24,7 +21,7 @@ export function ContrastCheckerDev() {
       <button
         type="button"
         className="contrast-fab"
-        aria-label={open ? 'Close contrast checker' : 'Open contrast checker'}
+        aria-label="Toggle contrast checker"
         onClick={() => setOpen(o => !o)}
       >
         ⚖️
