@@ -58,6 +58,14 @@ body {
 .legend-label { flex:1; font-size: var(--fs-14); }
 .legend-amount { font-weight: var(--fw-medium); font-size: var(--fs-14); }
 .donut-hint { font-size: var(--fs-12); color: var(--text-muted); margin:0; }
+
+/* Trends beautify */
+.trend-inline-summary { font-size: var(--fs-12); color: var(--text-muted); margin: 0 0 var(--sp-8); }
+.trend-tooltip { background: var(--color-surface); border:1px solid var(--color-border); padding: var(--sp-8) var(--sp-12); border-radius: var(--radius-8); box-shadow: var(--shadow-sm); font-size: var(--fs-12); display:flex; flex-direction:column; gap:4px; }
+.delta-chip { display:inline-block; padding:2px 6px; border-radius:999px; font-size:10px; font-weight: var(--fw-medium); }
+.delta-chip.up { background: var(--brand-success); color:#fff; }
+.delta-chip.down { background: var(--brand-danger); color:#fff; }
+.delta-chip.flat { background: var(--color-muted); color:#fff; }
 .insights-panel h3 { margin: 0; font-size: var(--heading-font-size); line-height: var(--lh-tight); }
 .insights-panel .panel-muted { color: var(--text-muted); font-size: var(--subheading-font-size); margin: 0; }
 
