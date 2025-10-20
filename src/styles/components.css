@@ -559,10 +559,131 @@
   }
 }
 
-/* Show mobile view only on mobile */
-@media (max-width: 768px) {
-  .table-container {
-    display: none;
+/* Overview Components */
+.overview-summary {
+  margin-bottom: var(--sp-6);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--sp-4);
+  margin-top: var(--sp-4);
+}
+
+.summary-metric {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+.metric-label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.metric-value {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-value--category {
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.metric-change {
+  font-size: var(--text-xs);
+  font-weight: 500;
+}
+
+.metric-change.positive {
+  color: var(--color-success);
+}
+
+.metric-change.negative {
+  color: var(--color-danger);
+}
+
+.quick-actions {
+  margin-bottom: var(--sp-6);
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-3);
+  color: var(--color-text);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: 64px;
+  
+  &:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--elevation-2);
+  }
+  
+  &:focus-visible {
+    outline: 2px solid var(--focus-color);
+    outline-offset: 2px;
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.action-icon {
+  font-size: var(--text-xl);
+  flex-shrink: 0;
+}
+
+.action-label {
+  flex: 1;
+  font-weight: 500;
+  text-align: left;
+}
+
+.action-arrow {
+  font-size: var(--text-lg);
+  opacity: 0.7;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.action-button:hover .action-arrow {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+@media (max-width: 640px) {
+  .summary-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-3);
+  }
+  
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-button {
+    min-height: 56px;
   }
 }
 
