@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Line, Legend } from 'recharts';
 import { formatRand } from '../../utils/currency';
 import { useReducedMotion } from '../../utils/accessibility';
 import type { CategoryItem, SpendingTrends } from '../../data/models';
 import { useInsightsData } from './useInsightsData';
+
+const DonutChart = lazy(() => import('../../components/charts/DonutChart'));
+const TrendsChart = lazy(() => import('../../components/charts/TrendsChart'));
 
 // Accessible tab ids
 const TAB_KEYS = ['category', 'trends'] as const;
@@ -81,12 +83,13 @@ export function InsightsCharts() {
             </div>
           )}
           {!catLoading && !catError && catData && catData.categories.length > 0 && (
-            <CategoryDonut
-              data={catData.categories}
-              total={catData.totalAmount}
-              onSegmentClick={(name: string) => navigate(`/transactions?category=${encodeURIComponent(name)}`)}
-              reducedMotion={reducedMotion}
-            />
+            <Suspense fallback={<CategorySkeleton reducedMotion={reducedMotion} />}>
+              <DonutChart
+                data={catData.categories}
+                total={catData.totalAmount}
+                onSegmentClick={(name: string) => navigate(`/transactions?category=${encodeURIComponent(name)}`)}
+              />
+            </Suspense>
           )}
           {!catLoading && !catError && catData && catData.categories.length === 0 && (
             <div role="status" className="empty-state">
@@ -112,7 +115,9 @@ export function InsightsCharts() {
             </div>
           )}
           {!trendLoading && !trendError && trendData && trendData.trends.length > 0 && (
-            <TrendsChart data={trendData.trends} reducedMotion={reducedMotion} />
+            <Suspense fallback={<TrendsSkeleton reducedMotion={reducedMotion} />}>
+              <TrendsChart data={trendData.trends} />
+            </Suspense>
           )}
           {!trendLoading && !trendError && trendData && trendData.trends.length === 0 && (
             <div role="status" className="empty-state">
@@ -243,8 +248,9 @@ function CategoryDonut({ data, total, onSegmentClick, reducedMotion }: CategoryD
           </PieChart>
         </ResponsiveContainer>
         <div className="donut-center" aria-hidden="true">
-          <div className="donut-center-top">{top?.name ? 'Top: ' + top.name : 'Total'}</div>
+          <div className="donut-center-label">{top?.name ? 'Top' : 'Total'}</div>
           <div className="donut-center-value">{formatRand(top?.amount ?? total)}</div>
+          {top?.name && <div className="donut-center-category">{top.name}</div>}
         </div>
       </div>
       <div id={summaryId} className="donut-summary" aria-hidden="true">

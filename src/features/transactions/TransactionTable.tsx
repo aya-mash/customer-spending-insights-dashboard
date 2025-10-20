@@ -1,5 +1,6 @@
 import { formatRand } from '../../utils/currency';
 import { formatDate } from '../../utils/dates';
+import { Button } from '../../components/Button';
 import { useTransactionsData } from './useTransactionsData';
 
 export function TransactionTable() {
@@ -14,7 +15,7 @@ export function TransactionTable() {
     return (
       <div role="alert" className="insights-error">
         <p>{error}</p>
-        <button onClick={loadData} className="btn btn--secondary btn--small">Retry</button>
+        <Button onClick={loadData} variant="secondary" size="small">Retry</Button>
       </div>
     );
   }
@@ -37,7 +38,7 @@ export function TransactionTable() {
               <button
                 type="button"
                 onClick={() => sort('date')}
-                className={`sort-header ${sortField === 'date' ? 'active' : ''}`}
+                className={`sort-header ${sortField === 'date' ? 'sort-header--active' : ''}`}
                 aria-sort={sortField === 'date' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
               >
                 Date
@@ -52,7 +53,7 @@ export function TransactionTable() {
               <button
                 type="button"
                 onClick={() => sort('merchant')}
-                className={`sort-header ${sortField === 'merchant' ? 'active' : ''}`}
+                className={`sort-header ${sortField === 'merchant' ? 'sort-header--active' : ''}`}
                 aria-sort={sortField === 'merchant' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
               >
                 Merchant
@@ -68,7 +69,7 @@ export function TransactionTable() {
               <button
                 type="button"
                 onClick={() => sort('amount')}
-                className={`sort-header ${sortField === 'amount' ? 'active' : ''}`}
+                className={`sort-header ${sortField === 'amount' ? 'sort-header--active' : ''}`}
                 aria-sort={sortField === 'amount' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
               >
                 Amount
@@ -104,7 +105,7 @@ export function TransactionTable() {
               <td>
                 <span 
                   className="chip chip--category"
-                  style={{ backgroundColor: transaction.categoryColor }}
+                  style={{ backgroundColor: transaction.categoryColor, color: 'white' }}
                 >
                   {transaction.category}
                 </span>
