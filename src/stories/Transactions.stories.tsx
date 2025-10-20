@@ -61,3 +61,25 @@ export const DarkMode: StoryObj = {
     return withData(false);
   }
 };
+
+export const SortedAmountDesc: StoryObj = {
+  name: 'Sorted Amount Desc',
+  render: () => {
+    // force query param sortBy=amount_desc
+    window.history.replaceState({}, '', '?sortBy=amount_desc');
+    return withData(false);
+  }
+};
+
+export const ErrorState: StoryObj = {
+  name: 'Error State',
+  render: () => {
+    (client.filters as unknown as () => Promise<unknown>) = () => Promise.reject(new Error('Network down'));
+    (client.transactions as unknown as () => Promise<unknown>) = () => Promise.reject(new Error('Network down'));
+    return (
+      <DashboardProvider config={dashboardConfig}>
+        <TransactionsRoute />
+      </DashboardProvider>
+    );
+  }
+};
