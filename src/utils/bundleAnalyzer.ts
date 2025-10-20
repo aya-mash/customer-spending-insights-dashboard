@@ -2,7 +2,7 @@ import { useMemoryMonitor, usePerformanceObserver } from './performance';
 
 // Bundle analysis utilities
 export function logBundleStats() {
-  if ('performance' in window && 'getEntriesByType' in performance) {
+  if ('performance' in window && 'getEntriesByType' in performance && import.meta.env.DEV) {
     const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
     const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
     
@@ -31,7 +31,6 @@ export function logBundleStats() {
   }
 }
 
-// Lighthouse scoring helper
 export function calculateLighthouseScore() {
   return new Promise((resolve) => {
     if ('performance' in window) {
@@ -73,12 +72,12 @@ export class MemoryLeakDetector {
         const current = (performance as unknown as { memory: { usedJSHeapSize: number } }).memory.usedJSHeapSize;
         this.measurements.push(current);
         
-        // Check for consistent growth (potential leak)
+        // Check for memory growth pattern
         if (this.measurements.length > 10) {
           const recent = this.measurements.slice(-10);
           const growth = recent.every((val, i) => i === 0 || val > recent[i - 1]);
           
-          if (growth) {
+          if (growth && import.meta.env.DEV) {
             console.warn('🚨 Potential memory leak detected - consistent heap growth');
           }
           
@@ -112,7 +111,7 @@ export function usePerformanceTracking() {
   
   usePerformanceObserver((entries) => {
     entries.forEach((entry) => {
-      if (entry.entryType === 'measure') {
+      if (entry.entryType === 'measure' && import.meta.env.DEV) {
         console.log(`📏 Performance Measure: ${entry.name} took ${entry.duration.toFixed(2)}ms`);
       }
     });

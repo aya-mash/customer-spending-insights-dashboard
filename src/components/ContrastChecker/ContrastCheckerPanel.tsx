@@ -33,7 +33,6 @@ export function ContrastCheckerPanel({ onClose }: Props) {
   const [bgToken, setBgToken] = useState<string>('');
   const [isLarge, setIsLarge] = useState(false);
 
-  // Update hex when token selection changes
   useEffect(()=>{ if (fgToken) { const v = resolveVar(fgToken); if (v) setFg(v); } },[fgToken]);
   useEffect(()=>{ if (bgToken) { const v = resolveVar(bgToken); if (v) setBg(v); } },[bgToken]);
 

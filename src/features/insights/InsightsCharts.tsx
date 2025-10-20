@@ -15,11 +15,10 @@ export function InsightsCharts() {
   const reducedMotion = useReducedMotion();
   const navigate = useNavigate();
   const location = useLocation();
-  const customerId = 'user123'; // TODO: replace with real user context when available
+  const customerId = 'user123';
 
   const { catLoading, catError, catData, trendLoading, trendError, trendData, loadData } = useInsightsData(customerId);
 
-  // Optionally sync with query param later
   useEffect(() => {
     const qp = new URLSearchParams(location.search).get('tab');
     if (qp && TAB_KEYS.includes(qp as TabKey) && qp !== activeTab) setActiveTab(qp as TabKey);

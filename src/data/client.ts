@@ -28,11 +28,15 @@ const instance: AxiosInstance = axios.create({
 if (import.meta.env.DEV) {
   instance.interceptors.response.use(
     (res: AxiosResponse) => {
-      console.debug('[api]', res.config.method?.toUpperCase(), res.config.url, res.status);
+      if (import.meta.env.DEV) {
+        console.debug('[api]', res.config.method?.toUpperCase(), res.config.url, res.status);
+      }
       return res;
     },
     (err: unknown) => {
-      if (err instanceof Error) console.warn('[api error]', err.message);
+      if (import.meta.env.DEV && err instanceof Error) {
+        console.warn('[api error]', err.message);
+      }
       return Promise.reject(err instanceof Error ? err : new Error('Request failed'));
     },
   );

@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import { trackBundlePerformance } from '../utils/performance';
 
-// Initialize performance tracking
 trackBundlePerformance();
 
 interface AppPerformanceProviderProps {

@@ -7,7 +7,7 @@ import { useMediaQuery } from '../../utils/accessibility';
 import { useTransactionsData } from './useTransactionsData';
 
 export function TransactionTable() {
-  const customerId = 'user123'; // TODO: replace with real user context when available
+  const customerId = 'user123';
   const { loading, error, data, sortField, sortDirection, loadData, sort } = useTransactionsData(customerId);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
@@ -39,14 +39,18 @@ export function TransactionTable() {
       <div className="mobile-view">
         <MobileTransactionList 
           transactions={data}
-          onTransactionClick={(transaction) => console.log('Transaction clicked:', transaction)}
+          onTransactionClick={() => {
+            // Handle transaction details
+          }}
         />
         
         {data.length > 0 && (
           <Pagination
             currentPage={1}
             totalPages={5}
-            onPageChange={(page) => console.log('Page changed to:', page)}
+            onPageChange={() => {
+              // Handle page change
+            }}
           />
         )}
       </div>
@@ -150,7 +154,9 @@ export function TransactionTable() {
         <Pagination
           currentPage={1}
           totalPages={5}
-          onPageChange={(page) => console.log('Page changed to:', page)}
+          onPageChange={() => {
+            // Handle page change  
+          }}
         />
       )}
     </div>

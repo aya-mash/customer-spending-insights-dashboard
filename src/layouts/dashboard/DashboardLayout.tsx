@@ -4,14 +4,12 @@ import { useDashboard } from './useDashboard';
 import { Header } from './Header.tsx';
 import { Sidebar } from './Sidebar.tsx';
 import { BottomBar } from './BottomBar.tsx';
-import { useNavigationTimings } from '../../hooks/useNavigationTimings';
 import { Outlet } from 'react-router-dom';
 
 export function DashboardLayout() {
   const { options, mobileSidebarOpen, setMobileSidebarOpen } = useDashboard();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const settingsBtnRef = useRef<HTMLButtonElement | null>(null);
-  useNavigationTimings();
   // Auto-hide settings drawer when switching to mobile (viewport < 640px)
   useEffect(() => {
     function handleResize() {

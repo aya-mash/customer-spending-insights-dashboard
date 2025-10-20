@@ -79,7 +79,7 @@ export function usePerformanceObserver(
     try {
       observer.observe(options || { entryTypes: ['measure', 'navigation', 'paint'] });
     } catch {
-      console.warn('Performance Observer not supported for this entry type');
+      // Performance Observer not supported
     }
 
     return () => observer.disconnect();
@@ -109,7 +109,10 @@ export function trackBundlePerformance() {
         firstContentfulPaint: paint.find(p => p.name === 'first-contentful-paint')?.startTime || 0
       };
 
-      console.log('Bundle Performance Metrics:', metrics);
+      // Track performance metrics in development
+      if (import.meta.env.DEV) {
+        console.log('Bundle Performance Metrics:', metrics);
+      }
     }
   });
 }

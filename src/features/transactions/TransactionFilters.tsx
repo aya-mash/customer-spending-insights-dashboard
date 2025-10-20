@@ -4,7 +4,7 @@ import { Chip } from '../../components/Chip';
 import type { PeriodPreset } from '../../data/models';
 
 export function TransactionFilters() {
-  const customerId = 'user123'; // TODO: replace with real user context when available
+  const customerId = 'user123';
   const { filters, updateFilters, clearFilters } = useTransactionsData(customerId);
 
   const periodOptions: Array<{ label: string; value: PeriodPreset }> = [

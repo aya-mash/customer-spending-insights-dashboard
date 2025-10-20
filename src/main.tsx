@@ -19,9 +19,8 @@ if (import.meta.env.DEV) {
   try {
     const { worker } = await import('./mocks/browser.ts');
     await worker.start({ onUnhandledRequest: 'bypass' });
-  } catch (err) {
-    // Fail gracefully; log to console but continue rendering the app.
-    console.warn('[MSW] Failed to start service worker:', err);
+  } catch {
+    // Service worker failed to start, continue without mocks
   }
 }
 
