@@ -52,7 +52,8 @@ body {
 .donut-center-value { font-size: var(--fs-16); font-weight: var(--fw-semibold); }
 .donut-legend { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap: var(--sp-8); }
 .legend-item { display:flex; align-items:center; gap: var(--sp-12); justify-content:space-between; width:100%; background: var(--color-surface-alt); border:1px solid var(--color-border); padding: var(--sp-8) var(--sp-12); border-radius: var(--radius-12); cursor:pointer; text-align:left; }
-.legend-item:hover { background: var(--color-surface); }
+.legend-item:hover, .legend-item:focus-visible { background: var(--color-surface); border-color: var(--brand-primary); }
+.legend-item:active { transform: scale(.97); }
 .legend-swatch { width:16px; height:16px; border-radius:4px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.15); }
 .legend-label { flex:1; font-size: var(--fs-14); }
 .legend-amount { font-weight: var(--fw-medium); font-size: var(--fs-14); }
