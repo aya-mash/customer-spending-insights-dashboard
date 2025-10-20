@@ -259,15 +259,20 @@ function TransactionsTable({ rows, sortBy, onChangeSort }: TransactionsTableProp
         </tr>
       </thead>
       <tbody>
-        {rows.map(r => (
-          <tr key={r.id}>
-            <td>{new Date(r.date).toLocaleDateString('en-ZA')}</td>
-            <td>{r.merchant}</td>
-            <td>{r.category}</td>
-            <td className={r.amount < 0 ? 'neg' : ''}>{formatAmount(r.amount)}</td>
-            <td>{r.paymentMethod}</td>
-          </tr>
-        ))}
+        {rows.map(r => {
+          const d = new Date(r.date);
+          const dateLabel = d.toLocaleString('en-ZA', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+          const iso = r.date;
+          return (
+            <tr key={r.id}>
+              <td title={iso}>{dateLabel}</td>
+              <td className="merchant"><span className="merchant-name">{r.merchant}</span></td>
+              <td className="category"><span className="cat-dot" style={{ background:r.categoryColor }} />{r.category}</td>
+              <td className={r.amount < 0 ? 'neg' : ''}>{formatAmount(r.amount)}</td>
+              <td className="method"><span className="method-icon" aria-hidden="true">💳</span>{r.paymentMethod}</td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
