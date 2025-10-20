@@ -251,7 +251,8 @@ function CategoryDonut({ data, total, onSelectCategory, reducedMotion }: Categor
               innerRadius={70}
               outerRadius={110}
               isAnimationActive={!reducedMotion}
-              paddingAngle={1}
+              paddingAngle={2}
+              cornerRadius={6}
               onClick={(dp) => onSelectCategory((dp as { name?: string }).name || '')}
             >
               {chartData.map(item => (
@@ -261,9 +262,9 @@ function CategoryDonut({ data, total, onSelectCategory, reducedMotion }: Categor
             <Tooltip formatter={(value: unknown, _name, d) => [formatRand(Number(value)), (d && (d as { payload: { name?: string } }).payload.name) || '']} />
           </PieChart>
         </ResponsiveContainer>
-        <div className="donut-center">
-          <strong>{formatRand(total)}</strong>
-          <span>Total</span>
+        <div className="donut-center" aria-hidden="true">
+          <div className="donut-center-top">{top?.name ? 'Top: ' + top.name : 'Total'}</div>
+          <div className="donut-center-value">{formatRand(top?.amount ?? total)}</div>
         </div>
       </div>
       <div id={summaryId} className="donut-summary" aria-hidden="true">
@@ -272,14 +273,15 @@ function CategoryDonut({ data, total, onSelectCategory, reducedMotion }: Categor
       <ul className="donut-legend" aria-label="Category legend">
         {data.map(item => (
           <li key={item.name}>
-            <button type="button" onClick={() => onSelectCategory(item.name)} className="legend-item">
+            <button type="button" onClick={() => onSelectCategory(item.name)} className="legend-item legend-pill">
               <span className="legend-swatch" style={{ background: item.color }} />
               <span className="legend-label">{item.name}</span>
-              <span className="legend-amount">{formatRand(item.amount)}</span>
+              <span className="legend-amount" aria-label={`${item.name} amount`}>{formatRand(item.amount)}</span>
             </button>
           </li>
         ))}
       </ul>
+      <p className="donut-hint" aria-hidden="true">Tap a category to view transactions</p>
     </div>
   );
 }
