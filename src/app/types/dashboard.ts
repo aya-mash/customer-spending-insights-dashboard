@@ -68,6 +68,8 @@ export interface DashboardConfig {
 export interface DashboardContextValue extends DashboardConfig {
   sidebarCollapsed: boolean;
   toggleSidebar: () => void;
+  mobileSidebarOpen?: boolean;
+  setMobileSidebarOpen?: (open: boolean) => void;
 }
 
 export type RouteGenerationResult = RouteObject[];
