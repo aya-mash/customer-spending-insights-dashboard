@@ -1,6 +1,7 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { TransactionSort, PeriodPreset } from '../../data/models';
+import type { TransactionSort, PeriodPreset, FiltersResponse, TransactionsPage } from '../../data/models';
+import { filters, transactions } from '../../data/client';
 
 interface TxnQueryState {
   category?: string;
@@ -46,6 +47,58 @@ export function TransactionsRoute() {
   const location = useLocation();
   const navigate = useNavigate();
   const qs = useMemo(() => parseSearch(location.search), [location.search]);
+  const customerId = 'user123';
+
+  // Data states
+  const [fltLoading, setFltLoading] = useState(true);
+  const [fltError, setFltError] = useState<string|null>(null);
+  const [fltData, setFltData] = useState<FiltersResponse|null>(null);
+
+  const [txLoading, setTxLoading] = useState(true);
+  const [txError, setTxError] = useState<string|null>(null);
+  const [txData, setTxData] = useState<TransactionsPage|null>(null);
+
+  const abortRef = useRef<AbortController|null>(null);
+
+  function computeDateRange(period?: PeriodPreset): { startDate?: string; endDate?: string } {
+    if (!period) return {};
+    const now = new Date();
+    const endDate = now.toISOString().slice(0,10);
+  const start = new Date(now);
+    const map: Record<PeriodPreset, number> = { '7d':7, '30d':30, '90d':90, '1y':365 };
+    const days = map[period];
+    start.setDate(start.getDate() - (days - 1));
+    const startDate = start.toISOString().slice(0,10);
+    return { startDate, endDate };
+  }
+
+  const loadData = useCallback(async () => {
+    abortRef.current?.abort();
+    const ac = new AbortController();
+    abortRef.current = ac;
+    setFltLoading(true); setFltError(null);
+    setTxLoading(true); setTxError(null);
+    const { startDate, endDate } = computeDateRange(qs.period);
+    const txParams = { limit: qs.limit, offset: qs.offset, category: qs.category, startDate, endDate, sortBy: qs.sortBy };
+    try {
+      const [fRes, tRes] = await Promise.all([
+        filters(customerId, ac.signal),
+        transactions(customerId, txParams, ac.signal)
+      ]);
+      if (ac.signal.aborted) return;
+      setFltData(fRes); setFltLoading(false);
+      setTxData(tRes); setTxLoading(false);
+    } catch (e) {
+      if (ac.signal.aborted) return;
+      const msg = e instanceof Error ? e.message : 'Failed loading transactions';
+      // If filters fail treat separately
+      setFltLoading(false); if (!fltData) setFltError(msg);
+      setTxLoading(false); if (!txData) setTxError(msg);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customerId, qs.category, qs.limit, qs.offset, qs.period, qs.sortBy]);
+
+  useEffect(() => { loadData(); return () => abortRef.current?.abort(); }, [loadData]);
 
   // Sync helper: pushes updated params to URL without full reload
   const update = useCallback((partial: Partial<TxnQueryState>) => {
@@ -71,7 +124,21 @@ export function TransactionsRoute() {
         </div>
       </section>
       <section aria-label="Results" className="transactions-results-reflection">
-        <p>Data fetch to be implemented next. (category={qs.category || 'none'}, period={qs.period || 'none'}, limit={qs.limit}, offset={qs.offset}, sort={qs.sortBy})</p>
+        { (fltError || txError) && (
+          <div role="alert" className="tx-error">
+            <p>{fltError || txError}</p>
+            <button onClick={loadData}>Retry</button>
+          </div>
+        ) }
+        { (fltLoading || txLoading) && (
+          <div className="tx-skeleton" aria-label="Loading transactions">
+            <div className="sk-header" />
+            <ul className="sk-rows">{Array.from({length:5}).map((_,i)=><li key={i} className="sk-row" />)}</ul>
+          </div>
+        ) }
+        { !txLoading && !txError && txData && (
+          <p>Loaded {txData.transactions.length} rows (show table in later step).</p>
+        ) }
       </section>
     </main>
   );
