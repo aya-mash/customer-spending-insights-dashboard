@@ -67,6 +67,11 @@ body {
 .delta-chip.down { background: var(--brand-danger); color:#fff; }
 .delta-chip.flat { background: var(--color-muted); color:#fff; }
 
+@media (prefers-reduced-motion: reduce) {
+  .donut-center, .trend-inline-summary { transition: none; }
+  .insights-tabs [role="tab"] { transition: none; }
+}
+
 /* Empty & error states */
 .empty-state { display:flex; flex-direction:column; align-items:center; gap: var(--sp-4); padding: var(--sp-12); color: var(--text-muted); font-size: var(--fs-14); }
 .empty-icon { font-size: var(--fs-20); }
