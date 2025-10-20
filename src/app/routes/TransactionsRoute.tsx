@@ -119,6 +119,10 @@ export function TransactionsRoute() {
   return (
   <main className="transactions-route" aria-labelledby="transactions-heading" role="main">
       <h2 id="transactions-heading">Transactions</h2>
+      {/* Live region announcing filter changes */}
+      <div aria-live="polite" aria-atomic="true" className="visually-hidden">
+        {qs.category || qs.period ? `Filters active: ${qs.category?`Category ${qs.category}`:''} ${qs.period?`Period ${qs.period}`:''}` : 'No filters active'}
+      </div>
       {/* Filters UI */}
       {isMobile ? (
         <section aria-label="Filters" className="tx-filters-mobile">

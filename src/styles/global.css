@@ -351,6 +351,14 @@ button {
 .tx-error button { background:#fff; color: var(--brand-danger); border:none; padding:6px 12px; border-radius:8px; cursor:pointer; }
 .tx-error button:hover { background:#ffe5e3; }
 .tx-error .alert-icon { font-size:20px; }
+
+/* Utility: visually hidden (for additional live regions) */
+.visually-hidden { position:absolute !important; width:1px !important; height:1px !important; padding:0 !important; margin:-1px !important; overflow:hidden !important; clip:rect(0 0 0 0) !important; white-space:nowrap !important; border:0 !important; }
+
+/* Enhanced focus styling for interactive elements inside transactions */
+.transactions-route button:focus-visible,
+.transactions-route [role="tab"]:focus-visible,
+.transactions-route a:focus-visible { outline: 2px solid var(--focus-ring-color); outline-offset:2px; border-radius:6px; }
 /* Theme icon button specialized styles */
 .theme-icon-btn {
   background: var(--color-surface-alt);
