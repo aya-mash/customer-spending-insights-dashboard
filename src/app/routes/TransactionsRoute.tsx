@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { TransactionSort, PeriodPreset, FiltersResponse, TransactionsPage } from '../../data/models';
+import type { TransactionSort, PeriodPreset, FiltersResponse, TransactionsPage, Transaction } from '../../data/models';
 import { filters, transactions } from '../../data/client';
 
 interface TxnQueryState {
@@ -185,7 +185,11 @@ export function TransactionsRoute() {
           </div>
         ) }
         { !txLoading && !txError && txData && (
-          <p>Loaded {txData.transactions.length} rows (table to follow).</p>
+          <TransactionsTable
+            rows={txData.transactions}
+            sortBy={qs.sortBy}
+            onChangeSort={(next) => update({ sortBy: next, offset: 0 })}
+          />
         ) }
       </section>
     </main>
@@ -193,3 +197,52 @@ export function TransactionsRoute() {
 }
 
 export default TransactionsRoute;
+
+interface TransactionsTableProps {
+  rows: Transaction[];
+  sortBy: TransactionSort;
+  onChangeSort: (s: TransactionSort) => void;
+}
+
+function TransactionsTable({ rows, sortBy, onChangeSort }: TransactionsTableProps) {
+  const dateSortState = sortBy.startsWith('date_') ? (sortBy === 'date_desc' ? 'descending' : 'ascending') : 'none';
+  const amountSortState = sortBy.startsWith('amount_') ? (sortBy === 'amount_desc' ? 'descending' : 'ascending') : 'none';
+  function toggleDate() {
+    onChangeSort(sortBy === 'date_desc' ? 'date_asc' : 'date_desc');
+  }
+  function toggleAmount() {
+    onChangeSort(sortBy === 'amount_desc' ? 'amount_asc' : 'amount_desc');
+  }
+  return (
+    <table className="tx-table" aria-label="Transactions table">
+      <thead>
+        <tr>
+          <th>
+            <button type="button" aria-sort={dateSortState} onClick={toggleDate} className="sortable">Date</button>
+          </th>
+          <th>Merchant</th>
+          <th>Category</th>
+          <th>
+            <button type="button" aria-sort={amountSortState} onClick={toggleAmount} className="sortable">Amount</button>
+          </th>
+          <th>Payment Method</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(r => (
+          <tr key={r.id}>
+            <td>{new Date(r.date).toLocaleDateString('en-ZA')}</td>
+            <td>{r.merchant}</td>
+            <td>{r.category}</td>
+            <td className={r.amount < 0 ? 'neg' : ''}>{formatAmount(r.amount)}</td>
+            <td>{r.paymentMethod}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+function formatAmount(v: number) {
+  return 'R' + v.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
