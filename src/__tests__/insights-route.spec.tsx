@@ -45,8 +45,8 @@ describe('InsightsRoute', () => {
   });
 
   it('renders donut legend and navigates on click', async () => {
-  vi.spyOn(client, 'categories').mockResolvedValue(mockCategories as CategoryBreakdown);
-  vi.spyOn(client, 'trends').mockResolvedValue(mockTrends as SpendingTrends);
+    vi.spyOn(client, 'categories').mockResolvedValue(mockCategories as CategoryBreakdown);
+    vi.spyOn(client, 'trends').mockResolvedValue(mockTrends as SpendingTrends);
     const Loc = () => { const l = useLocation(); return <div data-testid="loc" data-path={l.pathname} data-search={l.search} /> };
     render(
       <MemoryRouter initialEntries={["/insights"]}>
@@ -56,9 +56,18 @@ describe('InsightsRoute', () => {
         </DashboardProvider>
       </MemoryRouter>
     );
+    
+    // Wait for loading to complete and chart to render
+    await waitFor(() => {
+      expect(screen.queryByLabelText(/Loading category insights/i)).not.toBeInTheDocument();
+    }, { timeout: 3000 });
+    
     await waitFor(() => expect(screen.getByRole('list', { name: /Category legend/i })).toBeInTheDocument());
-    const foodBtn = screen.getByRole('button', { name: /Food/i });
+    
+    // Find the Food button by its text content using getByText
+    const foodBtn = screen.getByText(/^Food \(R 400,00\)$/);
     fireEvent.click(foodBtn);
+    
     await waitFor(() => {
       const locDiv = screen.getByTestId('loc');
       expect(locDiv.getAttribute('data-search')?.includes('category=Food')).toBe(true);
