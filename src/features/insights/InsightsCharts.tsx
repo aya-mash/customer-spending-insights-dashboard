@@ -1,8 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { formatRand } from '../../utils/currency';
 import { useReducedMotion } from '../../utils/accessibility';
-import type { CategoryItem, SpendingTrends } from '../../data/models';
 import { useInsightsData } from './useInsightsData';
 
 const DonutChart = lazy(() => import('../../components/charts/DonutChart'));
@@ -131,61 +129,7 @@ export function InsightsCharts() {
   );
 }
 
-interface TrendsChartProps { data: SpendingTrends['trends']; reducedMotion: boolean }
-function TrendsChart({ data, reducedMotion }: TrendsChartProps) {
-  const summaryId = 'trends-chart-summary';
-  const min = Math.min(...data.map(d => d.totalSpent));
-  const max = Math.max(...data.map(d => d.totalSpent));
-  const first = data[0];
-  const last = data[data.length - 1];
-  const direction = last.totalSpent > first.totalSpent ? 'increasing' : last.totalSpent < first.totalSpent ? 'decreasing' : 'flat';
-  const prev = data[data.length - 2];
-  const delta = prev ? last.totalSpent - prev.totalSpent : 0;
-  const deltaSign = delta === 0 ? '' : delta > 0 ? '+' : '−';
-  const deltaLabel = `${deltaSign}${formatRand(Math.abs(delta))}`;
-  return (
-    <div className="trends-chart" aria-describedby={summaryId} aria-label="Monthly spending trends chart">
-      <p className="trend-inline-summary" aria-hidden="true">{direction === 'increasing' ? 'Up' : direction === 'decreasing' ? 'Down' : 'Flat'} vs first month. Last month change {deltaLabel}.</p>
-      <ResponsiveContainer width="100%" height={320}>
-        <AreaChart data={data} margin={{ left: 8, right: 8, top: 16, bottom: 8 }}>
-          <defs>
-            <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--color-accent)" stopOpacity={0.35} />
-              <stop offset="100%" stopColor="var(--color-accent)" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-subtle)" />
-          <XAxis dataKey="month" tickFormatter={(m: string) => m.slice(5)} />
-          <YAxis tickFormatter={(v: number) => 'R' + (v/1000).toFixed(1) + 'k'} width={56} />
-          <Tooltip content={({ active, payload, label }) => {
-            if (!active || !payload || !payload.length) return null;
-            const value = payload[0].value as number;
-            const idx = data.findIndex(d => d.month === label);
-            const prevVal = idx > 0 ? data[idx - 1].totalSpent : undefined;
-            const diff = prevVal !== undefined ? value - prevVal : 0;
-            const diffSign = diff === 0 ? '' : diff > 0 ? '+' : '−';
-            return (
-              <div className="trend-tooltip">
-                <strong>{label}</strong>
-                <div>{formatRand(value)}</div>
-                {prevVal !== undefined && (
-                  <span className={`delta-chip ${diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat'}`}>{diffSign}{formatRand(Math.abs(diff))}</span>
-                )}
-              </div>
-            );
-          }} />
-          <Area type="monotone" dataKey="totalSpent" stroke="var(--color-accent)" fill="url(#trendFill)" isAnimationActive={!reducedMotion} />
-          <Line type="monotone" dataKey="totalSpent" stroke="var(--color-accent)" dot={false} isAnimationActive={!reducedMotion} />
-          <Legend />
-        </AreaChart>
-      </ResponsiveContainer>
-      <div id={summaryId} className="trends-summary" aria-hidden="true">
-        Trend spans {data.length} months. Min {formatRand(min)}, Max {formatRand(max)}, overall direction {direction}.
-      </div>
-    </div>
-  );
-}
-
+// Component skeletons for loading states
 function shimmerStyle(reduced: boolean) {
   return reduced ? { animation: 'none' } : {};
 }
@@ -208,66 +152,6 @@ function TrendsSkeleton({ reducedMotion }: { reducedMotion: boolean }) {
     <div className="trends-skeleton" aria-label="Loading trends insights">
       <div className="sk-line" style={shimmerStyle(reducedMotion)} />
       <div className="sk-bars" style={shimmerStyle(reducedMotion)} />
-    </div>
-  );
-}
-
-interface CategoryDonutProps {
-  data: CategoryItem[];
-  total: number;
-  onSegmentClick: (name: string) => void;
-  reducedMotion: boolean;
-}
-
-function CategoryDonut({ data, total, onSegmentClick, reducedMotion }: CategoryDonutProps) {
-  // Recharts dataset with index signature
-  const chartData: Array<CategoryItem & { [k: string]: unknown }> = data.map(d => ({ ...d }));
-  const top = data[0];
-  const summaryId = 'category-donut-summary';
-  return (
-    <div className="category-donut" aria-describedby={summaryId} aria-label="Spending by category donut chart">
-      <div className="donut-chart-wrapper">
-        <ResponsiveContainer width="100%" height={260}>
-          <PieChart>
-            <Pie
-              data={chartData}
-              dataKey="amount"
-              nameKey="name"
-              innerRadius={70}
-              outerRadius={110}
-              isAnimationActive={!reducedMotion}
-              paddingAngle={2}
-              cornerRadius={6}
-              onClick={(dp) => onSegmentClick((dp as { name?: string }).name || '')}
-            >
-              {chartData.map(item => (
-                <Cell key={item.name} fill={item.color || 'var(--color-accent-soft)'} aria-label={`${item.name} slice`} />
-              ))}
-            </Pie>
-            <Tooltip formatter={(value: unknown, _name, d) => [formatRand(Number(value)), (d && (d as { payload: { name?: string } }).payload.name) || '']} />
-          </PieChart>
-        </ResponsiveContainer>
-        <div className="donut-center" aria-hidden="true">
-          <div className="donut-center-label">{top?.name ? 'Top' : 'Total'}</div>
-          <div className="donut-center-value">{formatRand(top?.amount ?? total)}</div>
-          {top?.name && <div className="donut-center-category">{top.name}</div>}
-        </div>
-      </div>
-      <div id={summaryId} className="donut-summary" aria-hidden="true">
-        Top category {top?.name || 'N/A'} at {top ? formatRand(top.amount) : '0'} across {data.length} categories.
-      </div>
-      <ul className="donut-legend" aria-label="Category legend">
-        {data.map(item => (
-          <li key={item.name}>
-            <button type="button" onClick={() => onSegmentClick(item.name)} className="chip chip--legend">
-              <span className="legend-swatch" style={{ background: item.color }} />
-              <span className="legend-label">{item.name}</span>
-              <span className="legend-amount" aria-label={`${item.name} amount`}>{formatRand(item.amount)}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
-      <p className="donut-hint" aria-hidden="true">Tap a category to view transactions</p>
     </div>
   );
 }
