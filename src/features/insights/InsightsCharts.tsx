@@ -2,25 +2,13 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Line, Legend } from 'recharts';
 import { formatRand } from '../../utils/currency';
+import { useReducedMotion } from '../../utils/accessibility';
 import type { CategoryItem, SpendingTrends } from '../../data/models';
 import { useInsightsData } from './useInsightsData';
 
 // Accessible tab ids
 const TAB_KEYS = ['category', 'trends'] as const;
 type TabKey = typeof TAB_KEYS[number];
-
-function useReducedMotion() {
-  const [pref, setPref] = useState(false);
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return;
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const apply = () => setPref(mq.matches);
-    apply();
-    mq.addEventListener('change', apply);
-    return () => mq.removeEventListener('change', apply);
-  }, []);
-  return pref;
-}
 
 export function InsightsCharts() {
   const [activeTab, setActiveTab] = useState<TabKey>('category');
@@ -52,7 +40,7 @@ export function InsightsCharts() {
       {(catError && trendError) && (
         <div role="alert" className="insights-error combined-error" tabIndex={-1}>
           <p>Failed to load insights data. Please retry.</p>
-          <button onClick={loadData}>Retry All</button>
+          <button onClick={loadData} className="btn btn--secondary btn--small">Retry All</button>
         </div>
       )}
       <div role="tablist" aria-label="Insights panels" className="insights-tabs" onKeyDown={onKeyDown}>
@@ -63,7 +51,7 @@ export function InsightsCharts() {
           aria-selected={activeTab === 'category'}
           tabIndex={activeTab === 'category' ? 0 : -1}
           onClick={() => setActiveTab('category')}
-          className={activeTab === 'category' ? 'active' : ''}
+          className={`tab ${activeTab === 'category' ? 'tab--active' : ''}`}
         >By Category</button>
         <button
           role="tab"
@@ -72,7 +60,7 @@ export function InsightsCharts() {
           aria-selected={activeTab === 'trends'}
           tabIndex={activeTab === 'trends' ? 0 : -1}
           onClick={() => setActiveTab('trends')}
-          className={activeTab === 'trends' ? 'active' : ''}
+          className={`tab ${activeTab === 'trends' ? 'tab--active' : ''}`}
         >Trends</button>
       </div>
       <div className="insights-grid">
@@ -89,14 +77,14 @@ export function InsightsCharts() {
           {!catLoading && catError && !trendError && (
             <div role="alert" className="insights-error">
               <p>{catError}</p>
-              <button onClick={loadData}>Retry</button>
+              <button onClick={loadData} className="btn btn--secondary">Retry</button>
             </div>
           )}
           {!catLoading && !catError && catData && catData.categories.length > 0 && (
             <CategoryDonut
               data={catData.categories}
               total={catData.totalAmount}
-              onSelectCategory={(name) => navigate(`/transactions?category=${encodeURIComponent(name)}`)}
+              onSegmentClick={(name: string) => navigate(`/transactions?category=${encodeURIComponent(name)}`)}
               reducedMotion={reducedMotion}
             />
           )}
@@ -120,7 +108,7 @@ export function InsightsCharts() {
           {!trendLoading && trendError && !catError && (
             <div role="alert" className="insights-error">
               <p>{trendError}</p>
-              <button onClick={loadData}>Retry</button>
+              <button onClick={loadData} className="btn btn--secondary">Retry</button>
             </div>
           )}
           {!trendLoading && !trendError && trendData && trendData.trends.length > 0 && (
@@ -222,11 +210,11 @@ function TrendsSkeleton({ reducedMotion }: { reducedMotion: boolean }) {
 interface CategoryDonutProps {
   data: CategoryItem[];
   total: number;
-  onSelectCategory: (name: string) => void;
+  onSegmentClick: (name: string) => void;
   reducedMotion: boolean;
 }
 
-function CategoryDonut({ data, total, onSelectCategory, reducedMotion }: CategoryDonutProps) {
+function CategoryDonut({ data, total, onSegmentClick, reducedMotion }: CategoryDonutProps) {
   // Recharts dataset with index signature
   const chartData: Array<CategoryItem & { [k: string]: unknown }> = data.map(d => ({ ...d }));
   const top = data[0];
@@ -245,7 +233,7 @@ function CategoryDonut({ data, total, onSelectCategory, reducedMotion }: Categor
               isAnimationActive={!reducedMotion}
               paddingAngle={2}
               cornerRadius={6}
-              onClick={(dp) => onSelectCategory((dp as { name?: string }).name || '')}
+              onClick={(dp) => onSegmentClick((dp as { name?: string }).name || '')}
             >
               {chartData.map(item => (
                 <Cell key={item.name} fill={item.color || 'var(--color-accent-soft)'} aria-label={`${item.name} slice`} />
@@ -265,7 +253,7 @@ function CategoryDonut({ data, total, onSelectCategory, reducedMotion }: Categor
       <ul className="donut-legend" aria-label="Category legend">
         {data.map(item => (
           <li key={item.name}>
-            <button type="button" onClick={() => onSelectCategory(item.name)} className="legend-item legend-pill">
+            <button type="button" onClick={() => onSegmentClick(item.name)} className="chip chip--legend">
               <span className="legend-swatch" style={{ background: item.color }} />
               <span className="legend-label">{item.name}</span>
               <span className="legend-amount" aria-label={`${item.name} amount`}>{formatRand(item.amount)}</span>

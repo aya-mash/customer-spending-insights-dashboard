@@ -1,4 +1,6 @@
 import { useTransactionsData } from './useTransactionsData';
+import { Button } from '../../components/Button';
+import { Chip } from '../../components/Chip';
 import type { PeriodPreset } from '../../data/models';
 
 export function TransactionFilters() {
@@ -30,10 +32,11 @@ export function TransactionFilters() {
   return (
     <div className="transaction-filters" role="search" aria-label="Filter transactions">
       <div className="filter-controls">
-        <div className="filter-group">
-          <label htmlFor="category-filter">Category</label>
+        <div className="form-group">
+          <label htmlFor="category-filter" className="form-label">Category</label>
           <select
             id="category-filter"
+            className="form-select"
             value={filters.category || ''}
             onChange={(e) => updateFilters({ category: e.target.value || undefined })}
           >
@@ -44,10 +47,11 @@ export function TransactionFilters() {
           </select>
         </div>
 
-        <div className="filter-group">
-          <label htmlFor="period-filter">Period</label>
+        <div className="form-group">
+          <label htmlFor="period-filter" className="form-label">Period</label>
           <select
             id="period-filter"
+            className="form-select"
             value={filters.period || ''}
             onChange={(e) => updateFilters({ period: (e.target.value as PeriodPreset) || undefined })}
           >
@@ -59,44 +63,37 @@ export function TransactionFilters() {
         </div>
 
         {hasActiveFilters && (
-          <button 
+          <Button 
             type="button" 
             onClick={clearFilters}
-            className="clear-filters-btn"
+            variant="secondary"
+            size="small"
             aria-label="Clear all filters"
           >
             Clear filters
-          </button>
+          </Button>
         )}
       </div>
 
       {hasActiveFilters && (
         <div className="active-filters" aria-label="Active filters">
           {filters.category && (
-            <span className="filter-pill">
+            <Chip
+              variant="filter"
+              onRemove={() => updateFilters({ category: undefined })}
+              aria-label={`Remove category filter: ${filters.category}`}
+            >
               Category: {filters.category}
-              <button
-                type="button"
-                onClick={() => updateFilters({ category: undefined })}
-                aria-label={`Remove category filter: ${filters.category}`}
-                className="filter-pill-remove"
-              >
-                ×
-              </button>
-            </span>
+            </Chip>
           )}
           {filters.period && (
-            <span className="filter-pill">
+            <Chip
+              variant="filter"
+              onRemove={() => updateFilters({ period: undefined })}
+              aria-label={`Remove period filter: ${filters.period}`}
+            >
               Period: {periodOptions.find(p => p.value === filters.period)?.label}
-              <button
-                type="button"
-                onClick={() => updateFilters({ period: undefined })}
-                aria-label={`Remove period filter: ${filters.period}`}
-                className="filter-pill-remove"
-              >
-                ×
-              </button>
-            </span>
+            </Chip>
           )}
         </div>
       )}

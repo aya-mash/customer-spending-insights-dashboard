@@ -37,13 +37,54 @@
   --fw-semibold: 600;
   --fw-bold: 700;
 
-  /* Spacing */
+  /* Spacing Scale */
+  --sp-2: 2px;
   --sp-4: 4px;
+  --sp-6: 6px;
   --sp-8: 8px;
+  --sp-10: 10px;
   --sp-12: 12px;
+  --sp-14: 14px;
   --sp-16: 16px;
+  --sp-20: 20px;
   --sp-24: 24px;
+  --sp-28: 28px;
   --sp-32: 32px;
+  --sp-40: 40px;
+  --sp-48: 48px;
+  --sp-56: 56px;
+  --sp-64: 64px;
+
+  /* Elevation Scale */
+  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --elevation-2: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --elevation-3: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --elevation-4: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --elevation-5: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+
+  /* Radius Scale */
+  --radius-2: 2px;
+  --radius-4: 4px;
+  --radius-6: 6px;
+  --radius-8: 8px;
+  --radius-10: 10px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-20: 20px;
+  --radius-24: 24px;
+  --radius-full: 9999px;
+
+  /* Z-Index Scale */
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-modal-backdrop: 40;
+  --z-modal: 50;
+  --z-popover: 60;
+  --z-tooltip: 70;
+  --z-toast: 80;
+  --z-max: 999;
 
   /* Shape & Shadows */
   --radius: 12px;

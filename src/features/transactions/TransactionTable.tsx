@@ -12,9 +12,9 @@ export function TransactionTable() {
 
   if (error) {
     return (
-      <div role="alert" className="transaction-error">
+      <div role="alert" className="insights-error">
         <p>{error}</p>
-        <button onClick={loadData}>Retry</button>
+        <button onClick={loadData} className="btn btn--secondary btn--small">Retry</button>
       </div>
     );
   }
@@ -29,8 +29,8 @@ export function TransactionTable() {
   }
 
   return (
-    <div className="transaction-table-wrapper">
-      <table className="transaction-table" role="table" aria-label="Transaction history">
+    <div className="table-wrapper">
+      <table className="table" role="table" aria-label="Transaction history">
         <thead>
           <tr>
             <th>
@@ -103,7 +103,7 @@ export function TransactionTable() {
               </td>
               <td>
                 <span 
-                  className="category-chip"
+                  className="chip chip--category"
                   style={{ backgroundColor: transaction.categoryColor }}
                 >
                   {transaction.category}

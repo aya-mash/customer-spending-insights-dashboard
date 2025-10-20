@@ -1,4 +1,5 @@
 import { SummaryCardPlaceholder, QuickActionsPlaceholder, GoalsListPlaceholder, SummaryCard, QuickActions, GoalsList } from '../../widgets/Overview';
+import { Button } from '../../components/Button';
 import { useOverviewData } from './useOverviewData';
 
 export function OverviewWidgets() {
@@ -15,10 +16,10 @@ export function OverviewWidgets() {
         </div>
       )}
       {isError && !isInitialLoading && (
-        <div role="alert" className="overview-error" aria-live="assertive" style={{ marginTop: '1rem' }}>
+        <div role="alert" className="insights-error" aria-live="assertive" style={{ marginTop: '1rem' }}>
           <p style={{ margin: 0 }}><strong>Could not load overview.</strong></p>
             <p style={{ marginTop: '0.25rem' }}>Please check your connection and retry.</p>
-            <button type="button" onClick={retry} aria-label="Retry loading overview data">Retry</button>
+            <Button type="button" onClick={retry} variant="secondary" size="small" aria-label="Retry loading overview data">Retry</Button>
         </div>
       )}
       {!isInitialLoading && (hasPartialData || (!isError && summary && goals)) && (
