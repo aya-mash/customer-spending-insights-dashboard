@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, memo, useMemo } from 'react';
-import { useLazyLoad } from '../utils/performance';
+import { useLazyLoad } from '../utils/performance.js';
 
 interface LazyImageProps {
   src: string;
