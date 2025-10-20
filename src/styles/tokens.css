@@ -131,7 +131,7 @@
   --color-border: #2a3947;
   --color-text: #f1f5f9;
   --color-text-inverse: #f1f5f9;
-  --color-muted: #a3b2c2;
+  --color-muted: #b3c2d0; /* slightly lighter for contrast on dark */
   --color-brand: #3d82ff;
   --color-primary: var(--color-brand);
   --color-accent: #5a27c9;
