@@ -80,7 +80,7 @@ export function InsightsRoute() {
   // URL sync removed to prevent continuous re-renders; can be reintroduced with debounce later.
 
   return (
-    <div className="insights-route" aria-labelledby="insights-heading">
+  <div className="insights-route" aria-labelledby="insights-heading">
       <h2 id="insights-heading" className="visually-hidden">Insights</h2>
       {(catError && trendError) && (
         <div role="alert" className="insights-error combined-error" tabIndex={-1}>
@@ -108,6 +108,7 @@ export function InsightsRoute() {
           className={activeTab === 'trends' ? 'active' : ''}
         >Trends</button>
       </div>
+      <div className="insights-grid">
       <div
         id="panel-category"
         role="tabpanel"
@@ -115,6 +116,8 @@ export function InsightsRoute() {
         hidden={activeTab !== 'category'}
         className="insights-panel"
       >
+        <h3>By Category</h3>
+        <p className="panel-muted">Spending distribution across categories</p>
   {catLoading && <CategorySkeleton reducedMotion={reducedMotion} />}
         {!catLoading && catError && (
           <div role="alert" className="insights-error">
@@ -141,6 +144,8 @@ export function InsightsRoute() {
         hidden={activeTab !== 'trends'}
         className="insights-panel"
       >
+        <h3>Trends</h3>
+        <p className="panel-muted">Monthly spending trend</p>
   {trendLoading && <TrendsSkeleton reducedMotion={reducedMotion} />}
         {!trendLoading && trendError && (
           <div role="alert" className="insights-error">
@@ -154,7 +159,8 @@ export function InsightsRoute() {
         {!trendLoading && !trendError && trendData && trendData.trends.length === 0 && (
           <p role="status">No trends data available.</p>
         )}
-      </div>
+  </div>
+  </div>
     </div>
   );
 }
