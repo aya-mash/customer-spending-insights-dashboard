@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { categories, trends } from '../../data/client';
+import type { CategoryBreakdown, SpendingTrends } from '../../data/models';
 
 // Accessible tab ids
 const TAB_KEYS = ['category', 'trends'] as const;
@@ -23,6 +25,42 @@ export function InsightsRoute() {
   const reducedMotion = useReducedMotion();
   const navigate = useNavigate();
   const location = useLocation();
+  const customerId = 'user123'; // TODO: replace with real user context when available
+
+  // Data states
+  const [catLoading, setCatLoading] = useState(true);
+  const [catError, setCatError] = useState<string | null>(null);
+  const [catData, setCatData] = useState<CategoryBreakdown | null>(null);
+
+  const [trendLoading, setTrendLoading] = useState(true);
+  const [trendError, setTrendError] = useState<string | null>(null);
+  const [trendData, setTrendData] = useState<SpendingTrends | null>(null);
+
+  const abortRef = useRef<AbortController | null>(null);
+
+  const loadData = useCallback(async () => {
+    abortRef.current?.abort();
+    const ac = new AbortController();
+    abortRef.current = ac;
+    // Reset
+    setCatLoading(true); setCatError(null);
+    setTrendLoading(true); setTrendError(null);
+    try {
+      const [cats, tr] = await Promise.all([
+        categories(customerId, { period: '30d' }, ac.signal),
+        trends(customerId, { months: 12 }, ac.signal),
+      ]);
+      setCatData(cats); setCatLoading(false);
+      setTrendData(tr); setTrendLoading(false);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Failed loading insights';
+      // If both failed? try individually to know which
+      if (!catData) { setCatError(msg); setCatLoading(false); }
+      if (!trendData) { setTrendError(msg); setTrendLoading(false); }
+    }
+  }, [customerId, catData, trendData]);
+
+  useEffect(() => { loadData(); return () => abortRef.current?.abort(); }, [loadData]);
   // Optionally sync with query param later
   useEffect(() => {
     const qp = new URLSearchParams(location.search).get('tab');
@@ -75,7 +113,18 @@ export function InsightsRoute() {
         hidden={activeTab !== 'category'}
         className="insights-panel"
       >
-        <CategorySkeleton reducedMotion={reducedMotion} />
+        {catLoading && <CategorySkeleton reducedMotion={reducedMotion} />}
+        {!catLoading && catError && (
+          <div role="alert" className="insights-error">
+            <p>{catError}</p>
+            <button onClick={loadData}>Retry</button>
+          </div>
+        )}
+        {!catLoading && !catError && catData && (
+          <div className="category-placeholder" aria-label="Categories data ready">
+            <p>Loaded {catData.categories.length} categories (UI coming next).</p>
+          </div>
+        )}
       </div>
       <div
         id="panel-trends"
@@ -84,7 +133,18 @@ export function InsightsRoute() {
         hidden={activeTab !== 'trends'}
         className="insights-panel"
       >
-        <TrendsSkeleton reducedMotion={reducedMotion} />
+        {trendLoading && <TrendsSkeleton reducedMotion={reducedMotion} />}
+        {!trendLoading && trendError && (
+          <div role="alert" className="insights-error">
+            <p>{trendError}</p>
+            <button onClick={loadData}>Retry</button>
+          </div>
+        )}
+        {!trendLoading && !trendError && trendData && (
+          <div className="trends-placeholder" aria-label="Trends data ready">
+            <p>Loaded {trendData.trends.length} monthly points (UI coming next).</p>
+          </div>
+        )}
       </div>
     </div>
   );
