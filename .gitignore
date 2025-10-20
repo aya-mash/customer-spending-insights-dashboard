@@ -9,6 +9,7 @@ Thumbs.db
 *.bak
 *.tmp
 *.log
+.github/
 
 ###############################
 # Node / Package Managers

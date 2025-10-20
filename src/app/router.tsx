@@ -43,6 +43,8 @@ export const router = createBrowserRouter([
   },
 ]);
 
+export const defaultRouter = router;
+
 // Test helper to build an in-memory router with initial entries.
 export function buildTestRouter(initialEntries: string[] = ['/']) {
   return createMemoryRouter([
