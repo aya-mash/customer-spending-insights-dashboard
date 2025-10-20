@@ -134,7 +134,10 @@ export function InsightsRoute() {
           />
         )}
         {!catLoading && !catError && catData && catData.categories.length === 0 && (
-          <p role="status">No category data available.</p>
+          <div role="status" className="empty-state">
+            <span className="empty-icon" aria-hidden="true">🍃</span>
+            <p>No data for this period.</p>
+          </div>
         )}
       </div>
       <div
@@ -157,7 +160,10 @@ export function InsightsRoute() {
           <TrendsChart data={trendData.trends} reducedMotion={reducedMotion} />
         )}
         {!trendLoading && !trendError && trendData && trendData.trends.length === 0 && (
-          <p role="status">No trends data available.</p>
+          <div role="status" className="empty-state">
+            <span className="empty-icon" aria-hidden="true">📉</span>
+            <p>No data for this period.</p>
+          </div>
         )}
   </div>
   </div>
