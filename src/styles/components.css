@@ -281,16 +281,292 @@
   color: var(--color-accent);
 }
 
+/* Table Component */
+.table-container {
+  overflow-x: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-3);
+  box-shadow: var(--elevation-1);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.table th {
+  background: var(--color-surface-alt);
+  padding: var(--sp-3) var(--sp-4);
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text);
+  border-bottom: 2px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.table th:first-child {
+  border-top-left-radius: var(--radius-3);
+}
+
+.table th:last-child {
+  border-top-right-radius: var(--radius-3);
+}
+
+.table td {
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+.table tbody tr:nth-child(even) {
+  background: var(--color-surface-alt);
+}
+
+.table tbody tr:hover {
+  background: var(--color-surface-hover);
+}
+
+.table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: var(--radius-3);
+}
+
+.table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: var(--radius-3);
+}
+
+.sort-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+  border-radius: var(--radius-1);
+  
+  &:hover {
+    color: var(--color-accent);
+  }
+  
+  &:focus-visible {
+    outline: 2px solid var(--focus-color);
+    outline-offset: 2px;
+  }
+}
+
 .sort-header.sort-header--active {
   color: var(--color-accent);
 }
 
 .sort-icon {
-  font-size: var(--fs-12);
+  font-size: var(--text-sm);
   opacity: 0.7;
+  transition: opacity 0.15s ease;
 }
 
-/* Chip/Pill Component */
+.sort-header:hover .sort-icon {
+  opacity: 1;
+}
+
+/* Table Cell Styles */
+.merchant-cell {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+}
+
+.merchant-icon {
+  font-size: var(--text-lg);
+  flex-shrink: 0;
+}
+
+.merchant-name {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.merchant-description {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--sp-1);
+}
+
+.amount-cell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.amount {
+  font-weight: 600;
+  font-size: var(--text-sm);
+}
+
+.amount.positive {
+  color: var(--color-success);
+}
+
+.amount.negative {
+  color: var(--color-danger);
+}
+
+.amount.negative::before {
+  content: '-';
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+  .table-container {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+  
+  .table {
+    font-size: var(--text-xs);
+  }
+  
+  .table th,
+  .table td {
+    padding: var(--sp-2) var(--sp-3);
+  }
+  
+  .merchant-cell {
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+  
+  .merchant-icon {
+    align-self: flex-start;
+  }
+}
+
+/* Table Skeleton */
+.transaction-skeleton {
+  padding: var(--sp-4);
+}
+
+.sk-table-header {
+  height: 40px;
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-2);
+  margin-bottom: var(--sp-3);
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.sk-table-row {
+  height: 56px;
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-2);
+  margin-bottom: var(--sp-2);
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.sk-table-row:nth-child(even) {
+  animation-delay: 0.1s;
+}
+
+/* Mobile Transaction Cards */
+.mobile-transaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.transaction-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-3);
+  padding: var(--sp-4);
+  transition: all 0.15s ease;
+}
+
+.transaction-card--clickable {
+  cursor: pointer;
+  
+  &:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--elevation-2);
+  }
+  
+  &:focus-visible {
+    outline: 2px solid var(--focus-color);
+    outline-offset: 2px;
+  }
+}
+
+.transaction-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--sp-3);
+}
+
+.transaction-card__merchant {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  flex: 1;
+}
+
+.transaction-card__amount {
+  font-variant-numeric: tabular-nums;
+}
+
+.transaction-card__details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.transaction-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.transaction-date {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.payment-method {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-align: right;
+}
+
+.mobile-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+/* Hide mobile view on desktop */
+@media (min-width: 769px) {
+  .mobile-view {
+    display: none;
+  }
+}
+
+/* Show mobile view only on mobile */
+@media (max-width: 768px) {
+  .table-container {
+    display: none;
+  }
+}
+
+/* Form Controls */
 .chip {
   display: inline-flex;
   align-items: center;

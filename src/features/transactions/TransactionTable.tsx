@@ -1,11 +1,15 @@
 import { formatRand } from '../../utils/currency';
 import { formatDate } from '../../utils/dates';
 import { Button } from '../../components/Button';
+import { Pagination } from '../../components/Pagination';
+import { MobileTransactionList } from './MobileTransactionList';
+import { useMediaQuery } from '../../utils/accessibility';
 import { useTransactionsData } from './useTransactionsData';
 
 export function TransactionTable() {
   const customerId = 'user123'; // TODO: replace with real user context when available
   const { loading, error, data, sortField, sortDirection, loadData, sort } = useTransactionsData(customerId);
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   if (loading) {
     return <TransactionSkeleton />;
@@ -29,8 +33,29 @@ export function TransactionTable() {
     );
   }
 
+  // Mobile view: use card list
+  if (isMobile) {
+    return (
+      <div className="mobile-view">
+        <MobileTransactionList 
+          transactions={data}
+          onTransactionClick={(transaction) => console.log('Transaction clicked:', transaction)}
+        />
+        
+        {data.length > 0 && (
+          <Pagination
+            currentPage={1}
+            totalPages={5}
+            onPageChange={(page) => console.log('Page changed to:', page)}
+          />
+        )}
+      </div>
+    );
+  }
+
+  // Desktop view: use table
   return (
-    <div className="table-wrapper">
+    <div className="table-container" role="region" aria-label="Transaction history table">
       <table className="table" role="table" aria-label="Transaction history">
         <thead>
           <tr>
@@ -120,6 +145,14 @@ export function TransactionTable() {
           ))}
         </tbody>
       </table>
+      
+      {data.length > 0 && (
+        <Pagination
+          currentPage={1}
+          totalPages={5}
+          onPageChange={(page) => console.log('Page changed to:', page)}
+        />
+      )}
     </div>
   );
 }
