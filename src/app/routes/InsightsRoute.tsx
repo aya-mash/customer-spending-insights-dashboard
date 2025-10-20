@@ -168,7 +168,7 @@ function TrendsChart({ data, reducedMotion }: TrendsChartProps) {
   const last = data[data.length - 1];
   const direction = last.totalSpent > first.totalSpent ? 'increasing' : last.totalSpent < first.totalSpent ? 'decreasing' : 'flat';
   return (
-    <div className="trends-chart" aria-describedby={summaryId}>
+  <div className="trends-chart" aria-describedby={summaryId} aria-label="Monthly spending trends chart">
       <ResponsiveContainer width="100%" height={320}>
         <AreaChart data={data} margin={{ left: 8, right: 8, top: 16, bottom: 8 }}>
           <defs>
@@ -234,7 +234,7 @@ function CategoryDonut({ data, total, onSelectCategory, reducedMotion }: Categor
   const top = data[0];
   const summaryId = 'category-donut-summary';
   return (
-    <div className="category-donut" aria-describedby={summaryId}>
+  <div className="category-donut" aria-describedby={summaryId} aria-label="Spending by category donut chart">
       <div className="donut-chart-wrapper">
         <ResponsiveContainer width="100%" height={260}>
           <PieChart>
