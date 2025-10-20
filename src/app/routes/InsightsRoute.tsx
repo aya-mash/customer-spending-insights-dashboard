@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { categories, trends } from '../../data/client';
 import type { CategoryBreakdown, SpendingTrends, CategoryItem } from '../../data/models';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Line, Legend } from 'recharts';
 import { formatRand } from '../../lib/format';
 
 // Accessible tab ids
@@ -142,11 +142,46 @@ export function InsightsRoute() {
             <button onClick={loadData}>Retry</button>
           </div>
         )}
-        {!trendLoading && !trendError && trendData && (
-          <div className="trends-placeholder" aria-label="Trends data ready">
-            <p>Loaded {trendData.trends.length} monthly points (UI coming next).</p>
-          </div>
+        {!trendLoading && !trendError && trendData && trendData.trends.length > 0 && (
+          <TrendsChart data={trendData.trends} reducedMotion={reducedMotion} />
         )}
+        {!trendLoading && !trendError && trendData && trendData.trends.length === 0 && (
+          <p role="status">No trends data available.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+interface TrendsChartProps { data: SpendingTrends['trends']; reducedMotion: boolean }
+function TrendsChart({ data, reducedMotion }: TrendsChartProps) {
+  const summaryId = 'trends-chart-summary';
+  const min = Math.min(...data.map(d => d.totalSpent));
+  const max = Math.max(...data.map(d => d.totalSpent));
+  const first = data[0];
+  const last = data[data.length - 1];
+  const direction = last.totalSpent > first.totalSpent ? 'increasing' : last.totalSpent < first.totalSpent ? 'decreasing' : 'flat';
+  return (
+    <div className="trends-chart" aria-describedby={summaryId}>
+      <ResponsiveContainer width="100%" height={320}>
+        <AreaChart data={data} margin={{ left: 8, right: 8, top: 16, bottom: 8 }}>
+          <defs>
+            <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--color-accent)" stopOpacity={0.35} />
+              <stop offset="100%" stopColor="var(--color-accent)" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-subtle)" />
+            <XAxis dataKey="month" tickFormatter={(m: string) => m.slice(5)} />
+            <YAxis tickFormatter={(v: number) => 'R' + (v/1000).toFixed(1) + 'k'} width={56} />
+            <Tooltip formatter={(val: unknown) => formatRand(Number(val))} labelFormatter={(m: string) => m} />
+            <Area type="monotone" dataKey="totalSpent" stroke="var(--color-accent)" fill="url(#trendFill)" isAnimationActive={!reducedMotion} />
+            <Line type="monotone" dataKey="totalSpent" stroke="var(--color-accent)" dot={false} isAnimationActive={!reducedMotion} />
+            <Legend />
+        </AreaChart>
+      </ResponsiveContainer>
+      <div id={summaryId} className="trends-summary" aria-hidden="true">
+        Trend spans {data.length} months. Min {formatRand(min)}, Max {formatRand(max)}, overall direction {direction}.
       </div>
     </div>
   );
