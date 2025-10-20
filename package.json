@@ -24,7 +24,7 @@
   "devDependencies": {
     "@eslint/js": "^9.36.0",
     "@playwright/test": "1.48.2",
-    "@storybook/addon-a11y": "8.2.9",
+    "@storybook/addon-a11y": "9.1.13",
     "@storybook/addon-essentials": "8.2.9",
     "@storybook/react-vite": "8.2.9",
     "@storybook/test": "8.2.9",
