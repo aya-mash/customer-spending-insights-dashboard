@@ -172,6 +172,17 @@ export function TransactionsRoute() {
         </aside>
       )}
   <section aria-label="Results" className="transactions-results-reflection" role="region" aria-labelledby="transactions-heading">
+        {(qs.category || qs.period) && (
+          <div className="tx-active-pills" aria-label="Active filters">
+            {qs.category && (
+              <span className="pill" data-type="category">Category: {qs.category} <button aria-label="Remove category filter" onClick={() => update({ category: undefined, offset:0 })}>×</button></span>
+            )}
+            {qs.period && (
+              <span className="pill" data-type="period">Period: {qs.period} <button aria-label="Remove period filter" onClick={() => update({ period: undefined, offset:0 })}>×</button></span>
+            )}
+            <button type="button" className="clear-all" onClick={() => update({ category: undefined, period: undefined, offset:0 })}>Clear all</button>
+          </div>
+        )}
         { (fltError || txError) && (
           <div role="alert" className="tx-error">
             <p>{fltError || txError}</p>
