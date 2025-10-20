@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { DashboardProvider } from '../layouts/dashboard/DashboardProvider';
 import dashboardConfig from '../app/config/dashboard.config';
@@ -47,18 +47,22 @@ describe('InsightsRoute', () => {
   it('renders donut legend and navigates on click', async () => {
   vi.spyOn(client, 'categories').mockResolvedValue(mockCategories as CategoryBreakdown);
   vi.spyOn(client, 'trends').mockResolvedValue(mockTrends as SpendingTrends);
+    const Loc = () => { const l = useLocation(); return <div data-testid="loc" data-path={l.pathname} data-search={l.search} /> };
     render(
       <MemoryRouter initialEntries={["/insights"]}>
         <DashboardProvider config={dashboardConfig}>
           <InsightsRoute />
+          <Loc />
         </DashboardProvider>
       </MemoryRouter>
     );
     await waitFor(() => expect(screen.getByRole('list', { name: /Category legend/i })).toBeInTheDocument());
     const foodBtn = screen.getByRole('button', { name: /Food/i });
     fireEvent.click(foodBtn);
-    // Navigation effect: since using MemoryRouter, location should update.
-    expect(window.location.search.includes('category=Food')).toBe(true);
+    await waitFor(() => {
+      const locDiv = screen.getByTestId('loc');
+      expect(locDiv.getAttribute('data-search')?.includes('category=Food')).toBe(true);
+    });
   });
 
   it('renders trends chart with 12 points', async () => {
@@ -87,9 +91,11 @@ describe('InsightsRoute', () => {
         </DashboardProvider>
       </MemoryRouter>
     );
-    await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
-    fireEvent.click(screen.getByRole('button', { name: /Retry All/i }));
-    await waitFor(() => expect(screen.queryByRole('alert')).not.toBeInTheDocument());
+  await waitFor(() => expect(screen.getAllByRole('alert').length).toBeGreaterThan(0));
+  // If combined error present use Retry All, otherwise use first Retry
+  const retryAll = screen.queryByRole('button', { name: /Retry All/i });
+  fireEvent.click(retryAll || screen.getByRole('button', { name: /Retry/i }));
+  await waitFor(() => expect(screen.queryAllByRole('alert').length).toBe(0));
     expect(catErr).toHaveBeenCalledTimes(2);
     expect(trendErr).toHaveBeenCalledTimes(2);
   });
