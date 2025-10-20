@@ -117,7 +117,7 @@ export function TransactionsRoute() {
   const resetFilters = () => update({ category: undefined, period: undefined, offset: 0 });
 
   return (
-    <main className="transactions-route" aria-labelledby="transactions-heading">
+  <main className="transactions-route" aria-labelledby="transactions-heading" role="main">
       <h2 id="transactions-heading">Transactions</h2>
       {/* Filters UI */}
       {isMobile ? (
@@ -149,7 +149,7 @@ export function TransactionsRoute() {
           </details>
         </section>
       ) : (
-        <aside aria-label="Filters" className="tx-filters-desktop">
+  <aside aria-label="Filters" className="tx-filters-desktop" role="complementary">
           <div className="tx-filter-group" aria-labelledby="tx-period-label-d">
             <h3 id="tx-period-label-d">Date Range</h3>
             <div className="chip-column">
@@ -171,7 +171,7 @@ export function TransactionsRoute() {
           </div>
         </aside>
       )}
-      <section aria-label="Results" className="transactions-results-reflection">
+  <section aria-label="Results" className="transactions-results-reflection" role="region" aria-labelledby="transactions-heading">
         { (fltError || txError) && (
           <div role="alert" className="tx-error">
             <p>{fltError || txError}</p>
