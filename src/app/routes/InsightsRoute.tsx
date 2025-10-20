@@ -173,8 +173,13 @@ function TrendsChart({ data, reducedMotion }: TrendsChartProps) {
   const first = data[0];
   const last = data[data.length - 1];
   const direction = last.totalSpent > first.totalSpent ? 'increasing' : last.totalSpent < first.totalSpent ? 'decreasing' : 'flat';
+  const prev = data[data.length - 2];
+  const delta = prev ? last.totalSpent - prev.totalSpent : 0;
+  const deltaSign = delta === 0 ? '' : delta > 0 ? '+' : '−';
+  const deltaLabel = `${deltaSign}${formatRand(Math.abs(delta))}`;
   return (
   <div className="trends-chart" aria-describedby={summaryId} aria-label="Monthly spending trends chart">
+      <p className="trend-inline-summary" aria-hidden="true">{direction === 'increasing' ? 'Up' : direction === 'decreasing' ? 'Down' : 'Flat'} vs first month. Last month change {deltaLabel}.</p>
       <ResponsiveContainer width="100%" height={320}>
         <AreaChart data={data} margin={{ left: 8, right: 8, top: 16, bottom: 8 }}>
           <defs>
@@ -186,7 +191,23 @@ function TrendsChart({ data, reducedMotion }: TrendsChartProps) {
           <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-subtle)" />
             <XAxis dataKey="month" tickFormatter={(m: string) => m.slice(5)} />
             <YAxis tickFormatter={(v: number) => 'R' + (v/1000).toFixed(1) + 'k'} width={56} />
-            <Tooltip formatter={(val: unknown) => formatRand(Number(val))} labelFormatter={(m: string) => m} />
+            <Tooltip content={({ active, payload, label }) => {
+              if (!active || !payload || !payload.length) return null;
+              const value = payload[0].value as number;
+              const idx = data.findIndex(d => d.month === label);
+              const prevVal = idx > 0 ? data[idx - 1].totalSpent : undefined;
+              const diff = prevVal !== undefined ? value - prevVal : 0;
+              const diffSign = diff === 0 ? '' : diff > 0 ? '+' : '−';
+              return (
+                <div className="trend-tooltip">
+                  <strong>{label}</strong>
+                  <div>{formatRand(value)}</div>
+                  {prevVal !== undefined && (
+                    <span className={`delta-chip ${diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat'}`}>{diffSign}{formatRand(Math.abs(diff))}</span>
+                  )}
+                </div>
+              );
+            }} />
             <Area type="monotone" dataKey="totalSpent" stroke="var(--color-accent)" fill="url(#trendFill)" isAnimationActive={!reducedMotion} />
             <Line type="monotone" dataKey="totalSpent" stroke="var(--color-accent)" dot={false} isAnimationActive={!reducedMotion} />
             <Legend />
