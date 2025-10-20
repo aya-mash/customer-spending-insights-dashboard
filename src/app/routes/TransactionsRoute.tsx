@@ -287,9 +287,9 @@ function Pagination({ total, limit, offset, hasMore, onPageChange }: PaginationP
   const nextOffset = offset + limit;
   return (
     <div className="tx-pager" aria-label="Pagination controls">
-      <button type="button" disabled={offset === 0} onClick={() => onPageChange(prevOffset)}>Previous</button>
-      <span className="tx-page-info">{from}–{to} of {total}</span>
-      <button type="button" disabled={!hasMore} onClick={() => onPageChange(nextOffset)}>Next</button>
+      <button type="button" className="pager-btn" disabled={offset === 0} onClick={() => onPageChange(prevOffset)} aria-label="Previous page">‹ Prev</button>
+      <span className="tx-page-info" aria-live="polite">{from}–{to} of {total}</span>
+      <button type="button" className="pager-btn" disabled={!hasMore} onClick={() => onPageChange(nextOffset)} aria-label="Next page">Next ›</button>
     </div>
   );
 }

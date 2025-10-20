@@ -330,6 +330,13 @@ button {
 .tx-active-pills .pill button:hover { color: var(--brand-danger); }
 .tx-active-pills .clear-all { background:none; border:none; color: var(--brand-primary); cursor:pointer; font-size: var(--fs-12); text-decoration:underline; }
 .tx-active-pills .clear-all:hover { color: var(--brand-danger); }
+
+/* Pager pills */
+.tx-pager { display:flex; align-items:center; gap:12px; margin-top:16px; }
+.tx-pager .pager-btn { background: var(--color-surface-alt); color: var(--color-text); border:1px solid var(--color-border); padding:6px 14px; border-radius:999px; font-size: var(--fs-12); font-weight: var(--fw-medium); }
+.tx-pager .pager-btn:hover:not(:disabled) { background: var(--brand-primary); color:#fff; }
+.tx-pager .pager-btn:disabled { opacity:.4; cursor:not-allowed; }
+.tx-pager .tx-page-info { font-size: var(--fs-12); color: var(--text-muted); }
 /* Theme icon button specialized styles */
 .theme-icon-btn {
   background: var(--color-surface-alt);
