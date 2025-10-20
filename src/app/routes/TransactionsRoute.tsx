@@ -184,7 +184,13 @@ export function TransactionsRoute() {
             <ul className="sk-rows">{Array.from({length:5}).map((_,i)=><li key={i} className="sk-row" />)}</ul>
           </div>
         ) }
-        { !txLoading && !txError && txData && (
+        { !txLoading && !txError && txData && txData.transactions.length === 0 && (
+          <div className="tx-empty" role="status">
+            <p>No transactions found for the selected filters.</p>
+            <button type="button" onClick={resetFilters}>Reset Filters</button>
+          </div>
+        ) }
+        { !txLoading && !txError && txData && txData.transactions.length > 0 && (
           <>
             <TransactionsTable
               rows={txData.transactions}
