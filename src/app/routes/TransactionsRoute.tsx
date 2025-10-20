@@ -107,22 +107,70 @@ export function TransactionsRoute() {
   }, [qs, navigate, location.pathname]);
 
   // Placeholder UI reflecting current state
+  const isMobile = typeof window !== 'undefined' ? window.matchMedia('(max-width: 640px)').matches : false;
+
+  const periods = PERIOD_VALUES;
+  const cats = fltData?.categories || [];
+
+  const applyCategory = (c?: string) => update({ category: c, offset: 0 });
+  const applyPeriod = (p?: PeriodPreset) => update({ period: p, offset: 0 });
+  const resetFilters = () => update({ category: undefined, period: undefined, offset: 0 });
+
   return (
     <main className="transactions-route" aria-labelledby="transactions-heading">
       <h2 id="transactions-heading">Transactions</h2>
-      <section aria-label="Current filters" className="transactions-filters-reflection">
-        <dl>
-          <dt>Category</dt><dd>{qs.category || '—'}</dd>
-          <dt>Period</dt><dd>{qs.period || '—'}</dd>
-          <dt>Limit</dt><dd>{qs.limit}</dd>
-          <dt>Offset</dt><dd>{qs.offset}</dd>
-          <dt>Sort</dt><dd>{qs.sortBy}</dd>
-        </dl>
-        <div className="transactions-temp-controls" aria-label="Temporary controls for URL state">
-          <button type="button" onClick={() => update({ sortBy: qs.sortBy === 'date_desc' ? 'date_asc' : 'date_desc' })}>Toggle Date Sort</button>
-          <button type="button" onClick={() => update({ offset: 0 })}>Reset Offset</button>
-        </div>
-      </section>
+      {/* Filters UI */}
+      {isMobile ? (
+        <section aria-label="Filters" className="tx-filters-mobile">
+          <details>
+            <summary>Filters</summary>
+            <div className="tx-filter-group" aria-labelledby="tx-period-label">
+              <h3 id="tx-period-label">Date Range</h3>
+              <div className="chip-row">
+                {periods.map(p => (
+                  <button key={p} type="button" className={`chip ${qs.period===p?'selected':''}`} aria-pressed={qs.period===p}
+                    onClick={() => applyPeriod(qs.period===p?undefined:p)}>{p}</button>
+                ))}
+              </div>
+            </div>
+            <div className="tx-filter-group" aria-labelledby="tx-cat-label">
+              <h3 id="tx-cat-label">Categories</h3>
+              <div className="chip-row">
+                {cats.map(c => (
+                  <button key={c.name} type="button" className={`chip ${qs.category===c.name?'selected':''}`} aria-pressed={qs.category===c.name}
+                    onClick={() => applyCategory(qs.category===c.name?undefined:c.name)}>{c.name}</button>
+                ))}
+              </div>
+            </div>
+            <div className="tx-filter-actions">
+              <button type="button" onClick={() => { /* apply already live via toggle */ }}>Apply</button>
+              <button type="button" onClick={resetFilters}>Reset</button>
+            </div>
+          </details>
+        </section>
+      ) : (
+        <aside aria-label="Filters" className="tx-filters-desktop">
+          <div className="tx-filter-group" aria-labelledby="tx-period-label-d">
+            <h3 id="tx-period-label-d">Date Range</h3>
+            <div className="chip-column">
+              {periods.map(p => (
+                <button key={p} type="button" className={`chip ${qs.period===p?'selected':''}`} aria-pressed={qs.period===p}
+                  onClick={() => applyPeriod(qs.period===p?undefined:p)}>{p}</button>
+              ))}
+            </div>
+          </div>
+          <div className="tx-filter-group" aria-labelledby="tx-cat-label-d">
+            <h3 id="tx-cat-label-d">Categories</h3>
+            <div className="chip-column">
+              {cats.map(c => (
+                <button key={c.name} type="button" className={`chip ${qs.category===c.name?'selected':''}`} aria-pressed={qs.category===c.name}
+                  onClick={() => applyCategory(qs.category===c.name?undefined:c.name)}>{c.name}</button>
+              ))}
+            </div>
+            <button type="button" className="reset-btn" onClick={resetFilters}>Reset</button>
+          </div>
+        </aside>
+      )}
       <section aria-label="Results" className="transactions-results-reflection">
         { (fltError || txError) && (
           <div role="alert" className="tx-error">
@@ -137,7 +185,7 @@ export function TransactionsRoute() {
           </div>
         ) }
         { !txLoading && !txError && txData && (
-          <p>Loaded {txData.transactions.length} rows (show table in later step).</p>
+          <p>Loaded {txData.transactions.length} rows (table to follow).</p>
         ) }
       </section>
     </main>
