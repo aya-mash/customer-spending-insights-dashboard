@@ -1,14 +1,17 @@
 import { NavLink } from 'react-router-dom';
 import { useDashboard } from './useDashboard';
 import type { NavigationPageItem, NavigationItem } from '../../app/types/dashboard';
-import { prefetchRoute } from '../../app/router/generateRoutes.tsx';
+import { dashboardConfig } from '../../app/config/dashboard.config';
+
+function triggerPrefetch(path: string) {
+  const cfg = dashboardConfig.routes.find(r => r.path === path);
+  cfg?.prefetch?.();
+}
 
 function isPage(item: NavigationItem): item is NavigationPageItem { return item.type === 'page'; }
 
 export function NavList({ onNavigate }: Readonly<{ onNavigate?: () => void }>) {
-  const { navigation, routes } = useDashboard();
-
-  function triggerPrefetch(path: string) { prefetchRoute(path, routes); }
+  const { navigation } = useDashboard();
 
   const pages: NavigationPageItem[] = navigation.filter(isPage).filter(i => !i.hidden);
   return (

@@ -17,6 +17,7 @@ export function ContrastCheckerDev() {
   if (!enabled) return null;
   return (
     <>
+      {open && <div className="contrast-backdrop" aria-hidden="true" onClick={() => setOpen(false)} />}
       {open && <ContrastCheckerPanel onClose={() => setOpen(false)} />}
       <button
         type="button"

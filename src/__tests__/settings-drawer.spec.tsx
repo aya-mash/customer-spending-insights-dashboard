@@ -1,14 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { buildTestRouter } from '../app/router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from '../App';
 
 function renderApp() {
   const qc = new QueryClient();
+  const testRouter = buildTestRouter(['/']);
   return render(
     <QueryClientProvider client={qc}>
-      <MemoryRouter initialEntries={['/']}> <App /> </MemoryRouter>
+      <App router={testRouter} />
     </QueryClientProvider>
   );
 }
