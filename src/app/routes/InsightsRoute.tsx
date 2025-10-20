@@ -119,7 +119,7 @@ export function InsightsRoute() {
         <h3>By Category</h3>
         <p className="panel-muted">Spending distribution across categories</p>
   {catLoading && <CategorySkeleton reducedMotion={reducedMotion} />}
-        {!catLoading && catError && (
+        {!catLoading && catError && !trendError && (
           <div role="alert" className="insights-error">
             <p>{catError}</p>
             <button onClick={loadData}>Retry</button>
@@ -150,7 +150,7 @@ export function InsightsRoute() {
         <h3>Trends</h3>
         <p className="panel-muted">Monthly spending trend</p>
   {trendLoading && <TrendsSkeleton reducedMotion={reducedMotion} />}
-        {!trendLoading && trendError && (
+        {!trendLoading && trendError && !catError && (
           <div role="alert" className="insights-error">
             <p>{trendError}</p>
             <button onClick={loadData}>Retry</button>
