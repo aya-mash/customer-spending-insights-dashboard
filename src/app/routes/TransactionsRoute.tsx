@@ -185,11 +185,20 @@ export function TransactionsRoute() {
           </div>
         ) }
         { !txLoading && !txError && txData && (
-          <TransactionsTable
-            rows={txData.transactions}
-            sortBy={qs.sortBy}
-            onChangeSort={(next) => update({ sortBy: next, offset: 0 })}
-          />
+          <>
+            <TransactionsTable
+              rows={txData.transactions}
+              sortBy={qs.sortBy}
+              onChangeSort={(next) => update({ sortBy: next, offset: 0 })}
+            />
+            <Pagination
+              total={txData.pagination.total}
+              limit={txData.pagination.limit}
+              offset={txData.pagination.offset}
+              hasMore={txData.pagination.hasMore}
+              onPageChange={(nextOffset: number) => update({ offset: nextOffset })}
+            />
+          </>
         ) }
       </section>
     </main>
@@ -245,4 +254,21 @@ function TransactionsTable({ rows, sortBy, onChangeSort }: TransactionsTableProp
 
 function formatAmount(v: number) {
   return 'R' + v.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+interface PaginationProps {
+  total: number; limit: number; offset: number; hasMore: boolean; onPageChange: (nextOffset: number) => void;
+}
+function Pagination({ total, limit, offset, hasMore, onPageChange }: PaginationProps) {
+  const from = offset + 1;
+  const to = Math.min(offset + limit, total);
+  const prevOffset = Math.max(0, offset - limit);
+  const nextOffset = offset + limit;
+  return (
+    <div className="tx-pager" aria-label="Pagination controls">
+      <button type="button" disabled={offset === 0} onClick={() => onPageChange(prevOffset)}>Previous</button>
+      <span className="tx-page-info">{from}–{to} of {total}</span>
+      <button type="button" disabled={!hasMore} onClick={() => onPageChange(nextOffset)}>Next</button>
+    </div>
+  );
 }
