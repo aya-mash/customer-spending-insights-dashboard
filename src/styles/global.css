@@ -314,6 +314,11 @@ button {
 .tx-table td, .tx-table th { padding: 8px 12px; vertical-align: middle; }
 .tx-table td.neg { color: var(--brand-danger); font-weight: var(--fw-medium); }
 .tx-table td:nth-child(4) { text-align:right; font-variant-numeric: tabular-nums; }
+.tx-table td.merchant .merchant-name { font-weight: var(--fw-medium); }
+.tx-table td.category { display:flex; align-items:center; gap:6px; }
+.tx-table td.category .cat-dot { width:10px; height:10px; border-radius:50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.15); }
+.tx-table td.method { display:flex; align-items:center; gap:6px; }
+.tx-table td.method .method-icon { font-size:14px; }
 @media (prefers-color-scheme: dark) {
   .tx-table tbody tr:nth-child(odd) { background: var(--color-surface-alt); }
   .tx-table tbody tr:nth-child(even) { background: var(--color-surface); }
