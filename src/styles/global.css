@@ -66,6 +66,13 @@ body {
 .delta-chip.up { background: var(--brand-success); color:#fff; }
 .delta-chip.down { background: var(--brand-danger); color:#fff; }
 .delta-chip.flat { background: var(--color-muted); color:#fff; }
+
+/* Empty & error states */
+.empty-state { display:flex; flex-direction:column; align-items:center; gap: var(--sp-4); padding: var(--sp-12); color: var(--text-muted); font-size: var(--fs-14); }
+.empty-icon { font-size: var(--fs-20); }
+.insights-error { background: var(--brand-danger); color:#fff; padding: var(--sp-12) var(--sp-16); border-radius: var(--radius-12); display:flex; flex-direction:column; gap: var(--sp-8); }
+.insights-error button { align-self:flex-start; background:#fff; color: var(--brand-danger); border: none; padding: var(--sp-8) var(--sp-12); border-radius: var(--radius-8); cursor:pointer; font-weight: var(--fw-medium); }
+.insights-error button:hover { background: #ffe5e3; }
 .insights-panel h3 { margin: 0; font-size: var(--heading-font-size); line-height: var(--lh-tight); }
 .insights-panel .panel-muted { color: var(--text-muted); font-size: var(--subheading-font-size); margin: 0; }
 
