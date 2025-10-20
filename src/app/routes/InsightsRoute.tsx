@@ -82,6 +82,12 @@ export function InsightsRoute() {
   return (
     <div className="insights-route" aria-labelledby="insights-heading">
       <h2 id="insights-heading" className="visually-hidden">Insights</h2>
+      {(catError && trendError) && (
+        <div role="alert" className="insights-error combined-error" tabIndex={-1}>
+          <p>Failed to load insights data. Please retry.</p>
+          <button onClick={loadData}>Retry All</button>
+        </div>
+      )}
       <div role="tablist" aria-label="Insights panels" className="insights-tabs" onKeyDown={onKeyDown}>
         <button
           role="tab"
@@ -109,7 +115,7 @@ export function InsightsRoute() {
         hidden={activeTab !== 'category'}
         className="insights-panel"
       >
-        {catLoading && <CategorySkeleton reducedMotion={reducedMotion} />}
+  {catLoading && <CategorySkeleton reducedMotion={reducedMotion} />}
         {!catLoading && catError && (
           <div role="alert" className="insights-error">
             <p>{catError}</p>
@@ -135,7 +141,7 @@ export function InsightsRoute() {
         hidden={activeTab !== 'trends'}
         className="insights-panel"
       >
-        {trendLoading && <TrendsSkeleton reducedMotion={reducedMotion} />}
+  {trendLoading && <TrendsSkeleton reducedMotion={reducedMotion} />}
         {!trendLoading && trendError && (
           <div role="alert" className="insights-error">
             <p>{trendError}</p>
