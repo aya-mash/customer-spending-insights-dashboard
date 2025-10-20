@@ -185,6 +185,7 @@ export function TransactionsRoute() {
         )}
         { (fltError || txError) && (
           <div role="alert" className="tx-error">
+            <span className="alert-icon" aria-hidden="true">⚠️</span>
             <p>{fltError || txError}</p>
             <button onClick={loadData}>Retry</button>
           </div>
@@ -197,6 +198,8 @@ export function TransactionsRoute() {
         ) }
         { !txLoading && !txError && txData && txData.transactions.length === 0 && (
           <div className="tx-empty" role="status">
+            <div className="tx-illustration" aria-hidden="true">💸</div>
+            <h3>No transactions match</h3>
             <p>No transactions found for the selected filters.</p>
             <button type="button" onClick={resetFilters}>Reset Filters</button>
           </div>

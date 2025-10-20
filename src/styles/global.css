@@ -342,6 +342,15 @@ button {
 .tx-pager .pager-btn:hover:not(:disabled) { background: var(--brand-primary); color:#fff; }
 .tx-pager .pager-btn:disabled { opacity:.4; cursor:not-allowed; }
 .tx-pager .tx-page-info { font-size: var(--fs-12); color: var(--text-muted); }
+
+/* Empty & error refined */
+.tx-empty { display:flex; flex-direction:column; align-items:center; gap:8px; padding:32px 16px; text-align:center; background: var(--color-surface-alt); border:1px dashed var(--color-border); border-radius: var(--radius-12); }
+.tx-empty h3 { margin:0; font-size: var(--fs-16); }
+.tx-illustration { font-size:48px; line-height:1; }
+.tx-error { display:flex; align-items:center; gap:12px; background: var(--brand-danger); color:#fff; padding:12px 16px; border-radius: var(--radius-12); margin-bottom:16px; }
+.tx-error button { background:#fff; color: var(--brand-danger); border:none; padding:6px 12px; border-radius:8px; cursor:pointer; }
+.tx-error button:hover { background:#ffe5e3; }
+.tx-error .alert-icon { font-size:20px; }
 /* Theme icon button specialized styles */
 .theme-icon-btn {
   background: var(--color-surface-alt);
