@@ -233,12 +233,16 @@ function TransactionsTable({ rows, sortBy, onChangeSort }: TransactionsTableProp
       <thead>
         <tr>
           <th>
-            <button type="button" aria-sort={dateSortState} onClick={toggleDate} className="sortable">Date</button>
+            <button type="button" aria-sort={dateSortState} onClick={toggleDate} className="sortable" title="Sort by Date" aria-label="Sort by Date">
+              Date <span className={`chevron ${dateSortState}`}>▾</span>
+            </button>
           </th>
           <th>Merchant</th>
           <th>Category</th>
           <th>
-            <button type="button" aria-sort={amountSortState} onClick={toggleAmount} className="sortable">Amount</button>
+            <button type="button" aria-sort={amountSortState} onClick={toggleAmount} className="sortable" title="Sort by Amount" aria-label="Sort by Amount">
+              Amount <span className={`chevron ${amountSortState}`}>▾</span>
+            </button>
           </th>
           <th>Payment Method</th>
         </tr>
