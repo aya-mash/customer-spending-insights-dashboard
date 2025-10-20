@@ -8,7 +8,7 @@ import type { CategoryBreakdown, SpendingTrends } from '../data/models';
 const meta: Meta = {
   title: 'Insights/Panels',
   component: InsightsRoute,
-  parameters: { layout: 'fullscreen' },
+  parameters: { layout: 'fullscreen', viewport: { defaultViewport: 'responsive' } },
 };
 export default meta;
 
@@ -69,6 +69,17 @@ export const CategoryError: StoryObj = {
 export const TrendsDefault: StoryObj = {
   name: 'Trends Chart',
   render: () => {
+    (client.categories as unknown as () => Promise<unknown>) = () => Promise.resolve(mockCategories);
+    (client.trends as unknown as () => Promise<unknown>) = () => Promise.resolve(mockTrends);
+    return withData();
+  }
+};
+
+export const DarkMode: StoryObj = {
+  name: 'Dark Mode Panels',
+  parameters: { backgrounds: { default: 'dark' } },
+  render: () => {
+    document.documentElement.setAttribute('data-theme', 'dark');
     (client.categories as unknown as () => Promise<unknown>) = () => Promise.resolve(mockCategories);
     (client.trends as unknown as () => Promise<unknown>) = () => Promise.resolve(mockTrends);
     return withData();
