@@ -47,10 +47,11 @@ body {
 .insights-panel .panel-muted { color: var(--text-muted); font-size: var(--subheading-font-size); margin: 0; }
 
 /* Tabs pill style (will be enhanced in step2) placeholder */
-.insights-tabs { display: flex; gap: var(--sp-8); margin-bottom: var(--sp-16); }
-.insights-tabs [role="tab"] { background: transparent; border:1px solid var(--color-border); padding: var(--sp-8) var(--sp-16); border-radius: 999px; font: inherit; cursor: pointer; }
-.insights-tabs [role="tab"].active { background: var(--brand-primary); color: var(--color-text-inverse); border-color: var(--brand-primary); }
-.insights-tabs [role="tab"]:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 2px; }
+.insights-tabs { display: inline-flex; gap: var(--sp-8); margin-bottom: var(--sp-16); background: var(--color-surface-alt); padding: var(--sp-4); border-radius: 999px; }
+.insights-tabs [role="tab"] { background: transparent; border:1px solid transparent; padding: var(--sp-8) var(--sp-16); border-radius: 999px; font: inherit; cursor: pointer; position: relative; transition: background var(--transition-medium) var(--ease-standard), color var(--transition-medium) var(--ease-standard); }
+.insights-tabs [role="tab"].active { background: var(--brand-primary); color: var(--color-text-inverse); }
+.insights-tabs [role="tab"]:not(.active):hover { background: var(--color-surface); }
+.insights-tabs [role="tab"]:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--focus-ring-color); }
 
 img {
   max-width: 100%;
