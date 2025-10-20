@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { categories, trends } from '../../data/client';
-import type { CategoryBreakdown, SpendingTrends } from '../../data/models';
+import type { CategoryBreakdown, SpendingTrends, CategoryItem } from '../../data/models';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { formatRand } from '../../lib/format';
 
 // Accessible tab ids
 const TAB_KEYS = ['category', 'trends'] as const;
@@ -42,7 +44,6 @@ export function InsightsRoute() {
     abortRef.current?.abort();
     const ac = new AbortController();
     abortRef.current = ac;
-    // Reset
     setCatLoading(true); setCatError(null);
     setTrendLoading(true); setTrendError(null);
     try {
@@ -54,18 +55,17 @@ export function InsightsRoute() {
       setTrendData(tr); setTrendLoading(false);
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Failed loading insights';
-      // If both failed? try individually to know which
-      if (!catData) { setCatError(msg); setCatLoading(false); }
-      if (!trendData) { setTrendError(msg); setTrendLoading(false); }
+      setCatError(msg); setCatLoading(false);
+      setTrendError(msg); setTrendLoading(false);
     }
-  }, [customerId, catData, trendData]);
+  }, [customerId]);
 
   useEffect(() => { loadData(); return () => abortRef.current?.abort(); }, [loadData]);
   // Optionally sync with query param later
   useEffect(() => {
     const qp = new URLSearchParams(location.search).get('tab');
-    if (qp && TAB_KEYS.includes(qp as TabKey)) setActiveTab(qp as TabKey);
-  }, [location.search]);
+    if (qp && TAB_KEYS.includes(qp as TabKey) && qp !== activeTab) setActiveTab(qp as TabKey);
+  }, [location.search, activeTab]);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowRight' || e.key === 'Right') {
@@ -77,11 +77,7 @@ export function InsightsRoute() {
     }
   };
 
-  useEffect(() => {
-    const sp = new URLSearchParams(location.search);
-    sp.set('tab', activeTab);
-    navigate({ pathname: location.pathname, search: sp.toString() }, { replace: true });
-  }, [activeTab, location.pathname, location.search, navigate]);
+  // URL sync removed to prevent continuous re-renders; can be reintroduced with debounce later.
 
   return (
     <div className="insights-route" aria-labelledby="insights-heading">
@@ -120,10 +116,16 @@ export function InsightsRoute() {
             <button onClick={loadData}>Retry</button>
           </div>
         )}
-        {!catLoading && !catError && catData && (
-          <div className="category-placeholder" aria-label="Categories data ready">
-            <p>Loaded {catData.categories.length} categories (UI coming next).</p>
-          </div>
+        {!catLoading && !catError && catData && catData.categories.length > 0 && (
+          <CategoryDonut
+            data={catData.categories}
+            total={catData.totalAmount}
+            onSelectCategory={(name) => navigate(`/transactions?category=${encodeURIComponent(name)}`)}
+            reducedMotion={reducedMotion}
+          />
+        )}
+        {!catLoading && !catError && catData && catData.categories.length === 0 && (
+          <p role="status">No category data available.</p>
         )}
       </div>
       <div
@@ -177,3 +179,60 @@ function TrendsSkeleton({ reducedMotion }: { reducedMotion: boolean }) {
 }
 
 export default InsightsRoute;
+
+interface CategoryDonutProps {
+  data: CategoryItem[];
+  total: number;
+  onSelectCategory: (name: string) => void;
+  reducedMotion: boolean;
+}
+
+function CategoryDonut({ data, total, onSelectCategory, reducedMotion }: CategoryDonutProps) {
+  // Recharts dataset with index signature
+  const chartData: Array<CategoryItem & { [k: string]: unknown }> = data.map(d => ({ ...d }));
+  const top = data[0];
+  const summaryId = 'category-donut-summary';
+  return (
+    <div className="category-donut" aria-describedby={summaryId}>
+      <div className="donut-chart-wrapper">
+        <ResponsiveContainer width="100%" height={260}>
+          <PieChart>
+            <Pie
+              data={chartData}
+              dataKey="amount"
+              nameKey="name"
+              innerRadius={70}
+              outerRadius={110}
+              isAnimationActive={!reducedMotion}
+              paddingAngle={1}
+              onClick={(dp) => onSelectCategory((dp as { name?: string }).name || '')}
+            >
+              {chartData.map(item => (
+                <Cell key={item.name} fill={item.color || 'var(--color-accent-soft)'} aria-label={`${item.name} slice`} />
+              ))}
+            </Pie>
+            <Tooltip formatter={(value: unknown, _name, d) => [formatRand(Number(value)), (d && (d as { payload: { name?: string } }).payload.name) || '']} />
+          </PieChart>
+        </ResponsiveContainer>
+        <div className="donut-center">
+          <strong>{formatRand(total)}</strong>
+          <span>Total</span>
+        </div>
+      </div>
+      <div id={summaryId} className="donut-summary" aria-hidden="true">
+        Top category {top?.name || 'N/A'} at {top ? formatRand(top.amount) : '0'} across {data.length} categories.
+      </div>
+      <ul className="donut-legend" aria-label="Category legend">
+        {data.map(item => (
+          <li key={item.name}>
+            <button type="button" onClick={() => onSelectCategory(item.name)} className="legend-item">
+              <span className="legend-swatch" style={{ background: item.color }} />
+              <span className="legend-label">{item.name}</span>
+              <span className="legend-amount">{formatRand(item.amount)}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
