@@ -8,9 +8,10 @@ import {
   Stack, 
   Heading, 
   Text, 
-  Button 
+  Button,
+  Tabs
 } from '../../design-system/components/index';
-import { brand, text as textColors, surface, radius, spacing } from '../../design-system/tokens';
+import { text as textColors, surface, radius, spacing } from '../../design-system/tokens';
 import { DonutChart } from '../../design-system/components/DonutChart';
 
 // Lazy load trends chart
@@ -46,45 +47,8 @@ export function Insights() {
     }
   }, [location.search, activeTab]);
 
-  // Keyboard navigation for tabs
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowRight' || e.key === 'Right') {
-      e.preventDefault();
-      const currentIdx = TAB_KEYS.indexOf(activeTab);
-      setActiveTab(TAB_KEYS[(currentIdx + 1) % TAB_KEYS.length]);
-    } else if (e.key === 'ArrowLeft' || e.key === 'Left') {
-      e.preventDefault();
-      const currentIdx = TAB_KEYS.indexOf(activeTab);
-      setActiveTab(TAB_KEYS[(currentIdx - 1 + TAB_KEYS.length) % TAB_KEYS.length]);
-    }
-  };
-
   // Combined error at top if both fail
   const showCombinedError = catError && trendError;
-
-  // Pill tab styles
-  const pillContainerStyle: CSSProperties = {
-    display: 'inline-flex',
-    gap: spacing[1],
-    backgroundColor: surface.surfaceAlt,
-    padding: spacing[1],
-    borderRadius: radius.full,
-    marginBottom: spacing[6]
-  };
-
-  const getPillTabStyle = (isActive: boolean): CSSProperties => ({
-    backgroundColor: isActive ? brand.primary : 'transparent',
-    color: isActive ? textColors.inverse : textColors.primary,
-    border: '1px solid transparent',
-    borderRadius: radius.full,
-    padding: `${spacing[2]} ${spacing[6]}`,
-    fontSize: '14px',
-    fontWeight: isActive ? 600 : 500,
-    cursor: 'pointer',
-    outline: 'none',
-    transition: 'all 200ms ease',
-    fontFamily: 'inherit'
-  });
 
   return (
     <PageLayout 
@@ -122,38 +86,13 @@ export function Insights() {
           </Card>
         )}
 
-        {/* Pill-style tabs */}
-        <div 
-          role="tablist" 
-          aria-label="Insights panels" 
-          style={pillContainerStyle}
-          onKeyDown={onKeyDown}
-        >
-          {TAB_KEYS.map(tabKey => (
-            <button
-              key={tabKey}
-              role="tab"
-              id={`tab-${tabKey}`}
-              aria-controls={`panel-${tabKey}`}
-              aria-selected={activeTab === tabKey}
-              tabIndex={activeTab === tabKey ? 0 : -1}
-              onClick={() => setActiveTab(tabKey)}
-              style={getPillTabStyle(activeTab === tabKey)}
-              onMouseEnter={(e) => {
-                if (activeTab !== tabKey) {
-                  e.currentTarget.style.backgroundColor = surface.card;
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (activeTab !== tabKey) {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }
-              }}
-            >
-              {TAB_LABELS[tabKey]}
-            </button>
-          ))}
-        </div>
+        {/* Tabs Navigation */}
+        <Tabs
+          items={TAB_KEYS.map(key => ({ key, label: TAB_LABELS[key] }))}
+          activeTab={activeTab}
+          onChange={(key) => setActiveTab(key as TabKey)}
+          aria-label="Insights panels"
+        />
 
         {/* Category Panel */}
         <div

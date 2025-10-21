@@ -58,7 +58,7 @@ export function ContrastCheckerPanel({ onClose }: Props) {
     transform: 'translate(-50%, -50%)',
     backgroundColor: surface.surface,
     borderRadius: radius.xl,
-    boxShadow: 'var(--shadow-neumorphic-lg)',
+    boxShadow: 'var(--shadow-neumorphic-sm)',
     padding: spacing[6],
     width: '90%',
     maxWidth: '480px',

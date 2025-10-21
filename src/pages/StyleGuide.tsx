@@ -1,40 +1,33 @@
 /**
- * STYLE GUIDE
- * Design system tokens and components showcase with integrated contrast checker and neomorphic examples
+ * NEOMORPHIC DESIGN SYSTEM - STYLE GUIDE
+ * Complete component catalog and usage documentation
+ * Single source of truth for the Neomorphic Design System
  */
 
-import { useState, useEffect, type CSSProperties } from 'react';
-import { PageLayout, Card, Stack, Grid, Heading, Text, Button, Badge, Divider } from '../design-system/components/index';
+import { useState, useEffect } from 'react';
 import { 
-  brand, 
-  neutral, 
-  semantic, 
-  surface, 
-  text as textColors,
-  spacing,
-  fontSize,
-  fontWeight,
-  radius,
-  shadow,
-  categories
-} from '../design-system/tokens';
-import { contrastRatio } from '../lib/contrast';
+  PageLayout, 
+  Card, 
+  Stack, 
+  Grid, 
+  Heading, 
+  Text, 
+  Button, 
+  TextField,
+  Select,
+  Badge,
+  Divider,
+  Tabs
+} from '../design-system/components/index';
+import { Palette, Info } from 'lucide-react';
 import { ContrastCheckerPanel } from '../design-system/components/ContrastCheckerPanel';
-import { Palette } from 'lucide-react';
-
-interface ColorSwatch {
-  name: string;
-  value: string;
-  category: 'brand' | 'neutral' | 'semantic' | 'surface' | 'text' | 'categories';
-}
 
 export function StyleGuide() {
-  const [copiedToken, setCopiedToken] = useState<string | null>(null);
   const [showContrastChecker, setShowContrastChecker] = useState(false);
-  const [circleButtonPressed, setCircleButtonPressed] = useState(false);
-  const [squareButtonPressed, setSquareButtonPressed] = useState(false);
+  const [activeTab, setActiveTab] = useState<'overview' | 'components' | 'tokens'>('overview');
+  const [demoTab, setDemoTab] = useState('overview');
 
-  // Close dialog on Escape key
+  // Close dialog on Escape
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && showContrastChecker) {
@@ -45,749 +38,655 @@ export function StyleGuide() {
     return () => window.removeEventListener('keydown', handleEscape);
   }, [showContrastChecker]);
 
-  // Collect all color tokens
-  const brandColors: ColorSwatch[] = [
-    { name: 'Primary', value: brand.primary, category: 'brand' },
-    { name: 'Secondary', value: brand.secondary, category: 'brand' },
-    { name: 'Tertiary', value: brand.accent, category: 'brand' },
-    { name: 'Hover', value: brand.primaryHover, category: 'brand' },
-  ];
-
-  const neutralColors: ColorSwatch[] = [
-    { name: 'Gray 50', value: neutral[50], category: 'neutral' },
-    { name: 'Gray 100', value: neutral[100], category: 'neutral' },
-    { name: 'Gray 200', value: neutral[200], category: 'neutral' },
-    { name: 'Gray 300', value: neutral[300], category: 'neutral' },
-    { name: 'Gray 400', value: neutral[400], category: 'neutral' },
-    { name: 'Gray 500', value: neutral[500], category: 'neutral' },
-    { name: 'Gray 600', value: neutral[600], category: 'neutral' },
-    { name: 'Gray 700', value: neutral[700], category: 'neutral' },
-    { name: 'Gray 800', value: neutral[800], category: 'neutral' },
-    { name: 'Gray 900', value: neutral[900], category: 'neutral' },
-  ];
-
-  const semanticColors: ColorSwatch[] = [
-    { name: 'Success', value: semantic.success, category: 'semantic' },
-    { name: 'Warning', value: semantic.warning, category: 'semantic' },
-    { name: 'Danger', value: semantic.error, category: 'semantic' },
-    { name: 'Info', value: semantic.info, category: 'semantic' },
-  ];
-
-  const categoryColors: ColorSwatch[] = [
-    { name: 'Dining', value: categories.dining.main, category: 'categories' },
-    { name: 'Transportation', value: categories.transport.main, category: 'categories' },
-    { name: 'Shopping', value: categories.shopping.main, category: 'categories' },
-    { name: 'Entertainment', value: categories.entertainment.main, category: 'categories' },
-    { name: 'Groceries', value: categories.groceries.main, category: 'categories' },
-    { name: 'Utilities', value: categories.utilities.main, category: 'categories' },
-  ];
-
-  const copyToClipboard = (text: string, token: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedToken(token);
-    setTimeout(() => setCopiedToken(null), 2000);
-  };
-
-  const getContrastInfo = (bg: string, fg: string = '#FFFFFF'): string => {
-    const ratio = contrastRatio(bg, fg);
-    const level = ratio >= 7 ? 'AAA' : ratio >= 4.5 ? 'AA' : 'Fail';
-    return `${ratio.toFixed(2)}:1 (${level})`;
-  };
-
-  const swatchStyle = (bgColor: string): CSSProperties => {
-    const ratio = contrastRatio(bgColor, '#FFFFFF');
-    const textColor = ratio >= 4.5 ? '#FFFFFF' : '#1F2937';
-    
-    return {
-      backgroundColor: bgColor,
-      color: textColor,
-      padding: spacing[4],
-      borderRadius: radius.md,
-      border: `1px solid ${surface.border}`,
-      cursor: 'pointer',
-      transition: 'transform 150ms ease',
-      minHeight: '100px',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-    };
-  };
-
   return (
-    <PageLayout title="Design System Style Guide">
-      <Stack direction="vertical" spacing={8}>
-        {/* Introduction */}
-        <Card padding={6}>
-          <Stack direction="vertical" spacing={3}>
-            <Heading level={2}>Design tokens and baseline components preview.</Heading>
-            <Text variant="body">
-              This page showcases all design system tokens, components, and patterns used throughout the application.
-              Click any color swatch to copy its hex value.
+    <PageLayout title="Design System">
+      <Stack spacing={8}>
+        {/* Header */}
+        <Card padding={8}>
+          <Stack spacing={4}>
+            <Heading level={1}>Neomorphic Design System</Heading>
+            <Text variant="body" color="muted">
+              A unified soft UI design system with embossed and debossed elements. 
+              Light source from top-left creates subtle depth through dual shadows.
             </Text>
           </Stack>
         </Card>
 
-        {/* Brand Colors */}
-        <Card padding={6}>
-          <Stack direction="vertical" spacing={4}>
-            <Heading level={3}>Brand Colors</Heading>
-            <Grid columns={{ mobile: 2, tablet: 4 }} gap={4}>
-              {brandColors.map(color => (
-                <div
-                  key={color.name}
-                  style={swatchStyle(color.value)}
-                  onClick={() => copyToClipboard(color.value, color.name)}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`${color.name} color ${color.value}`}
-                >
-                  <Text variant="bodySm" style={{ fontWeight: 600 }}>{color.name}</Text>
+        {/* Navigation Tabs */}
+        <div style={{
+          display: 'flex',
+          gap: '8px',
+          padding: '8px',
+          backgroundColor: 'var(--color-surface)',
+          borderRadius: 'var(--radius-lg)',
+          boxShadow: 'var(--shadow-neumorphic-inset)',
+        }}>
+          {(['overview', 'components', 'tokens'] as const).map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              style={{
+                flex: 1,
+                padding: '12px 24px',
+                border: 'none',
+                borderRadius: 'var(--radius-md)',
+                backgroundColor: activeTab === tab ? 'var(--color-surface)' : 'transparent',
+                boxShadow: activeTab === tab ? 'var(--shadow-neumorphic-sm)' : 'var(--shadow-neumorphic-pressed)',
+                transform: activeTab === tab ? 'translateY(-1px)' : 'none',
+                color: activeTab === tab ? 'var(--color-text-strong)' : 'var(--color-text-muted)',
+                fontWeight: activeTab === tab ? 600 : 400,
+                fontSize: '14px',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
+        </div>
+
+        {/* Overview Tab */}
+        {activeTab === 'overview' && (
+          <Stack spacing={6}>
+            {/* Design Principles */}
+            <Card padding={6}>
+              <Stack spacing={4}>
+                <Heading level={2}>Design Principles</Heading>
+                <Grid columns={{ mobile: 1, tablet: 2 }} gap={4}>
                   <div>
-                    <Text variant="caption" style={{ opacity: 0.9 }}>{color.value}</Text>
-                    <br />
-                    <Text variant="caption" style={{ opacity: 0.8, fontSize: '11px' }}>
-                      {getContrastInfo(color.value)}
+                    <Text variant="bodyLg" style={{ fontWeight: 600, marginBottom: '8px' }}>
+                      Monochromatic Base
+                    </Text>
+                    <Text variant="body" color="muted">
+                      Elements share the same base color as the background (whitish #EBF0F5 in light, 
+                      dark charcoal in dark mode) creating a cohesive molded appearance.
                     </Text>
                   </div>
-                  {copiedToken === color.name && (
-                    <Text variant="caption" style={{ fontWeight: 600 }}>✓ Copied!</Text>
-                  )}
-                </div>
-              ))}
-            </Grid>
-          </Stack>
-        </Card>
-
-        {/* Semantic Colors */}
-        <Card padding={6}>
-          <Stack direction="vertical" spacing={4}>
-            <Heading level={3}>Semantic Colors</Heading>
-            <Grid columns={{ mobile: 2, tablet: 4 }} gap={4}>
-              {semanticColors.map(color => (
-                <div
-                  key={color.name}
-                  style={swatchStyle(color.value)}
-                  onClick={() => copyToClipboard(color.value, color.name)}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
-                  role="button"
-                  tabIndex={0}
-                >
-                  <Text variant="bodySm" style={{ fontWeight: 600 }}>{color.name}</Text>
                   <div>
-                    <Text variant="caption" style={{ opacity: 0.9 }}>{color.value}</Text>
-                    <br />
-                    <Text variant="caption" style={{ opacity: 0.8, fontSize: '11px' }}>
-                      {getContrastInfo(color.value)}
+                    <Text variant="bodyLg" style={{ fontWeight: 600, marginBottom: '8px' }}>
+                      Dual Shadow Technique
+                    </Text>
+                    <Text variant="body" color="muted">
+                      Light shadow (white) on top-left, dark shadow (gray-blue) on bottom-right 
+                      simulates a light source creating depth without harsh borders.
                     </Text>
                   </div>
-                </div>
-              ))}
-            </Grid>
-          </Stack>
-        </Card>
-
-        {/* Neutral Colors */}
-        <Card padding={6}>
-          <Stack direction="vertical" spacing={4}>
-            <Heading level={3}>Neutral Colors</Heading>
-            <Grid columns={{ mobile: 5, tablet: 10 }} gap={2}>
-              {neutralColors.map(color => (
-                <div
-                  key={color.name}
-                  style={{
-                    ...swatchStyle(color.value),
-                    minHeight: '80px',
-                    padding: spacing[2],
-                  }}
-                  onClick={() => copyToClipboard(color.value, color.name)}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                  }}
-                  role="button"
-                  tabIndex={0}
-                >
-                  <Text variant="caption" style={{ fontSize: '10px', fontWeight: 600 }}>
-                    {color.name.replace('Gray ', '')}
-                  </Text>
-                </div>
-              ))}
-            </Grid>
-          </Stack>
-        </Card>
-
-        {/* Category Colors */}
-        <Card padding={6}>
-          <Stack direction="vertical" spacing={4}>
-            <Heading level={3}>Category Colors</Heading>
-            <Grid columns={{ mobile: 2, tablet: 3, desktop: 6 }} gap={4}>
-              {categoryColors.map(color => (
-                <div
-                  key={color.name}
-                  style={swatchStyle(color.value)}
-                  onClick={() => copyToClipboard(color.value, color.name)}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
-                  role="button"
-                  tabIndex={0}
-                >
-                  <Text variant="bodySm" style={{ fontWeight: 600 }}>{color.name}</Text>
-                  <Text variant="caption" style={{ opacity: 0.9 }}>{color.value}</Text>
-                </div>
-              ))}
-            </Grid>
-          </Stack>
-        </Card>
-
-        {/* Typography */}
-        <Card padding={6}>
-          <Stack direction="vertical" spacing={4}>
-            <Heading level={3}>Typography</Heading>
-            <Divider />
-            <Stack direction="vertical" spacing={3}>
-              <div>
-                <Heading level={1}>H1 – The quick brown fox jumps over the lazy dog.</Heading>
-                <Text variant="caption" style={{ color: textColors.muted }}>
-                  {fontSize.h1} · {fontWeight.bold}
-                </Text>
-              </div>
-              <div>
-                <Heading level={2}>H2 – The quick brown fox jumps over the lazy dog.</Heading>
-                <Text variant="caption" style={{ color: textColors.muted }}>
-                  {fontSize.h2} · {fontWeight.semibold}
-                </Text>
-              </div>
-              <div>
-                <Heading level={3}>H3 – The quick brown fox jumps over the lazy dog.</Heading>
-                <Text variant="caption" style={{ color: textColors.muted }}>
-                  {fontSize.h3} · {fontWeight.semibold}
-                </Text>
-              </div>
-              <div>
-                <Heading level={4}>H4 – The quick brown fox jumps over the lazy dog.</Heading>
-                <Text variant="caption" style={{ color: textColors.muted }}>
-                  {fontSize.h4} · {fontWeight.semibold}
-                </Text>
-              </div>
-              <div>
-                <Text variant="bodyLg">Body Large – The quick brown fox jumps over the lazy dog.</Text>
-                <Text variant="caption" style={{ color: textColors.muted }}>
-                  {fontSize.bodyLg} · {fontWeight.regular}
-                </Text>
-              </div>
-              <div>
-                <Text variant="body">Body – The quick brown fox jumps over the lazy dog.</Text>
-                <Text variant="caption" style={{ color: textColors.muted }}>
-                  {fontSize.body} · {fontWeight.regular}
-                </Text>
-              </div>
-              <div>
-                <Text variant="bodySm">Body Small – The quick brown fox jumps over the lazy dog.</Text>
-                <Text variant="caption" style={{ color: textColors.muted }}>
-                  {fontSize.bodySm} · {fontWeight.regular}
-                </Text>
-              </div>
-              <div>
-                <Text variant="caption">Caption – The quick brown fox jumps over the lazy dog.</Text>
-                <Text variant="caption" style={{ color: textColors.muted }}>
-                  {fontSize.caption} · {fontWeight.medium}
-                </Text>
-              </div>
-            </Stack>
-          </Stack>
-        </Card>
-
-        {/* Spacing Scale */}
-        <Card padding={6}>
-          <Stack direction="vertical" spacing={4}>
-            <Heading level={3}>Spacing</Heading>
-            <Stack direction="vertical" spacing={2}>
-              {Object.entries(spacing).map(([key, value]) => (
-                <div
-                  key={key}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: spacing[4],
-                  }}
-                >
-                  <Text variant="bodySm" style={{ minWidth: '60px', fontWeight: 600 }}>
-                    {key}
-                  </Text>
-                  <div
-                    style={{
-                      height: '24px',
-                      width: value,
-                      backgroundColor: brand.primary,
-                      borderRadius: radius.sm,
-                    }}
-                  />
-                  <Text variant="caption" style={{ color: textColors.muted }}>
-                    {value}
-                  </Text>
-                </div>
-              ))}
-            </Stack>
-          </Stack>
-        </Card>
-
-        {/* Components */}
-        <Card padding={6}>
-          <Stack direction="vertical" spacing={4}>
-            <Heading level={3}>Components</Heading>
-            <Divider />
-            
-            {/* Buttons */}
-            <div>
-              <Text variant="bodySm" style={{ fontWeight: 600, marginBottom: spacing[3] }}>
-                Buttons
-              </Text>
-              <Stack direction="horizontal" spacing={3} wrap>
-                <Button variant="primary">Primary</Button>
-                <Button variant="secondary">Secondary</Button>
-                <Button variant="ghost">Ghost</Button>
-                <Button variant="primary" size="small">Small</Button>
-                <Button variant="primary" size="large">Large</Button>
+                  <div>
+                    <Text variant="bodyLg" style={{ fontWeight: 600, marginBottom: '8px' }}>
+                      Embossed (Raised)
+                    </Text>
+                    <Text variant="body" color="muted">
+                      Outward shadows (--shadow-neumorphic-sm/md/lg) make elements appear to 
+                      protrude from the surface. Use for buttons, cards, navigation.
+                    </Text>
+                  </div>
+                  <div>
+                    <Text variant="bodyLg" style={{ fontWeight: 600, marginBottom: '8px' }}>
+                      Debossed (Recessed)
+                    </Text>
+                    <Text variant="body" color="muted">
+                      Inset shadows (--shadow-neumorphic-inset/pressed) make elements appear 
+                      pressed into the surface. Use for inputs, inactive tabs, containers.
+                    </Text>
+                  </div>
+                </Grid>
               </Stack>
-            </div>
+            </Card>
 
-            <Divider />
-
-            {/* Badges */}
-            <div>
-              <Text variant="bodySm" style={{ fontWeight: 600, marginBottom: spacing[3] }}>
-                Badges
-              </Text>
-              <Stack direction="horizontal" spacing={3} wrap>
-                <Badge variant="default">Default</Badge>
-                <Badge variant="info">Primary</Badge>
-                <Badge variant="success">Success</Badge>
-                <Badge variant="warning">Warning</Badge>
-                <Badge variant="error">Danger</Badge>
+            {/* Depth Scale */}
+            <Card padding={6}>
+              <Stack spacing={4}>
+                <Heading level={2}>Neomorphic Depth Scale</Heading>
+                <Text variant="body" color="muted">
+                  Three elevation levels for raised elements, two for recessed elements:
+                </Text>
+                <Grid columns={{ mobile: 1, tablet: 3 }} gap={4}>
+                  <div style={{
+                    padding: '32px',
+                    borderRadius: 'var(--radius-lg)',
+                    backgroundColor: 'var(--color-surface)',
+                    boxShadow: 'var(--shadow-neumorphic-sm)',
+                    textAlign: 'center',
+                  }}>
+                    <Text variant="body" style={{ fontWeight: 600 }}>Small (sm)</Text>
+                    <Text variant="bodySm" color="muted">Subtle cards, chips</Text>
+                  </div>
+                  <div style={{
+                    padding: '32px',
+                    borderRadius: 'var(--radius-lg)',
+                    backgroundColor: 'var(--color-surface)',
+                    boxShadow: 'var(--shadow-neumorphic-md)',
+                    textAlign: 'center',
+                  }}>
+                    <Text variant="body" style={{ fontWeight: 600 }}>Medium (md)</Text>
+                    <Text variant="bodySm" color="muted">Buttons, panels</Text>
+                  </div>
+                  <div style={{
+                    padding: '32px',
+                    borderRadius: 'var(--radius-lg)',
+                    backgroundColor: 'var(--color-surface)',
+                    boxShadow: 'var(--shadow-neumorphic-lg)',
+                    textAlign: 'center',
+                  }}>
+                    <Text variant="body" style={{ fontWeight: 600 }}>Large (lg)</Text>
+                    <Text variant="bodySm" color="muted">Modals, headers</Text>
+                  </div>
+                </Grid>
+                <Grid columns={{ mobile: 1, tablet: 2 }} gap={4}>
+                  <div style={{
+                    padding: '32px',
+                    borderRadius: 'var(--radius-lg)',
+                    backgroundColor: 'var(--color-surface)',
+                    boxShadow: 'var(--shadow-neumorphic-inset)',
+                    textAlign: 'center',
+                  }}>
+                    <Text variant="body" style={{ fontWeight: 600 }}>Inset</Text>
+                    <Text variant="bodySm" color="muted">Text fields, containers</Text>
+                  </div>
+                  <div style={{
+                    padding: '32px',
+                    borderRadius: 'var(--radius-lg)',
+                    backgroundColor: 'var(--color-surface)',
+                    boxShadow: 'var(--shadow-neumorphic-pressed)',
+                    textAlign: 'center',
+                  }}>
+                    <Text variant="body" style={{ fontWeight: 600 }}>Pressed</Text>
+                    <Text variant="bodySm" color="muted">Active/pressed states</Text>
+                  </div>
+                </Grid>
               </Stack>
-            </div>
+            </Card>
 
-            <Divider />
-
-            {/* Cards */}
-            <div>
-              <Text variant="bodySm" style={{ fontWeight: 600, marginBottom: spacing[3] }}>
-                Cards
-              </Text>
-              <Grid columns={{ mobile: 1, tablet: 2 }} gap={4}>
-                <Card padding={4}>
-                  <Heading level={4}>Card Title</Heading>
-                  <Text variant="body">This is a card with default padding and styling.</Text>
-                </Card>
-                <Card padding={4} style={{ backgroundColor: surface.surfaceAlt }}>
-                  <Heading level={4}>Alt Surface Card</Heading>
-                  <Text variant="body">This card uses the alternate surface color.</Text>
-                </Card>
-              </Grid>
-            </div>
-          </Stack>
-        </Card>
-
-        {/* Border Radius */}
-        <Card padding={6}>
-          <Stack direction="vertical" spacing={4}>
-            <Heading level={3}>Border Radius</Heading>
-            <Grid columns={{ mobile: 2, tablet: 4 }} gap={4}>
-              {Object.entries(radius).map(([key, value]) => (
-                <div key={key} style={{ textAlign: 'center' }}>
-                  <div
-                    style={{
+            {/* Shape Examples */}
+            <Card padding={6}>
+              <Stack spacing={4}>
+                <Heading level={2}>Shape Variants</Heading>
+                <Grid columns={{ mobile: 2, tablet: 4 }} gap={4}>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{
                       width: '80px',
                       height: '80px',
-                      backgroundColor: brand.primary,
-                      borderRadius: value,
-                      margin: '0 auto',
-                      marginBottom: spacing[2],
-                    }}
-                  />
-                  <Text variant="bodySm" style={{ fontWeight: 600 }}>{key}</Text>
-                  <Text variant="caption" style={{ color: textColors.muted }}>{value}</Text>
-                </div>
-              ))}
-            </Grid>
-          </Stack>
-        </Card>
-
-        {/* Shadows */}
-        <Card padding={6}>
-          <Stack direction="vertical" spacing={4}>
-            <Heading level={3}>Shadows</Heading>
-            <Grid columns={{ mobile: 1, tablet: 3 }} gap={6}>
-              {Object.entries(shadow).map(([key, value]) => (
-                <div key={key}>
-                  <div
-                    style={{
-                      height: '100px',
-                      backgroundColor: surface.card,
-                      borderRadius: radius.md,
-                      boxShadow: value,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: spacing[2],
-                    }}
-                  >
-                    <Text variant="body" style={{ fontWeight: 600 }}>{key}</Text>
-                  </div>
-                  <Text variant="caption" style={{ color: textColors.muted, fontSize: '11px' }}>
-                    {value}
-                  </Text>
-                </div>
-              ))}
-            </Grid>
-          </Stack>
-        </Card>
-
-        {/* Contrast Checker */}
-        {/* Contrast Checker Section - Now a Dialog */}
-        <Card padding={6}>
-          <Stack direction="vertical" spacing={4}>
-            <div>
-              <Heading level={3}>Contrast Checker</Heading>
-              <Text variant="body" color="muted" style={{ marginTop: spacing[2] }}>
-                Click the floating button (bottom-right) to open the contrast checker dialog.
-              </Text>
-            </div>
-          </Stack>
-        </Card>
-
-        {/* Neomorphic Design System Section */}
-        <Card padding={6}>
-          <Stack direction="vertical" spacing={6}>
-            <div>
-              <Heading level={2}>Neomorphic Design System</Heading>
-              <Text variant="body" color="muted" style={{ marginTop: spacing[2] }}>
-                Soft, monochromatic design with subtle shadows creating a molded-from-surface appearance.
-              </Text>
-            </div>
-
-            <Divider />
-
-            {/* Circular Examples */}
-            <div>
-              <Heading level={3} style={{ marginBottom: spacing[4] }}>Circular Elements</Heading>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                gap: spacing[6],
-                marginTop: spacing[4],
-              }}>
-                {/* Raised Button */}
-                <div style={{ textAlign: 'center' }}>
-                  <button
-                    onMouseDown={() => setCircleButtonPressed(true)}
-                    onMouseUp={() => setCircleButtonPressed(false)}
-                    onMouseLeave={() => setCircleButtonPressed(false)}
-                    style={{
-                      width: '100px',
-                      height: '100px',
+                      margin: '0 auto 12px',
                       borderRadius: '50%',
-                      backgroundColor: surface.surface,
-                      border: 'none',
-                      cursor: 'pointer',
-                      boxShadow: circleButtonPressed ? 'var(--shadow-neumorphic-pressed)' : 'var(--shadow-neumorphic-md)',
-                      transition: 'all 200ms ease',
-                      fontSize: fontSize.bodySm,
-                      fontWeight: fontWeight.semibold,
-                      color: brand.primary,
-                    }}
-                  >
-                    Button
-                  </button>
-                  <Text variant="caption" color="muted" style={{ marginTop: spacing[2], display: 'block' }}>
-                    Raised/Embossed
-                  </Text>
-                </div>
-
-                {/* Debossed Input */}
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{
-                    width: '100px',
-                    height: '100px',
-                    borderRadius: '50%',
-                    backgroundColor: surface.surface,
-                    boxShadow: 'var(--shadow-neumorphic-inset)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto',
-                  }}>
-                    <input
-                      type="text"
-                      placeholder="Input"
-                      style={{
-                        width: '70px',
-                        backgroundColor: 'transparent',
-                        border: 'none',
-                        outline: 'none',
-                        textAlign: 'center',
-                        fontSize: fontSize.bodySm,
-                        color: textColors.primary,
-                      }}
-                    />
+                      backgroundColor: 'var(--color-surface)',
+                      boxShadow: 'var(--shadow-neumorphic-md)',
+                    }} />
+                    <Text variant="bodySm" color="muted">Circle</Text>
                   </div>
-                  <Text variant="caption" color="muted" style={{ marginTop: spacing[2], display: 'block' }}>
-                    Depressed/Debossed
-                  </Text>
-                </div>
-
-                {/* Ring */}
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{
-                    width: '100px',
-                    height: '100px',
-                    borderRadius: '50%',
-                    backgroundColor: surface.surface,
-                    border: `5px solid ${surface.surface}`,
-                    boxShadow: 'var(--shadow-neumorphic-ring)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto',
-                  }}>
+                  <div style={{ textAlign: 'center' }}>
                     <div style={{
-                      width: '70px',
-                      height: '70px',
+                      width: '80px',
+                      height: '80px',
+                      margin: '0 auto 12px',
+                      borderRadius: 'var(--radius-md)',
+                      backgroundColor: 'var(--color-surface)',
+                      boxShadow: 'var(--shadow-neumorphic-md)',
+                    }} />
+                    <Text variant="bodySm" color="muted">Rounded</Text>
+                  </div>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{
+                      width: '80px',
+                      height: '80px',
+                      margin: '0 auto 12px',
                       borderRadius: '50%',
+                      backgroundColor: 'var(--color-surface)',
                       boxShadow: 'var(--shadow-neumorphic-inset)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: fontSize.caption,
-                      color: textColors.muted,
-                    }}>
-                      Ring
-                    </div>
+                    }} />
+                    <Text variant="bodySm" color="muted">Inset Circle</Text>
                   </div>
-                  <Text variant="caption" color="muted" style={{ marginTop: spacing[2], display: 'block' }}>
-                    Raised Ring
-                  </Text>
-                </div>
-              </div>
-            </div>
-
-            <Divider />
-
-            {/* Square Examples */}
-            <div>
-              <Heading level={3} style={{ marginBottom: spacing[4] }}>Rounded Square Elements</Heading>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                gap: spacing[6],
-                marginTop: spacing[4],
-              }}>
-                {/* Square Button */}
-                <div style={{ textAlign: 'center' }}>
-                  <button
-                    onMouseDown={() => setSquareButtonPressed(true)}
-                    onMouseUp={() => setSquareButtonPressed(false)}
-                    onMouseLeave={() => setSquareButtonPressed(false)}
-                    style={{
-                      width: '140px',
-                      height: '100px',
-                      borderRadius: radius.lg,
-                      backgroundColor: surface.surface,
-                      border: 'none',
-                      cursor: 'pointer',
-                      boxShadow: squareButtonPressed ? 'var(--shadow-neumorphic-pressed)' : 'var(--shadow-neumorphic-md)',
-                      transition: 'all 200ms ease',
-                      fontSize: fontSize.bodySm,
-                      fontWeight: fontWeight.semibold,
-                      color: brand.primary,
-                    }}
-                  >
-                    Button
-                  </button>
-                  <Text variant="caption" color="muted" style={{ marginTop: spacing[2], display: 'block' }}>
-                    Raised/Embossed
-                  </Text>
-                </div>
-
-                {/* Square Input */}
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{
-                    width: '140px',
-                    height: '100px',
-                    borderRadius: radius.lg,
-                    backgroundColor: surface.surface,
-                    boxShadow: 'var(--shadow-neumorphic-inset)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto',
-                    padding: spacing[3],
-                  }}>
-                    <input
-                      type="text"
-                      placeholder="Enter..."
-                      style={{
-                        width: '100%',
-                        backgroundColor: 'transparent',
-                        border: 'none',
-                        outline: 'none',
-                        textAlign: 'center',
-                        fontSize: fontSize.bodySm,
-                        color: textColors.primary,
-                      }}
-                    />
-                  </div>
-                  <Text variant="caption" color="muted" style={{ marginTop: spacing[2], display: 'block' }}>
-                    Depressed/Debossed
-                  </Text>
-                </div>
-
-                {/* Square Ring */}
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{
-                    width: '140px',
-                    height: '100px',
-                    borderRadius: radius.lg,
-                    backgroundColor: surface.surface,
-                    border: `5px solid ${surface.surface}`,
-                    boxShadow: 'var(--shadow-neumorphic-ring)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto',
-                  }}>
+                  <div style={{ textAlign: 'center' }}>
                     <div style={{
-                      width: '100px',
-                      height: '70px',
-                      borderRadius: radius.md,
+                      width: '80px',
+                      height: '80px',
+                      margin: '0 auto 12px',
+                      borderRadius: 'var(--radius-md)',
+                      backgroundColor: 'var(--color-surface)',
                       boxShadow: 'var(--shadow-neumorphic-inset)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: fontSize.caption,
-                      color: textColors.muted,
-                    }}>
-                      Ring
-                    </div>
+                    }} />
+                    <Text variant="bodySm" color="muted">Inset Square</Text>
                   </div>
-                  <Text variant="caption" color="muted" style={{ marginTop: spacing[2], display: 'block' }}>
-                    Raised Ring
-                  </Text>
-                </div>
-              </div>
-            </div>
+                </Grid>
+              </Stack>
+            </Card>
+          </Stack>
+        )}
 
-            <Divider />
-
-            {/* Tabs Example */}
-            <div>
-              <Heading level={3} style={{ marginBottom: spacing[4] }}>Debossed Tabs</Heading>
-              <div style={{ textAlign: 'center', marginTop: spacing[4] }}>
-                <div style={{
-                  display: 'inline-flex',
-                  gap: spacing[2],
-                  background: surface.surface,
-                  padding: spacing[2],
-                  borderRadius: radius.lg,
-                  boxShadow: 'var(--shadow-neumorphic-inset)',
-                }}>
-                  <button style={{
-                    background: surface.surface,
-                    border: 'none',
-                    padding: `${spacing[3]} ${spacing[4]}`,
-                    borderRadius: radius.md,
-                    fontSize: fontSize.body,
-                    fontWeight: fontWeight.semibold,
-                    color: brand.primary,
-                    cursor: 'pointer',
-                    boxShadow: 'var(--shadow-neumorphic-sm)',
-                    transform: 'translateY(-1px)',
-                  }}>
-                    Active
-                  </button>
-                  <button style={{
-                    background: surface.surface,
-                    border: 'none',
-                    padding: `${spacing[3]} ${spacing[4]}`,
-                    borderRadius: radius.md,
-                    fontSize: fontSize.body,
-                    fontWeight: fontWeight.medium,
-                    color: textColors.muted,
-                    cursor: 'pointer',
-                    boxShadow: 'var(--shadow-neumorphic-inset)',
-                  }}>
-                    Inactive
-                  </button>
-                  <button style={{
-                    background: surface.surface,
-                    border: 'none',
-                    padding: `${spacing[3]} ${spacing[4]}`,
-                    borderRadius: radius.md,
-                    fontSize: fontSize.body,
-                    fontWeight: fontWeight.medium,
-                    color: textColors.muted,
-                    cursor: 'pointer',
-                    boxShadow: 'var(--shadow-neumorphic-inset)',
-                  }}>
-                    Another
-                  </button>
-                </div>
-                <Text variant="caption" color="muted" style={{ marginTop: spacing[3], display: 'block' }}>
-                  Container debossed, active tab raised, inactive tabs recessed
+        {/* Components Tab */}
+        {activeTab === 'components' && (
+          <Stack spacing={6}>
+            {/* Buttons */}
+            <Card padding={6}>
+              <Stack spacing={4}>
+                <Heading level={2}>Buttons</Heading>
+                <Text variant="body" color="muted">
+                  Raised appearance with hover elevation. Active state uses pressed shadow.
                 </Text>
-              </div>
-            </div>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <Button variant="primary" size="medium">Primary</Button>
+                  <Button variant="secondary" size="medium">Secondary</Button>
+                  <Button variant="ghost" size="medium">Ghost</Button>
+                  <Button variant="primary" size="small">Small</Button>
+                  <Button variant="primary" size="large">Large</Button>
+                  <Button variant="primary" size="medium" disabled>Disabled</Button>
+                </div>
+                <Divider />
+                <Stack spacing={2}>
+                  <Text variant="bodySm" style={{ fontWeight: 600 }}>States</Text>
+                  <Text variant="bodySm" color="muted">
+                    • Default: --shadow-neumorphic-sm<br/>
+                    • Hover: --shadow-neumorphic-md + translateY(-1px)<br/>
+                    • Active/Pressed: --shadow-neumorphic-pressed<br/>
+                    • Focus: --shadow-neumorphic-ring (outline)
+                  </Text>
+                </Stack>
+              </Stack>
+            </Card>
+
+            {/* Inputs */}
+            <Card padding={6}>
+              <Stack spacing={4}>
+                <Heading level={2}>Text Fields & Select</Heading>
+                <Text variant="body" color="muted">
+                  Recessed appearance creates natural input feel. Focus adds subtle ring.
+                </Text>
+                <Grid columns={{ mobile: 1, tablet: 2 }} gap={4}>
+                  <TextField 
+                    label="Email" 
+                    placeholder="you@example.com"
+                    type="email"
+                  />
+                  <TextField 
+                    label="Password" 
+                    placeholder="••••••••"
+                    type="password"
+                  />
+                  <Select
+                    label="Category"
+                    options={[
+                      { value: 'dining', label: 'Dining' },
+                      { value: 'transport', label: 'Transportation' },
+                      { value: 'shopping', label: 'Shopping' },
+                    ]}
+                    value="dining"
+                    onChange={() => {}}
+                  />
+                  <TextField 
+                    label="Disabled" 
+                    placeholder="Can't edit"
+                    disabled
+                  />
+                </Grid>
+                <Divider />
+                <Stack spacing={2}>
+                  <Text variant="bodySm" style={{ fontWeight: 600 }}>States</Text>
+                  <Text variant="bodySm" color="muted">
+                    • Default: --shadow-neumorphic-inset<br/>
+                    • Focus: --shadow-neumorphic-ring<br/>
+                    • Disabled: Reduced opacity, no interaction
+                  </Text>
+                </Stack>
+              </Stack>
+            </Card>
+
+            {/* Cards & Panels */}
+            <Card padding={6}>
+              <Stack spacing={4}>
+                <Heading level={2}>Cards & Panels</Heading>
+                <Text variant="body" color="muted">
+                  Soft elevated containers for content grouping. Use small shadow for subtle elevation.
+                </Text>
+                <Grid columns={{ mobile: 1, tablet: 2 }} gap={4}>
+                  <Card padding={4}>
+                    <Stack spacing={2}>
+                      <Heading level={3}>Metric Card</Heading>
+                      <Heading level={2}>$1,234.56</Heading>
+                      <Text variant="bodySm" color="muted">Monthly spending</Text>
+                    </Stack>
+                  </Card>
+                  <Card padding={4}>
+                    <Stack spacing={2}>
+                      <Heading level={3}>Info Panel</Heading>
+                      <Text variant="body">
+                        Cards use --shadow-neumorphic-sm for subtle depth without overwhelming the interface.
+                      </Text>
+                    </Stack>
+                  </Card>
+                </Grid>
+              </Stack>
+            </Card>
+
+            {/* Badges & Chips */}
+            <Card padding={6}>
+              <Stack spacing={4}>
+                <Heading level={2}>Badges & Chips</Heading>
+                <Text variant="body" color="muted">
+                  Small inline elements with subtle elevation for status and labels.
+                </Text>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <Badge variant="default">Default</Badge>
+                  <Badge variant="success">Success</Badge>
+                  <Badge variant="warning">Warning</Badge>
+                  <Badge variant="error">Error</Badge>
+                  <Badge variant="info">Info</Badge>
+                </div>
+              </Stack>
+            </Card>
+
+            {/* Navigation */}
+            <Card padding={6}>
+              <Stack spacing={4}>
+                <Heading level={2}>Navigation</Heading>
+                <Text variant="body" color="muted">
+                  Sidebar and bottom navigation use medium elevation. Active states highlighted with color.
+                </Text>
+                <div style={{
+                  padding: '16px',
+                  backgroundColor: 'var(--color-surface)',
+                  borderRadius: 'var(--radius-lg)',
+                  boxShadow: 'var(--shadow-neumorphic-md)',
+                }}>
+                  <Stack spacing={2}>
+                    <div style={{
+                      padding: '12px 16px',
+                      borderRadius: 'var(--radius-md)',
+                      backgroundColor: 'var(--brand-primary)',
+                      color: 'white',
+                      fontWeight: 600,
+                    }}>
+                      Overview (Active)
+                    </div>
+                    <div style={{
+                      padding: '12px 16px',
+                      borderRadius: 'var(--radius-md)',
+                      color: 'var(--color-text-muted)',
+                    }}>
+                      Insights
+                    </div>
+                    <div style={{
+                      padding: '12px 16px',
+                      borderRadius: 'var(--radius-md)',
+                      color: 'var(--color-text-muted)',
+                    }}>
+                      Transactions
+                    </div>
+                  </Stack>
+                </div>
+              </Stack>
+            </Card>
+
+            {/* Tabs */}
+            <Card padding={6}>
+              <Stack spacing={4}>
+                <Heading level={2}>Tabs</Heading>
+                <Text variant="body" color="muted">
+                  Container is debossed (inset), inactive tabs debossed, active tab raised. 
+                  Supports keyboard navigation (Arrow keys, Home, End).
+                </Text>
+                
+                {/* Interactive Demo */}
+                <div>
+                  <Text variant="bodySm" weight="medium" style={{ marginBottom: '12px', display: 'block' }}>
+                    Interactive Example:
+                  </Text>
+                  <Tabs
+                    items={[
+                      { key: 'overview', label: 'Overview' },
+                      { key: 'details', label: 'Details' },
+                      { key: 'settings', label: 'Settings' }
+                    ]}
+                    activeTab={demoTab}
+                    onChange={(key) => setDemoTab(key)}
+                    aria-label="Demo tabs"
+                  />
+                  <Card padding={4} style={{ marginTop: '16px' }}>
+                    <Text variant="body">
+                      Active tab: <strong>{demoTab}</strong>
+                    </Text>
+                  </Card>
+                </div>
+
+                {/* Usage Example */}
+                <div>
+                  <Text variant="bodySm" weight="medium" style={{ marginBottom: '8px', display: 'block' }}>
+                    Usage:
+                  </Text>
+                  <pre style={{
+                    padding: '16px',
+                    backgroundColor: 'var(--neutral-100)',
+                    borderRadius: 'var(--radius-md)',
+                    fontSize: '13px',
+                    fontFamily: 'monospace',
+                    overflow: 'auto',
+                    lineHeight: '1.5'
+                  }}>
+{`<Tabs
+  items={[
+    { key: 'tab1', label: 'Tab 1' },
+    { key: 'tab2', label: 'Tab 2' }
+  ]}
+  activeTab={activeTab}
+  onChange={(key) => setActiveTab(key)}
+  aria-label="Navigation tabs"
+/>`}
+                  </pre>
+                </div>
+              </Stack>
+            </Card>
           </Stack>
-        </Card>
+        )}
+
+        {/* Tokens Tab */}
+        {activeTab === 'tokens' && (
+          <Stack spacing={6}>
+            {/* Token Reference */}
+            <Card padding={6}>
+              <Stack spacing={4}>
+                <Heading level={2}>Design Tokens</Heading>
+                <Text variant="body" color="muted">
+                  Design tokens are defined in <code style={{
+                    padding: '2px 6px',
+                    backgroundColor: 'var(--neutral-100)',
+                    borderRadius: 'var(--radius-sm)',
+                    fontSize: '13px',
+                    fontFamily: 'monospace',
+                  }}>src/styles/tokens.css</code>. Import and use them in components via the design system.
+                </Text>
+              </Stack>
+            </Card>
+
+            {/* Shadow Tokens */}
+            <Card padding={6}>
+              <Stack spacing={4}>
+                <Heading level={3}>Shadow Tokens</Heading>
+                <div style={{
+                  padding: '16px',
+                  backgroundColor: 'var(--neutral-50)',
+                  borderRadius: 'var(--radius-md)',
+                  fontFamily: 'monospace',
+                  fontSize: '13px',
+                  lineHeight: 1.6,
+                }}>
+                  <div><strong>Raised (Embossed):</strong></div>
+                  <div>--shadow-neumorphic-sm</div>
+                  <div>--shadow-neumorphic-md</div>
+                  <div>--shadow-neumorphic-lg</div>
+                  <br/>
+                  <div><strong>Recessed (Debossed):</strong></div>
+                  <div>--shadow-neumorphic-inset</div>
+                  <div>--shadow-neumorphic-pressed</div>
+                  <br/>
+                  <div><strong>Outline:</strong></div>
+                  <div>--shadow-neumorphic-ring</div>
+                </div>
+              </Stack>
+            </Card>
+
+            {/* Color Tokens */}
+            <Card padding={6}>
+              <Stack spacing={4}>
+                <Heading level={3}>Color Tokens</Heading>
+                <Text variant="body" color="muted">
+                  Semantic color tokens adapt to light/dark mode automatically.
+                </Text>
+                <Grid columns={{ mobile: 2, tablet: 4 }} gap={3}>
+                  {[
+                    { name: 'Background', token: '--color-bg' },
+                    { name: 'Surface', token: '--color-surface' },
+                    { name: 'Text', token: '--color-text' },
+                    { name: 'Border', token: '--color-border' },
+                    { name: 'Primary', token: '--brand-primary' },
+                    { name: 'Success', token: '--color-success' },
+                    { name: 'Warning', token: '--color-warning' },
+                    { name: 'Error', token: '--color-error' },
+                  ].map(({ name, token }) => (
+                    <div key={token}>
+                      <div style={{
+                        height: '60px',
+                        borderRadius: 'var(--radius-md)',
+                        backgroundColor: `var(${token})`,
+                        boxShadow: 'var(--shadow-neumorphic-sm)',
+                        marginBottom: '8px',
+                      }} />
+                      <Text variant="bodySm" style={{ fontWeight: 600 }}>{name}</Text>
+                      <Text variant="bodySm" color="muted" style={{ fontFamily: 'monospace', fontSize: '11px' }}>
+                        var({token})
+                      </Text>
+                    </div>
+                  ))}
+                </Grid>
+              </Stack>
+            </Card>
+
+            {/* Spacing & Radius */}
+            <Card padding={6}>
+              <Stack spacing={4}>
+                <Heading level={3}>Spacing & Border Radius</Heading>
+                <Grid columns={{ mobile: 1, tablet: 2 }} gap={4}>
+                  <Stack spacing={3}>
+                    <Text variant="body" style={{ fontWeight: 600 }}>Spacing Scale</Text>
+                    <div style={{
+                      padding: '16px',
+                      backgroundColor: 'var(--neutral-50)',
+                      borderRadius: 'var(--radius-md)',
+                      fontFamily: 'monospace',
+                      fontSize: '13px',
+                      lineHeight: 1.8,
+                    }}>
+                      --sp-1: 4px<br/>
+                      --sp-2: 8px<br/>
+                      --sp-3: 12px<br/>
+                      --sp-4: 16px<br/>
+                      --sp-6: 24px<br/>
+                      --sp-8: 32px<br/>
+                      --sp-12: 48px
+                    </div>
+                  </Stack>
+                  <Stack spacing={3}>
+                    <Text variant="body" style={{ fontWeight: 600 }}>Border Radius</Text>
+                    <div style={{
+                      padding: '16px',
+                      backgroundColor: 'var(--neutral-50)',
+                      borderRadius: 'var(--radius-md)',
+                      fontFamily: 'monospace',
+                      fontSize: '13px',
+                      lineHeight: 1.8,
+                    }}>
+                      --radius-sm: 4px<br/>
+                      --radius-md: 8px<br/>
+                      --radius-lg: 12px<br/>
+                      --radius-xl: 16px<br/>
+                      --radius-2xl: 24px<br/>
+                      --radius-full: 9999px
+                    </div>
+                  </Stack>
+                </Grid>
+              </Stack>
+            </Card>
+
+            {/* Usage Guide */}
+            <Card padding={6}>
+              <Stack spacing={4}>
+                <Heading level={3}>How to Use Tokens</Heading>
+                <Text variant="body" color="muted">
+                  Import tokens from the design system and use them in your components:
+                </Text>
+                <div style={{
+                  padding: '16px',
+                  backgroundColor: 'var(--neutral-900)',
+                  color: 'var(--neutral-50)',
+                  borderRadius: 'var(--radius-md)',
+                  fontFamily: 'monospace',
+                  fontSize: '13px',
+                  lineHeight: 1.6,
+                  overflow: 'auto',
+                }}>
+                  <div><span style={{ color: '#7DD3FC' }}>import</span> {'{'} surface, spacing, radius {'}'} <span style={{ color: '#7DD3FC' }}>from</span> <span style={{ color: '#86EFAC' }}>'../design-system/tokens'</span>;</div>
+                  <br/>
+                  <div><span style={{ color: '#7DD3FC' }}>const</span> styles = {'{'};</div>
+                  <div>  backgroundColor: surface.surface,</div>
+                  <div>  padding: spacing[4],</div>
+                  <div>  borderRadius: radius.md,</div>
+                  <div>  boxShadow: <span style={{ color: '#86EFAC' }}>'var(--shadow-neumorphic-sm)'</span></div>
+                  <div>{'}'};  </div>
+                </div>
+              </Stack>
+            </Card>
+
+            {/* Accessibility Note */}
+            <Card padding={6} style={{ 
+              backgroundColor: 'var(--color-info-light)', 
+              border: '1px solid var(--color-info)' 
+            }}>
+              <Stack spacing={3} direction="horizontal" align="start">
+                <Info size={20} color="var(--color-info)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <Stack spacing={2}>
+                  <Text variant="body" style={{ fontWeight: 600, color: 'var(--color-info-dark)' }}>
+                    Accessibility Guidelines
+                  </Text>
+                  <Text variant="body" color="muted">
+                    • Ensure all interactive elements have :focus-visible rings<br/>
+                    • Maintain AA contrast (4.5:1) for body text, AAA (7:1) for large text<br/>
+                    • Test with keyboard navigation and screen readers<br/>
+                    • Respect prefers-reduced-motion for animations
+                  </Text>
+                </Stack>
+              </Stack>
+            </Card>
+          </Stack>
+        )}
       </Stack>
 
-      {/* Floating Action Button (FAB) for Contrast Checker */}
+      {/* Floating Action Button - Contrast Checker */}
       <button
         onClick={() => setShowContrastChecker(true)}
         style={{
           position: 'fixed',
-          bottom: spacing[6],
-          right: spacing[6],
-          width: '60px',
-          height: '60px',
+          bottom: '24px',
+          right: '24px',
+          width: '56px',
+          height: '56px',
           borderRadius: '50%',
-          backgroundColor: brand.primary,
-          color: textColors.inverse,
           border: 'none',
-          cursor: 'pointer',
+          backgroundColor: 'var(--brand-primary)',
+          color: 'white',
           boxShadow: 'var(--shadow-neumorphic-lg)',
+          cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          zIndex: 1000,
-          transition: 'all 200ms ease',
+          transition: 'all 0.2s ease',
+          zIndex: 100,
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'scale(1.1)';
-          e.currentTarget.style.boxShadow = shadow['2xl'];
+          e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-lg)';
+          e.currentTarget.style.transform = 'translateY(-2px)';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'scale(1)';
           e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-lg)';
+          e.currentTarget.style.transform = 'translateY(0)';
         }}
-        aria-label="Open Contrast Checker"
+        aria-label="Open contrast checker"
       >
         <Palette size={24} />
       </button>
@@ -795,17 +694,15 @@ export function StyleGuide() {
       {/* Contrast Checker Dialog */}
       {showContrastChecker && (
         <>
-          {/* Backdrop - Solid overlay (neomorphic design) */}
           <div
             style={{
               position: 'fixed',
               inset: 0,
-              backgroundColor: surface.overlay,
+              backgroundColor: 'var(--color-overlay)',
               zIndex: 1300,
             }}
             onClick={() => setShowContrastChecker(false)}
           />
-          {/* Dialog */}
           <ContrastCheckerPanel onClose={() => setShowContrastChecker(false)} />
         </>
       )}

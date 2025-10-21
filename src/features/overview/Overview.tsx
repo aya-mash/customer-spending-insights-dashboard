@@ -30,7 +30,8 @@ import {
   Text,
   Badge,
   Divider,
-  DonutChart
+  DonutChart,
+  Tabs
 } from '../../design-system/components/index';
 import { radius } from '../../design-system/tokens';
 import type { PeriodPreset } from '../../data/models';
@@ -94,18 +95,12 @@ export function Overview() {
 
   // Period selector component
   const PeriodSelector = () => (
-    <Stack direction="horizontal" spacing={2} wrap>
-      {PERIODS.map((period) => (
-        <Button
-          key={period.key}
-          variant={activePeriod === period.key ? 'primary' : 'secondary'}
-          size="small"
-          onClick={() => setActivePeriod(period.key)}
-        >
-          {period.label}
-        </Button>
-      ))}
-    </Stack>
+    <Tabs
+      items={PERIODS.map(p => ({ key: p.key, label: p.label }))}
+      activeTab={activePeriod}
+      onChange={(key) => setActivePeriod(key as PeriodPreset)}
+      aria-label="Time period selection"
+    />
   );
 
   return (

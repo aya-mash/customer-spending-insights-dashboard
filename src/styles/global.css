@@ -367,8 +367,8 @@ button {
 
 /* Transactions Table Styling */
 .tx-table { width:100%; border-collapse:collapse; font-size: var(--fs-14); table-layout: fixed; }
-.tx-table thead th { position:sticky; top:0; background: var(--color-surface-alt); z-index:1; box-shadow: 0 1px 0 var(--color-border), 0 2px 4px rgba(0,0,0,0.06); }
-.tx-table thead th button.sortable { all:unset; cursor:pointer; display:inline-flex; align-items:center; gap:4px; padding: var(--sp-8) var(--sp-4); font-weight: var(--fw-medium); }
+.tx-table thead th { position:sticky; top:0; background: var(--color-surface-alt); z-index:1; box-shadow: 0 1px 0 var(--color-border), var(--shadow-neumorphic-sm); }
+.tx-table thead th button.sortable { all:unset; cursor:pointer; display:inline-flex; align-items:center; gap:4px; padding: var(--sp-2) var(--sp-1); font-weight: var(--fw-medium); }
 .tx-table thead th button.sortable .chevron { display:inline-block; transition: transform .18s var(--ease-standard), opacity .18s var(--ease-standard); opacity:.4; }
 .tx-table thead th button.sortable .chevron.ascending { transform: rotate(180deg); opacity:1; }
 .tx-table thead th button.sortable .chevron.descending { transform: rotate(0deg); opacity:1; }
@@ -379,7 +379,7 @@ button {
 .tx-table tbody tr:nth-child(odd) { background: var(--color-surface); }
 .tx-table tbody tr:nth-child(even) { background: var(--color-surface-alt); }
 .tx-table tbody tr:hover { background: var(--color-accent-soft); }
-.tx-table td, .tx-table th { padding: 8px 12px; vertical-align: middle; }
+.tx-table td, .tx-table th { padding: var(--sp-2) var(--sp-3); vertical-align: middle; }
 .tx-table td.neg { color: var(--brand-danger); font-weight: var(--fw-medium); }
 .tx-table td:nth-child(4) { text-align:right; font-variant-numeric: tabular-nums; }
 .tx-table td.merchant .merchant-name { font-weight: var(--fw-medium); }

@@ -23,6 +23,7 @@ export { Select, type SelectProps, type SelectOption } from './Select';
 export { FilterChip, type FilterChipProps } from './FilterChip';
 export { Table, type TableProps, type TableColumn } from './Table';
 export { TextField, type TextFieldProps } from './TextField';
+export { Tabs, type TabsProps, type TabItem } from './Tabs';
 export { default as TrendsChart } from './TrendsChart';
 export { ContrastCheckerPanel } from './ContrastCheckerPanel';
 export { ContrastCheckerDev } from './ContrastCheckerFab';
@@ -52,6 +53,7 @@ import { Select } from './Select';
 import { FilterChip } from './FilterChip';
 import { Table } from './Table';
 import { TextField } from './TextField';
+import { Tabs } from './Tabs';
 
 export default {
   Box,
@@ -74,4 +76,5 @@ export default {
   FilterChip,
   Table,
   TextField,
+  Tabs,
 };

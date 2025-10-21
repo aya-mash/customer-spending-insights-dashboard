@@ -65,7 +65,7 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
       maxWidth: '400px',
       height: '100vh',
       backgroundColor: surface.card,
-      boxShadow: '-8px 0 32px rgba(0, 0, 0, 0.12)',
+      boxShadow: 'var(--shadow-neumorphic-lg)',
       borderTopLeftRadius: radius.xl,
       borderBottomLeftRadius: radius.xl,
       zIndex: zIndex.drawer,
