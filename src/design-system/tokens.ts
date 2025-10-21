@@ -105,8 +105,10 @@ export const categories = {
 export const surface = {
   bg: '#FFFFFF',
   surface: '#FFFFFF',
+  card: '#FFFFFF',
   surfaceAlt: '#F9FAFB',
   surfaceElevated: '#FFFFFF',
+  hover: '#F3F4F6',
   border: '#E5E7EB',
   borderStrong: '#D1D5DB',
   overlay: 'rgba(0, 0, 0, 0.4)',
@@ -118,6 +120,7 @@ export const surface = {
 
 export const text = {
   primary: '#1F2937',
+  secondary: '#6B7280',
   strong: '#111827',
   muted: '#6B7280',
   disabled: '#9CA3AF',
@@ -297,7 +300,9 @@ export const zIndex = {
   dropdown: 1000,
   sticky: 1100,
   fixed: 1200,
+  overlay: 1300,
   modalBackdrop: 1300,
+  drawer: 1400,
   modal: 1400,
   popover: 1500,
   tooltip: 1600,

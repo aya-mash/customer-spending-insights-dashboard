@@ -14,6 +14,9 @@ export { PageLayout, type PageLayoutProps } from './PageLayout';
 export { Divider, type DividerProps } from './Divider';
 export { MetricCard, type MetricCardProps } from './MetricCard';
 export { DonutChart, type DonutChartProps } from './DonutChart';
+export { Navigation, type NavigationProps, type NavItem } from './Navigation';
+export { BottomNav, type BottomNavProps, type BottomNavItem } from './BottomNav';
+export { SettingsDrawer, type SettingsDrawerProps } from './SettingsDrawer';
 
 // Default export for convenience
 import { Card } from './Card';
