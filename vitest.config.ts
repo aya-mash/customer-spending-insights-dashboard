@@ -16,5 +16,30 @@ export default defineConfig({
     ],
     // Exclude dependency test suites & e2e playwright specs.
     exclude: ['node_modules/**', 'dist/**', 'tests/e2e/**'],
+    // Coverage configuration for SonarCloud
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'lcov', 'html'],
+      reportsDirectory: './coverage',
+      exclude: [
+        'node_modules/**',
+        'dist/**',
+        'build/**',
+        'coverage/**',
+        '**/*.spec.ts',
+        '**/*.spec.tsx',
+        '**/*.test.ts',
+        '**/*.test.tsx',
+        '**/test/**',
+        '**/__tests__/**',
+        '**/mocks/**',
+        '**/stories/**',
+        '**/*.stories.tsx',
+        'src/test/setup.ts',
+        'vite.config.ts',
+        'vitest.config.ts',
+        'playwright.config.ts'
+      ]
+    }
   },
 });
