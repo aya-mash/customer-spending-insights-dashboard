@@ -30,6 +30,9 @@ import { PageLayout } from './PageLayout';
 import { Divider } from './Divider';
 import { MetricCard } from './MetricCard';
 import { DonutChart } from './DonutChart';
+import { Navigation } from './Navigation';
+import { BottomNav } from './BottomNav';
+import { SettingsDrawer } from './SettingsDrawer';
 
 export default {
   Card,
@@ -43,4 +46,7 @@ export default {
   Divider,
   MetricCard,
   DonutChart,
+  Navigation,
+  BottomNav,
+  SettingsDrawer,
 };
