@@ -234,6 +234,7 @@ export function Transactions() {
             emptyMessage="No transactions found."
             stickyHeader
             maxHeight="calc(100vh - 300px)"
+            aria-label="Transactions table"
           />
         </Card>
 
