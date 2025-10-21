@@ -4,7 +4,12 @@ import { config } from '../config/env';
 
 export function useNavigationTimings() {
   const loc = useLocation();
-  const startRef = useRef<number>(performance.now());
+  const startRef = useRef<number>(0);
+  
+  useEffect(() => {
+    startRef.current = performance.now();
+  }, []);
+  
   useEffect(() => {
     const now = performance.now();
     const duration = now - startRef.current;

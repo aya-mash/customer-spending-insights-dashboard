@@ -43,6 +43,7 @@ export function Insights() {
   useEffect(() => {
     const qp = new URLSearchParams(location.search).get('tab');
     if (qp && TAB_KEYS.includes(qp as TabKey) && qp !== activeTab) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Synchronizing with URL query params
       setActiveTab(qp as TabKey);
     }
   }, [location.search, activeTab]);

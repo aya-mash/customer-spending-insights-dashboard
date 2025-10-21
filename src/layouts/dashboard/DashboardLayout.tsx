@@ -40,6 +40,7 @@ export function DashboardLayout() {
   // Close settings on mobile viewport change
   useEffect(() => {
     if (isMobile && settingsOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Synchronizing with breakpoint changes
       setSettingsOpen(false);
     }
   }, [isMobile, settingsOpen]);
