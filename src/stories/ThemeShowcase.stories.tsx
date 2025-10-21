@@ -14,11 +14,11 @@ export const LightDark: Story = {
   render: () => (
     <MemoryRouter initialEntries={['/']}>
       <DashboardProvider config={dashboardConfig}>
-        <DashboardLayout>
-          <Routes>
-            <Route path="/" element={<div><h1>Overview</h1><p>Sample content.</p></div>} />
-          </Routes>
-        </DashboardLayout>
+        <Routes>
+          <Route path="/" element={<DashboardLayout />}>
+            <Route index element={<div><h1>Overview</h1><p>Sample content.</p></div>} />
+          </Route>
+        </Routes>
       </DashboardProvider>
     </MemoryRouter>
   )
