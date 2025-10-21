@@ -3,6 +3,7 @@
  * Central export point for all design system components
  */
 
+export { Box, type BoxProps } from './Box';
 export { Card, type CardProps } from './Card';
 export { Button, type ButtonProps } from './Button';
 export { Grid, type GridProps } from './Grid';
@@ -20,8 +21,10 @@ export { SettingsDrawer, type SettingsDrawerProps } from './SettingsDrawer';
 export { Pagination, type PaginationProps } from './Pagination';
 export { Select, type SelectProps, type SelectOption } from './Select';
 export { FilterChip, type FilterChipProps } from './FilterChip';
+export { Table, type TableProps, type TableColumn } from './Table';
 
 // Default export for convenience
+import { Box } from './Box';
 import { Card } from './Card';
 import { Button } from './Button';
 import { Grid } from './Grid';
@@ -39,8 +42,10 @@ import { SettingsDrawer } from './SettingsDrawer';
 import { Pagination } from './Pagination';
 import { Select } from './Select';
 import { FilterChip } from './FilterChip';
+import { Table } from './Table';
 
 export default {
+  Box,
   Card,
   Button,
   Grid,
@@ -58,4 +63,5 @@ export default {
   Pagination,
   Select,
   FilterChip,
+  Table,
 };

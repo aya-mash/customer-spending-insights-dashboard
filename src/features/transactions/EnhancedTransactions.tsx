@@ -18,10 +18,10 @@ import {
   Select,
   FilterChip,
   Pagination,
-  type SelectOption
+  Table,
+  type SelectOption,
+  type TableColumn
 } from '../../design-system/components/index';
-import { surface, text as textColors } from '../../design-system/tokens';
-import { ChevronUp, ChevronDown } from 'lucide-react';
 import type { PeriodPreset, Transaction } from '../../data/models';
 
 const periodOptions: SelectOption[] = [
@@ -64,14 +64,43 @@ export function EnhancedTransactions() {
 
   const hasActiveFilters = !!(filters.category || filters.period);
 
-  const handleSort = (field: keyof Transaction) => {
-    sort(field);
-  };
-
-  const getSortIcon = (field: keyof Transaction) => {
-    if (sortField !== field) return null;
-    return sortDirection === 'asc' ? <ChevronUp size={16} /> : <ChevronDown size={16} />;
-  };
+  // Define table columns
+  const columns: TableColumn<Transaction>[] = [
+    {
+      key: 'date',
+      label: 'Date',
+      sortable: true,
+      render: (value: string) => new Date(value).toLocaleDateString(),
+    },
+    {
+      key: 'merchant',
+      label: 'Merchant',
+      sortable: true,
+    },
+    {
+      key: 'category',
+      label: 'Category',
+      sortable: true,
+      render: (value: string) => <Badge variant="default">{value}</Badge>,
+    },
+    {
+      key: 'amount',
+      label: 'Amount',
+      sortable: true,
+      align: 'right',
+      render: (value: number) => (
+        <Text 
+          variant="body" 
+          style={{ 
+            fontWeight: 600,
+            color: value < 0 ? '#EF4444' : undefined 
+          }}
+        >
+          {formatCurrency(Math.abs(value))}
+        </Text>
+      ),
+    },
+  ];
 
   if (loading) {
     return (
@@ -158,141 +187,29 @@ export function EnhancedTransactions() {
           <Stack spacing={4}>
             <Heading level={3}>All Transactions</Heading>
             
-            {data.length === 0 ? (
-              <Stack spacing={4} align="center" style={{ padding: '48px 0' }}>
-                <Text variant="body" color="muted">No transactions found.</Text>
-              </Stack>
-            ) : (
-              <>
-                {/* Desktop Table */}
-                <Card padding={1} variant="default" style={{ 
-                  overflow: 'hidden',
-                  border: `1px solid ${surface.border}` 
-                }}>
-                  <div style={{ overflowX: 'auto' }}>
-                    <table style={{
-                      width: '100%',
-                      borderCollapse: 'collapse',
-                    }}>
-                      <thead style={{
-                        backgroundColor: surface.surfaceAlt,
-                        borderBottom: `2px solid ${surface.border}`,
-                      }}>
-                        <tr>
-                          <th style={{
-                            padding: '12px 16px',
-                            textAlign: 'left',
-                            fontWeight: 600,
-                            fontSize: '14px',
-                            color: textColors.secondary,
-                            cursor: 'pointer',
-                            userSelect: 'none',
-                          }} onClick={() => handleSort('date')}>
-                            <Stack direction="horizontal" spacing={2} align="center">
-                              <span>Date</span>
-                              {getSortIcon('date')}
-                            </Stack>
-                          </th>
-                          <th style={{
-                            padding: '12px 16px',
-                            textAlign: 'left',
-                            fontWeight: 600,
-                            fontSize: '14px',
-                            color: textColors.secondary,
-                            cursor: 'pointer',
-                            userSelect: 'none',
-                          }} onClick={() => handleSort('merchant')}>
-                            <Stack direction="horizontal" spacing={2} align="center">
-                              <span>Merchant</span>
-                              {getSortIcon('merchant')}
-                            </Stack>
-                          </th>
-                          <th style={{
-                            padding: '12px 16px',
-                            textAlign: 'left',
-                            fontWeight: 600,
-                            fontSize: '14px',
-                            color: textColors.secondary,
-                            cursor: 'pointer',
-                            userSelect: 'none',
-                          }} onClick={() => handleSort('category')}>
-                            <Stack direction="horizontal" spacing={2} align="center">
-                              <span>Category</span>
-                              {getSortIcon('category')}
-                            </Stack>
-                          </th>
-                          <th style={{
-                            padding: '12px 16px',
-                            textAlign: 'right',
-                            fontWeight: 600,
-                            fontSize: '14px',
-                            color: textColors.secondary,
-                            cursor: 'pointer',
-                            userSelect: 'none',
-                          }} onClick={() => handleSort('amount')}>
-                            <Stack direction="horizontal" spacing={2} align="center" justify="end">
-                              <span>Amount</span>
-                              {getSortIcon('amount')}
-                            </Stack>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {data.map((txn, idx) => (
-                          <tr 
-                            key={txn.id}
-                            style={{
-                              backgroundColor: idx % 2 === 0 ? 'transparent' : surface.surfaceAlt,
-                              borderBottom: `1px solid ${surface.border}`,
-                            }}
-                          >
-                            <td style={{
-                              padding: '12px 16px',
-                              fontSize: '14px',
-                              color: textColors.primary,
-                            }}>
-                              {new Date(txn.date).toLocaleDateString()}
-                            </td>
-                            <td style={{
-                              padding: '12px 16px',
-                              fontSize: '14px',
-                              color: textColors.primary,
-                              fontWeight: 500,
-                            }}>
-                              {txn.merchant}
-                            </td>
-                            <td style={{
-                              padding: '12px 16px',
-                            }}>
-                              <Badge>{txn.category}</Badge>
-                            </td>
-                            <td style={{
-                              padding: '12px 16px',
-                              textAlign: 'right',
-                              fontSize: '14px',
-                              fontWeight: 600,
-                              color: txn.amount < 0 ? '#EF4444' : textColors.primary,
-                            }}>
-                              {formatCurrency(Math.abs(txn.amount))}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </Card>
+            <Table
+              columns={columns}
+              data={data}
+              keyExtractor={(row) => row.id}
+              onSort={(key) => sort(key as keyof Transaction)}
+              sortKey={sortField}
+              sortDirection={sortDirection}
+              zebraStripe
+              emptyMessage="No transactions found."
+              stickyHeader={false}
+            />
 
-                {/* Pagination */}
-                <Stack align="center">
-                  <Pagination
-                    currentPage={page}
-                    totalPages={totalPages}
-                    onPageChange={(newPage) => updateFilters({ page: newPage })}
-                    maxVisible={7}
-                    showPrevNext
-                  />
-                </Stack>
-              </>
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <Stack align="center">
+                <Pagination
+                  currentPage={page}
+                  totalPages={totalPages}
+                  onPageChange={(newPage) => updateFilters({ page: newPage })}
+                  maxVisible={7}
+                  showPrevNext
+                />
+              </Stack>
             )}
           </Stack>
         </Card>
