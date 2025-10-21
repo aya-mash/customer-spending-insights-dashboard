@@ -34,22 +34,18 @@ jobs:
           cache: 'yarn'
 
       - name: Install dependencies
-        run: |
-          if [ -f package.json ]; then yarn install --frozen-lockfile || yarn install; else echo 'No package.json'; fi
+        run: yarn install --frozen-lockfile
 
       - name: Build
-        run: |
-          if grep -q '"build"' package.json; then yarn build || echo 'Build failed'; else echo 'No build script'; fi
+        run: yarn build
 
       - name: Sync build to S3 (Integration)
         if: success()
-        run: |
-          if [ -d dist ]; then aws s3 sync dist s3://${{ secrets.S3_BUCKET_INT }} --delete; else echo 'No dist folder'; fi
+        run: aws s3 sync dist s3://${{ secrets.S3_BUCKET_INT }} --delete
 
       - name: Invalidate CloudFront (Integration)
         if: success()
-        run: |
-          if [ -n "${{ secrets.CF_DIST_ID_INT }}" ]; then aws cloudfront create-invalidation --distribution-id ${{ secrets.CF_DIST_ID_INT }} --paths '/*'; else echo 'No distribution id secret set'; fi
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CF_DIST_ID_INT }} --paths '/*'
 
   production:
     if: github.ref == 'refs/heads/main'
@@ -74,19 +70,15 @@ jobs:
           cache: 'yarn'
 
       - name: Install dependencies
-        run: |
-          if [ -f package.json ]; then yarn install --frozen-lockfile || yarn install; else echo 'No package.json'; fi
+        run: yarn install --frozen-lockfile
 
       - name: Build
-        run: |
-          if grep -q '"build"' package.json; then yarn build || echo 'Build failed'; else echo 'No build script'; fi
+        run: yarn build
 
       - name: Sync build to S3 (Production)
         if: success()
-        run: |
-          if [ -d dist ]; then aws s3 sync dist s3://${{ secrets.S3_BUCKET_PROD }} --delete; else echo 'No dist folder'; fi
+        run: aws s3 sync dist s3://${{ secrets.S3_BUCKET_PROD }} --delete
 
       - name: Invalidate CloudFront (Production)
         if: success()
-        run: |
-          if [ -n "${{ secrets.CF_DIST_ID_PROD }}" ]; then aws cloudfront create-invalidation --distribution-id ${{ secrets.CF_DIST_ID_PROD }} --paths '/*'; else echo 'No distribution id secret set'; fi
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CF_DIST_ID_PROD }} --paths '/*'

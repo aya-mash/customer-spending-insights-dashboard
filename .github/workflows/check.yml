@@ -28,33 +28,16 @@ jobs:
           cache: 'yarn'
 
       - name: Install dependencies
-        run: |
-          if [ -f package.json ]; then
-            if grep -q '"yarn"' <<< "${{ runner.tool_cache }}"; then echo ''; fi
-            yarn install --frozen-lockfile || yarn install
-          else
-            echo "No package.json; skipping install"
-          fi
+        run: yarn install --frozen-lockfile
 
       - name: Type check
-        if: ${{ hashFiles('tsconfig*.json') != '' }}
-        run: |
-          if yarn run | grep -q 'tsc'; then yarn tsc -b || echo 'tsc script failed'; else echo 'No tsc build references'; fi
+        run: yarn tsc -b
 
       - name: Lint
-        run: |
-          if grep -q '"lint"' package.json; then yarn lint || echo 'Lint failed'; else echo 'No lint script'; fi
+        run: yarn lint
 
       - name: Build
-        run: |
-          if grep -q '"build"' package.json; then yarn build || echo 'Build failed'; else echo 'No build script'; fi
+        run: yarn build
 
       - name: Test
-        run: |
-          if grep -q '"test"' package.json; then yarn test --coverage --run || echo 'Tests failed'; else echo 'No test script'; fi
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: yarn test --run
