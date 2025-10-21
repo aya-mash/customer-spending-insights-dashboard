@@ -8,6 +8,7 @@ import { useRouteError, isRouteErrorResponse, useNavigate } from 'react-router-d
 import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
 import { PageLayout } from './PageLayout';
 import { Card } from './Card';
+import { config } from '../../config/env';
 import { Stack } from './Stack';
 import { Heading } from './Heading';
 import { Text } from './Text';
@@ -32,7 +33,7 @@ export function ErrorPage() {
     // JavaScript Error object
     title = 'Application Error';
     message = error.message;
-    details = import.meta.env.DEV ? error.stack : undefined;
+    details = config.isDevelopment ? error.stack : undefined;
   } else if (typeof error === 'string') {
     message = error;
   }
