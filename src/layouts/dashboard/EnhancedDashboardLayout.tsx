@@ -4,18 +4,26 @@
  */
 
 import { useState, useEffect, type CSSProperties } from 'react';
-import { Outlet } from 'react-router-dom';
-import { Settings2, Home, TrendingUp, CreditCard } from 'lucide-react';
+import { Outlet, useLocation } from 'react-router-dom';
+import { Settings2, Home, TrendingUp, CreditCard, BarChart3 } from 'lucide-react';
 import { Navigation, type NavItem } from '../../design-system/components/Navigation';
 import { BottomNav, type BottomNavItem } from '../../design-system/components/BottomNav';
 import { SettingsDrawer } from '../../design-system/components/SettingsDrawer';
 import { useThemeChoice } from '../../hooks/useThemeChoice';
-import { brand, surface, spacingNum, zIndex } from '../../design-system/tokens';
+import { brand, surface, spacingNum, zIndex, text as textColors, fontSize, fontWeight } from '../../design-system/tokens';
 import { useBreakpoint, useTheme } from '../../design-system';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
 }
+
+// Page title mapping
+const PAGE_TITLES: Record<string, string> = {
+  '/': 'Spending Overview',
+  '/insights': 'Spending Insights',
+  '/transactions': 'Spending Transactions',
+  '/style-guide': 'Style Guide',
+};
 
 export function EnhancedDashboardLayout() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -25,6 +33,9 @@ export function EnhancedDashboardLayout() {
   const { mode, setMode } = useThemeChoice();
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === 'mobile';
+  const location = useLocation();
+
+  const pageTitle = PAGE_TITLES[location.pathname] || 'Spending Insights';
 
   // Close settings on mobile viewport change
   useEffect(() => {
@@ -73,10 +84,23 @@ export function EnhancedDashboardLayout() {
   });
 
   const logoStyles = createDynamicStyles({
-    fontSize: '20px',
-    fontWeight: 700,
+    display: 'flex',
+    alignItems: 'center',
+    gap: `${spacingNum[3]}px`,
+  });
+
+  const iconWrapperStyles = createDynamicStyles({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     color: brand.primary,
-    textDecoration: 'none',
+  });
+
+  const titleStyles = createDynamicStyles({
+    fontSize: fontSize.h4,
+    fontWeight: fontWeight.semibold,
+    color: textColors.strong,
+    margin: 0,
   });
 
   const settingsButtonStyles = createDynamicStyles({
@@ -132,9 +156,12 @@ export function EnhancedDashboardLayout() {
 
       {/* Header */}
       <header style={headerStyles}>
-        <a href="/" style={logoStyles}>
-          Spending Insights
-        </a>
+        <div style={logoStyles}>
+          <div style={iconWrapperStyles}>
+            <BarChart3 size={24} />
+          </div>
+          <h1 style={titleStyles}>{pageTitle}</h1>
+        </div>
         <button
           type="button"
           aria-label="Open settings"

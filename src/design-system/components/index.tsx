@@ -22,6 +22,7 @@ export { Pagination, type PaginationProps } from './Pagination';
 export { Select, type SelectProps, type SelectOption } from './Select';
 export { FilterChip, type FilterChipProps } from './FilterChip';
 export { Table, type TableProps, type TableColumn } from './Table';
+export { TextField, type TextFieldProps } from './TextField';
 
 // Default export for convenience
 import { Box } from './Box';
@@ -43,6 +44,7 @@ import { Pagination } from './Pagination';
 import { Select } from './Select';
 import { FilterChip } from './FilterChip';
 import { Table } from './Table';
+import { TextField } from './TextField';
 
 export default {
   Box,
@@ -64,4 +66,5 @@ export default {
   Select,
   FilterChip,
   Table,
+  TextField,
 };

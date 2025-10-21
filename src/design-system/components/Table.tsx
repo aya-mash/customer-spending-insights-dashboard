@@ -33,6 +33,7 @@ export interface TableProps<T = any> {
   loading?: boolean;
   emptyMessage?: string;
   stickyHeader?: boolean;
+  maxHeight?: string;
 }
 
 export const Table = forwardRef<HTMLDivElement, TableProps>(
@@ -48,6 +49,7 @@ export const Table = forwardRef<HTMLDivElement, TableProps>(
       loading = false,
       emptyMessage = 'No data available',
       stickyHeader = false,
+      maxHeight = '600px',
       ...props
     },
     ref
@@ -56,26 +58,31 @@ export const Table = forwardRef<HTMLDivElement, TableProps>(
       overflow: 'hidden',
       border: `1px solid ${surface.border}`,
       borderRadius: radius.lg,
+      display: 'flex',
+      flexDirection: 'column',
+      maxHeight,
     };
 
     const tableWrapperStyle: CSSProperties = {
       overflowX: 'auto',
-      width: '100%',
+      overflowY: 'auto',
+      flex: 1,
+      maxHeight,
     };
 
     const tableStyle: CSSProperties = {
       width: '100%',
       borderCollapse: 'collapse',
+      display: 'table',
     };
 
     const headerStyle: CSSProperties = {
       backgroundColor: surface.surfaceAlt,
       borderBottom: `2px solid ${surface.border}`,
-      ...(stickyHeader && {
-        position: 'sticky',
-        top: 0,
-        zIndex: 10,
-      }),
+      display: 'table-header-group',
+      position: stickyHeader ? 'sticky' : 'relative',
+      top: 0,
+      zIndex: 10,
     };
 
     const headerCellStyle = (col: TableColumn, isSortable: boolean): CSSProperties => ({

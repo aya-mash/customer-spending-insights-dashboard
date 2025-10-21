@@ -4,6 +4,7 @@
  * Zero semantic HTML outside design system components
  */
 
+import { useState } from 'react';
 import { useTransactionsData } from './useTransactionsData';
 import { formatCurrency } from '../../design-system';
 import { 
@@ -12,16 +13,17 @@ import {
   Card, 
   Stack, 
   Button,
-  Heading,
   Text,
   Badge,
   Select,
   FilterChip,
   Pagination,
   Table,
+  TextField,
   type SelectOption,
   type TableColumn
 } from '../../design-system/components/index';
+import { Search } from 'lucide-react';
 import type { PeriodPreset, Transaction } from '../../data/models';
 
 const periodOptions: SelectOption[] = [
@@ -48,6 +50,7 @@ const categoryOptions: SelectOption[] = [
 
 export function EnhancedTransactions() {
   const customerId = 'user123';
+  const [searchQuery, setSearchQuery] = useState('');
   const { 
     loading, 
     error, 
@@ -63,6 +66,16 @@ export function EnhancedTransactions() {
   } = useTransactionsData(customerId);
 
   const hasActiveFilters = !!(filters.category || filters.period);
+
+  // Filter data by search query (client-side search across all columns)
+  const filteredData = searchQuery
+    ? data.filter(txn =>
+        txn.merchant.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        txn.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        new Date(txn.date).toLocaleDateString().includes(searchQuery) ||
+        formatCurrency(Math.abs(txn.amount)).includes(searchQuery)
+      )
+    : data;
 
   // Define table columns
   const columns: TableColumn<Transaction>[] = [
@@ -104,7 +117,7 @@ export function EnhancedTransactions() {
 
   if (loading) {
     return (
-      <PageLayout title="Transactions">
+      <PageLayout>
         <Card padding={8}>
           <Stack spacing={4} align="center">
             <Text variant="body" color="muted">Loading transactions...</Text>
@@ -116,7 +129,7 @@ export function EnhancedTransactions() {
 
   if (error) {
     return (
-      <PageLayout title="Transactions">
+      <PageLayout>
         <Card padding={8}>
           <Stack spacing={4} align="center">
             <Text variant="body" color="muted">{error}</Text>
@@ -128,14 +141,12 @@ export function EnhancedTransactions() {
   }
 
   return (
-    <PageLayout title="Transactions">
-      <Stack spacing={6}>
+    <PageLayout>
+      <Stack spacing={4}>
         {/* Filter Controls */}
-        <Card padding={6}>
+        <Card padding={4}>
           <Stack spacing={4}>
-            <Heading level={3}>Filters</Heading>
-            
-            <Grid columns={{ mobile: 1, tablet: 2, desktop: 4 }} gap={4}>
+            <Grid columns={{ mobile: 1, tablet: 2, desktop: 4 }} gap={3}>
               <Select
                 id="category-filter"
                 label="Category"
@@ -153,6 +164,18 @@ export function EnhancedTransactions() {
                 onChange={(e) => updateFilters({ period: (e.target.value as PeriodPreset) || undefined })}
                 fullWidth
               />
+
+              <div style={{ gridColumn: 'span 2' }}>
+                <TextField
+                  id="search-filter"
+                  label="Search"
+                  placeholder="Search transactions..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  startIcon={<Search size={18} />}
+                  fullWidth
+                />
+              </div>
             </Grid>
 
             {/* Active Filters */}
@@ -183,36 +206,33 @@ export function EnhancedTransactions() {
         </Card>
 
         {/* Transactions Table */}
-        <Card padding={6}>
-          <Stack spacing={4}>
-            <Heading level={3}>All Transactions</Heading>
-            
-            <Table
-              columns={columns}
-              data={data}
-              keyExtractor={(row) => row.id}
-              onSort={(key) => sort(key as keyof Transaction)}
-              sortKey={sortField}
-              sortDirection={sortDirection}
-              zebraStripe
-              emptyMessage="No transactions found."
-              stickyHeader={false}
-            />
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <Stack align="center">
-                <Pagination
-                  currentPage={page}
-                  totalPages={totalPages}
-                  onPageChange={(newPage) => updateFilters({ page: newPage })}
-                  maxVisible={7}
-                  showPrevNext
-                />
-              </Stack>
-            )}
-          </Stack>
+        <Card padding={1}>
+          <Table
+            columns={columns}
+            data={filteredData}
+            keyExtractor={(row) => row.id}
+            onSort={(key) => sort(key as keyof Transaction)}
+            sortKey={sortField}
+            sortDirection={sortDirection}
+            zebraStripe
+            emptyMessage="No transactions found."
+            stickyHeader
+            maxHeight="calc(100vh - 280px)"
+          />
         </Card>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <Stack align="center">
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={(newPage) => updateFilters({ page: newPage })}
+              maxVisible={7}
+              showPrevNext
+            />
+          </Stack>
+        )}
       </Stack>
     </PageLayout>
   );

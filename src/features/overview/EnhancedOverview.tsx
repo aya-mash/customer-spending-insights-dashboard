@@ -62,7 +62,7 @@ export function EnhancedOverview() {
 
   if (isError) {
     return (
-      <PageLayout title="Overview">
+      <PageLayout subtitle="Track your spending and financial health">
         <Card padding={8}>
           <Stack spacing={4} align="center">
             <Text variant="body" color="strong">Could not load overview data.</Text>
@@ -379,7 +379,7 @@ export function EnhancedOverview() {
 
 function OverviewSkeleton() {
   return (
-    <PageLayout title="Loading...">
+    <PageLayout>
       <Grid columns={{ mobile: 1, tablet: 2, desktop: 4 }} gap={6}>
         {Array.from({ length: 8 }).map((_, i) => (
           <Card key={i} padding={6}>
