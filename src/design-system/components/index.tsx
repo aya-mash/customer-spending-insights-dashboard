@@ -13,6 +13,7 @@ export { Badge, type BadgeProps } from './Badge';
 export { PageLayout, type PageLayoutProps } from './PageLayout';
 export { Divider, type DividerProps } from './Divider';
 export { MetricCard, type MetricCardProps } from './MetricCard';
+export { DonutChart, type DonutChartProps } from './DonutChart';
 
 // Default export for convenience
 import { Card } from './Card';
@@ -25,6 +26,7 @@ import { Badge } from './Badge';
 import { PageLayout } from './PageLayout';
 import { Divider } from './Divider';
 import { MetricCard } from './MetricCard';
+import { DonutChart } from './DonutChart';
 
 export default {
   Card,
@@ -37,4 +39,5 @@ export default {
   PageLayout,
   Divider,
   MetricCard,
+  DonutChart,
 };

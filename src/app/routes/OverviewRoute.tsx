@@ -1,12 +1,7 @@
-import { TabbedOverview } from '../../features/overview/TabbedOverview';
+import { EnhancedOverview } from '../../features/overview/EnhancedOverview';
 
 export function OverviewRoute() {
-  return (
-    <section aria-labelledby="overview-heading" className="overview-route">
-      <h2 id="overview-heading" className="visually-hidden">Spending Overview</h2>
-      <TabbedOverview />
-    </section>
-  );
+  return <EnhancedOverview />;
 }
 
 export default OverviewRoute;
