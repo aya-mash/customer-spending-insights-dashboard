@@ -7,7 +7,6 @@ import { forwardRef, type CSSProperties } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { brand, categories as categoryColors, type CategoryName, neutral, text as textColors, spacingNum, radius } from '../tokens';
 import { formatCurrency, usePrefersReducedMotion, useBreakpoint } from '../index';
-import { useTheme } from '../useTheme';
 import type { CategoryItem } from '../../data/models';
 import { Text } from './Text';
 
@@ -37,8 +36,6 @@ export interface DonutChartProps {
 
 export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
   ({ data, total, onSegmentClick, height = 280 }, ref) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const _ = useTheme(); // Force re-render on theme change
     const reducedMotion = usePrefersReducedMotion();
     const breakpoint = useBreakpoint();
     const isMobile = breakpoint === 'mobile';

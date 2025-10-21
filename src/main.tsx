@@ -1,17 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import './styles/tokens.css';
 import './styles/base.css';
 import App from './App';
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 60_000,
-    },
-  },
-});
 
 if (import.meta.env.DEV) {
   try {
@@ -24,8 +15,6 @@ if (import.meta.env.DEV) {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
+    <App />
   </StrictMode>,
 );

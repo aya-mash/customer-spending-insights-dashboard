@@ -4,12 +4,12 @@
  */
 
 import { forwardRef, useEffect, useRef, type CSSProperties } from 'react';
-import { Settings2, X, Sun, Monitor, Moon } from 'lucide-react';
+import { Settings2, X, Sun, Monitor, Moon, Palette } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { brand, surface, text as textColors, spacingNum, radius, transition, easing, zIndex } from '../tokens';
 import { Heading } from './Heading';
 import { Stack } from './Stack';
 import { Text } from './Text';
-import { useTheme } from '../useTheme';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -24,9 +24,8 @@ export interface SettingsDrawerProps {
 
 export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
   ({ open, onClose, mode, onModeChange }, ref) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const _ = useTheme(); // Force re-render on theme change
     const panelRef = useRef<HTMLElement | null>(null);
+    const navigate = useNavigate();
 
     // Close on Escape
     useEffect(() => {
@@ -194,6 +193,7 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
                       type="button"
                       role="radio"
                       aria-checked={mode === item.key}
+                      data-testid={`mode-${item.key}`}
                       style={modeButtonStyles(mode === item.key)}
                       onClick={() => onModeChange(item.key)}
                       onMouseEnter={(e) => {
@@ -215,6 +215,52 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
                 <Text variant="bodySm" color="muted">
                   Choose how the dashboard looks. System matches your device settings.
                 </Text>
+              </Stack>
+
+              {/* Design System Section */}
+              <Stack spacing={3}>
+                <Text variant="body" weight="semibold" style={{ fontSize: '14px' }}>
+                  Design System
+                </Text>
+                <button
+                  type="button"
+                  style={createDynamicStyles({
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: `${spacingNum[3]}px`,
+                    padding: `${spacingNum[3]}px ${spacingNum[4]}px`,
+                    borderRadius: radius.lg,
+                    border: `1px solid ${surface.border}`,
+                    backgroundColor: surface.surfaceAlt,
+                    color: textColors.primary,
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    transition: `all ${transition.fast} ${easing.standard}`,
+                    width: '100%',
+                    textAlign: 'left',
+                  })}
+                  onClick={() => {
+                    navigate('/style-guide');
+                    onClose();
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = surface.hover;
+                    e.currentTarget.style.borderColor = brand.primary;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = surface.surfaceAlt;
+                    e.currentTarget.style.borderColor = surface.border;
+                  }}
+                >
+                  <Palette size={20} color={brand.primary} aria-hidden="true" />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 600 }}>Style Guide</div>
+                    <div style={{ fontSize: '12px', color: textColors.muted, marginTop: '2px' }}>
+                      View design tokens and components
+                    </div>
+                  </div>
+                </button>
               </Stack>
             </Stack>
           </div>

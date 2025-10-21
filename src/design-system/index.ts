@@ -428,5 +428,11 @@ export function getChartLabel(value: number, isSmallScreen: boolean): string {
 export * from './tokens';
 export { useTheme, useEffectiveTheme } from './useTheme';
 
+// Components
+export { ErrorPage } from './components/ErrorPage';
+export { ErrorBoundary } from './components/ErrorBoundary';
+export { Logo } from './components/Logo';
+export { AsyncSection as Skeleton } from './components/Skeleton';
+
 // =============================================================================
 export { default as tokens } from './tokens';

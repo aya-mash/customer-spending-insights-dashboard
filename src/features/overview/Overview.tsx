@@ -53,25 +53,13 @@ export function Overview() {
     transactions, 
     isInitialLoading, 
     isError, 
+    hasPartialData,
     retry 
   } = useOverviewData(customerId, activePeriod);
 
-  if (isInitialLoading) {
+  // Show skeleton only if everything is still loading and we have no data yet
+  if (isInitialLoading && !hasPartialData) {
     return <OverviewSkeleton />;
-  }
-
-  if (isError) {
-    return (
-      <PageLayout subtitle="Track your spending and financial health">
-        <Card padding={8}>
-          <Stack spacing={4} align="center">
-            <Text variant="body" color="strong">Could not load overview data.</Text>
-            <Text variant="bodySm" color="muted">Please check your connection and retry.</Text>
-            <Button onClick={retry} variant="secondary" size="small">Retry</Button>
-          </Stack>
-        </Card>
-      </PageLayout>
-    );
   }
 
   const totalSpent = summary?.totalSpent || 0;
@@ -121,10 +109,19 @@ export function Overview() {
 
   return (
     <PageLayout
-      title="Spending Overview"
+      // title="Spending Overview"
       subtitle={`View your financial summary for the past ${PERIODS.find(p => p.key === activePeriod)?.label.toLowerCase()}`}
       actions={<PeriodSelector />}
     >
+      {/* If some data loaded but at least one resource failed, surface an inline alert with a retry */}
+      {isError && hasPartialData && (
+        <Card padding={4}>
+          <Stack spacing={3} align="center">
+            <Text variant="bodySm" color="muted">Some data failed to load. Showing partial results.</Text>
+            <Button onClick={retry} variant="secondary" size="small">Retry</Button>
+          </Stack>
+        </Card>
+      )}
       {/* 8 Comprehensive Summary Cards */}
       <Grid 
         columns={{ mobile: 1, tablet: 2, desktop: 4 }} 
@@ -140,6 +137,7 @@ export function Overview() {
             direction: spentChange > 0 ? 'up' : 'down'
           } : undefined}
           variant="primary"
+          data-testid="summary-total"
         />
 
         {/* Card 2: Transaction Count */}

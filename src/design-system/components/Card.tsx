@@ -1,9 +1,10 @@
 /**
  * CARD COMPONENT
  * Flexible container with variants, elevation, and hover states
+ * Optimized with React.memo for performance
  */
 
-import React, { forwardRef, type CSSProperties, type ReactNode, type HTMLAttributes } from 'react';
+import React, { forwardRef, useMemo, useCallback, type CSSProperties, type ReactNode, type HTMLAttributes } from 'react';
 import {
   brand,
   surface,
@@ -28,12 +29,14 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
 }
 
-export const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ variant = 'default', hover = false, padding = 6, children, style, onClick, ...props }, ref) => {
-    const resolvedPadding = useResponsiveValue(padding);
-    const prefersReducedMotion = usePrefersReducedMotion();
+export const Card = React.memo(
+  forwardRef<HTMLDivElement, CardProps>(
+    ({ variant = 'default', hover = false, padding = 6, children, style, onClick, ...props }, ref) => {
+      const resolvedPadding = useResponsiveValue(padding);
+      const prefersReducedMotion = usePrefersReducedMotion();
 
-    const baseStyles = createDynamicStyles({
+    // Memoize base styles with theme-aware tokens
+    const baseStyles = useMemo(() => createDynamicStyles({
       backgroundColor: surface.surface,
       border: `1px solid ${surface.border}`,
       borderRadius: radius.lg,
@@ -41,9 +44,10 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       boxShadow: shadow.sm,
       transition: prefersReducedMotion ? 'none' : `all ${transition.normal} ${easing.standard}`,
       position: 'relative',
-    });
+    }), [resolvedPadding, prefersReducedMotion]);
 
-    const variantStyles: Record<string, CSSProperties> = {
+    // Memoize variant styles with theme-aware tokens
+    const variantStyles: Record<string, CSSProperties> = useMemo(() => ({
       default: {},
       primary: {
         borderColor: brand.primary,
@@ -52,29 +56,27 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       elevated: {
         boxShadow: shadow.md,
       },
-    };
+    }), []);
 
-    const hoverStyles: CSSProperties = hover
-      ? {
-          cursor: 'pointer',
-        }
-      : {};
+    const hoverStyles: CSSProperties = useMemo(() => hover
+      ? { cursor: 'pointer' }
+      : {}, [hover]);
 
-    const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
       if (hover && !prefersReducedMotion) {
         e.currentTarget.style.transform = 'translateY(-4px)';
         e.currentTarget.style.boxShadow = shadow.lg;
         e.currentTarget.style.borderColor = brand.primary;
       }
-    };
+    }, [hover, prefersReducedMotion]);
 
-    const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    const handleMouseLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
       if (hover) {
         e.currentTarget.style.transform = 'translateY(0)';
         e.currentTarget.style.boxShadow = shadow.sm;
         e.currentTarget.style.borderColor = surface.border;
       }
-    };
+    }, [hover]);
 
     return (
       <div
@@ -93,7 +95,8 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         {children}
       </div>
     );
-  }
+  })
 );
 
 Card.displayName = 'Card';
+

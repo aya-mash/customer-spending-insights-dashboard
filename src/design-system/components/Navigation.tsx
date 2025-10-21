@@ -17,7 +17,6 @@ import {
   easing,
 } from "../tokens";
 import { useBreakpoint } from "../index";
-import { useTheme } from "../useTheme";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
@@ -45,8 +44,6 @@ export interface NavigationProps {
 
 export const Navigation = forwardRef<HTMLElement, NavigationProps>(
   ({ items, isExpanded = false, onToggle }, ref) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const _ = useTheme(); // Force re-render on theme change
     const location = useLocation();
     const breakpoint = useBreakpoint();
     const isMobile = breakpoint === "mobile";

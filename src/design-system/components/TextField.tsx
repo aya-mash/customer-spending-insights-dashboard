@@ -3,7 +3,7 @@
  * Styled input field matching design system
  */
 
-import { forwardRef, type InputHTMLAttributes } from 'react';
+import React, { forwardRef, type InputHTMLAttributes } from 'react';
 import { surface, text as textColors, radius, spacingNum, fontSize, fontWeight, brand } from '../tokens';
 
 export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -15,7 +15,8 @@ export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   endIcon?: React.ReactNode;
 }
 
-export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
+export const TextField = React.memo(
+  forwardRef<HTMLInputElement, TextFieldProps>(
   (
     {
       label,
@@ -121,7 +122,8 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         {error && <span style={errorStyle} role="alert">{error}</span>}
       </div>
     );
-  }
+  })
 );
 
 TextField.displayName = 'TextField';
+

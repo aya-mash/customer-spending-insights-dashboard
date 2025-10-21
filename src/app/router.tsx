@@ -3,7 +3,7 @@ import { Suspense, lazy, createElement, useState, useEffect, Fragment } from 're
 import { DashboardLayout } from '../layouts/dashboard/DashboardLayout';
 import { DashboardProvider } from '../layouts/dashboard/DashboardProvider';
 import { dashboardConfig } from './config/dashboard.config';
-import { ErrorFallback } from '../pages/ErrorFallback';
+import { ErrorPage } from '../design-system/components/ErrorPage';
 import { makeLoadingFallback, overviewLoadingFallback } from './loadingFallback';
 
 // Build route objects from dashboardConfig.routes converting lazy component factory to element
@@ -38,7 +38,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: createElement(DashboardProvider, { config: dashboardConfig }, createElement(DashboardLayout)),
-    errorElement: createElement(ErrorFallback),
+    errorElement: createElement(ErrorPage),
     children: childRoutes,
   },
 ]);
@@ -50,7 +50,7 @@ export function buildTestRouter(initialEntries: string[] = ['/']) {
     {
       path: '/',
       element: createElement(DashboardProvider, { config: dashboardConfig }, createElement(DashboardLayout)),
-      errorElement: createElement(ErrorFallback),
+      errorElement: createElement(ErrorPage),
       children: childRoutes,
     },
   ], { initialEntries });

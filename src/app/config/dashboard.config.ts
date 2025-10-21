@@ -1,5 +1,5 @@
 import type { DashboardConfig } from "../types/dashboard";
-import { Logo } from "../../components/Logo";
+import { Logo } from "../../design-system/components/Logo";
 import { createElement } from "react";
 import {
   LayoutDashboard,

@@ -1,6 +1,6 @@
 /**
  * STYLE GUIDE
- * Design system tokens and components showcase
+ * Design system tokens and components showcase with integrated contrast checker
  */
 
 import { useState, type CSSProperties } from 'react';
@@ -19,6 +19,7 @@ import {
   categories
 } from '../design-system/tokens';
 import { contrastRatio } from '../lib/contrast';
+import { ContrastCheckerPanel } from '../components/ContrastChecker/ContrastCheckerPanel';
 
 interface ColorSwatch {
   name: string;
@@ -441,6 +442,19 @@ export function StyleGuide() {
                 </div>
               ))}
             </Grid>
+          </Stack>
+        </Card>
+
+        {/* Contrast Checker */}
+        <Card padding={6}>
+          <Stack direction="vertical" spacing={4}>
+            <div>
+              <Heading level={3}>Contrast Checker</Heading>
+              <Text variant="body" color="muted" style={{ marginTop: spacing[2] }}>
+                Check color contrast ratios against WCAG AA and AAA standards.
+              </Text>
+            </div>
+            <ContrastCheckerPanel />
           </Stack>
         </Card>
       </Stack>

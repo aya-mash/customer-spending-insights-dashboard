@@ -48,15 +48,17 @@ describe('Pagination', () => {
     const handlePageChange = vi.fn();
     render(<Pagination currentPage={1} totalPages={10} onPageChange={handlePageChange} />);
     
-    const page3Button = screen.getByLabelText('Go to page 3');
-    fireEvent.click(page3Button);
-    expect(handlePageChange).toHaveBeenCalledWith(3);
+    // Page 2 should be visible (current=1 shows pages around it)
+    const page2Button = screen.getByLabelText('Page 2');
+    fireEvent.click(page2Button);
+    expect(handlePageChange).toHaveBeenCalledWith(2);
   });
 
   it('highlights current page', () => {
     render(<Pagination currentPage={5} totalPages={10} onPageChange={() => {}} />);
-    const currentPage = screen.getByLabelText('Page 5 (current)');
-    expect(currentPage).toBeInTheDocument();
+    // aria-current="page" makes it the current page, label is just "Page 5"
+    const currentPage = screen.getByLabelText('Page 5');
+    expect(currentPage).toHaveAttribute('aria-current', 'page');
   });
 
   it('shows ellipsis for large page ranges', () => {

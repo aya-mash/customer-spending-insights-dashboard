@@ -1,18 +1,12 @@
-import { ContrastCheckerDev } from '../components/ContrastChecker/ContrastCheckerFab';
-import { RouterProvider } from 'react-router-dom';
-import { defaultRouter } from './router';
+import { RouterProvider, type RouterProviderProps } from "react-router-dom";
+import { defaultRouter } from "./router";
 
-// Type for router instance isn't exported cleanly; using 'any' with lint disable for this single prop.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface AppShellProps { readonly router?: any }
+export interface AppShellProps {
+  readonly router?: RouterProviderProps["router"];
+}
 
 function AppShell({ router = defaultRouter }: Readonly<AppShellProps>) {
-  return (
-    <>
-      <RouterProvider router={router} />
-      <ContrastCheckerDev />
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default AppShell;

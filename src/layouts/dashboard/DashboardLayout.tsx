@@ -3,15 +3,16 @@
  * Design system layout with Navigation, BottomNav, and SettingsDrawer
  */
 
-import { useState, useEffect, type CSSProperties } from 'react';
+import { useState, useEffect, useContext, type CSSProperties } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Settings2, Home, TrendingUp, CreditCard, BarChart3 } from 'lucide-react';
 import { Navigation, type NavItem } from '../../design-system/components/Navigation';
 import { BottomNav, type BottomNavItem } from '../../design-system/components/BottomNav';
 import { SettingsDrawer } from '../../design-system/components/SettingsDrawer';
-import { useThemeChoice } from '../../hooks/useThemeChoice';
+import { useThemeContext } from '../../contexts';
 import { brand, surface, spacingNum, zIndex, text as textColors, fontSize, fontWeight } from '../../design-system/tokens';
-import { useBreakpoint, useTheme } from '../../design-system';
+import { useBreakpoint } from '../../design-system';
+import { DashboardContext } from './DashboardProvider';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -26,11 +27,10 @@ const PAGE_TITLES: Record<string, string> = {
 };
 
 export function DashboardLayout() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _ = useTheme(); // Force re-render on theme change
+  const dash = useContext(DashboardContext);
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const { mode, setMode } = useThemeChoice();
+  const { mode, setMode } = useThemeContext();
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === 'mobile';
   const location = useLocation();
@@ -157,9 +157,15 @@ export function DashboardLayout() {
       {/* Header */}
       <header style={headerStyles}>
         <div style={logoStyles}>
-          <div style={iconWrapperStyles}>
-            <BarChart3 size={24} />
-          </div>
+          {dash?.branding?.logo ? (
+            <div style={iconWrapperStyles}>
+              {dash.branding.logo}
+            </div>
+          ) : (
+            <div style={iconWrapperStyles}>
+              <BarChart3 size={24} />
+            </div>
+          )}
           <h1 style={titleStyles}>{pageTitle}</h1>
         </div>
         <button

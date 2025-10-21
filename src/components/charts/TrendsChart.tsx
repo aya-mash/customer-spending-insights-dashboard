@@ -19,7 +19,7 @@ interface TrendsChartProps {
 
 /**
  * TrendsChart - Production-grade monthly spending trends visualization
- * 
+ *
  * Features:
  * - Smooth area gradient with brand colors
  * - Subtle grid lines for readability
@@ -32,13 +32,13 @@ interface TrendsChartProps {
  */
 export default function TrendsChart({ data }: TrendsChartProps) {
   const reducedMotion = useReducedMotion();
-  
+
   const min = Math.min(...data.map(d => d.totalSpent));
   const max = Math.max(...data.map(d => d.totalSpent));
-  const direction = data.length >= 2 
+  const direction = data.length >= 2
     ? data[data.length - 1].totalSpent > data[0].totalSpent ? 'upward' : 'downward'
     : 'stable';
-  
+
   const summaryId = 'trends-chart-summary';
 
   // Format month labels (YYYY-MM → MMM)
@@ -68,10 +68,10 @@ export default function TrendsChart({ data }: TrendsChartProps) {
           {formatTooltipCurrency(value)}
         </div>
         {prevVal !== undefined && diff !== 0 && (
-          <div 
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
               gap: '4px',
               fontSize: '13px',
               color: isPositive ? 'var(--color-error)' : isNegative ? 'var(--color-success)' : 'var(--color-text-muted)',
@@ -92,8 +92,8 @@ export default function TrendsChart({ data }: TrendsChartProps) {
   return (
     <div className="trends-chart" aria-describedby={summaryId} aria-label="Monthly spending trends area chart">
       <ResponsiveContainer width="100%" height={340}>
-        <AreaChart 
-          data={data} 
+        <AreaChart
+          data={data}
           margin={{ top: 24, right: 24, left: 16, bottom: 24 }}
         >
           <defs>
@@ -102,25 +102,25 @@ export default function TrendsChart({ data }: TrendsChartProps) {
               <stop offset="100%" stopColor={CHART_COLORS.primary} stopOpacity={0.02}/>
             </linearGradient>
           </defs>
-          
-          <CartesianGrid 
+
+          <CartesianGrid
             stroke={GRID_CONFIG.stroke}
             strokeDasharray={GRID_CONFIG.strokeDasharray}
             strokeWidth={GRID_CONFIG.strokeWidth}
             opacity={GRID_CONFIG.opacity}
             vertical={false}
           />
-          
-          <XAxis 
-            dataKey="month" 
+
+          <XAxis
+            dataKey="month"
             tickFormatter={formatMonth}
             {...AXIS_CONFIG.tick}
             axisLine={AXIS_CONFIG.axisLine}
             tickLine={AXIS_CONFIG.tickLine}
             dy={8}
           />
-          
-          <YAxis 
+
+          <YAxis
             {...AXIS_CONFIG.tick}
             axisLine={AXIS_CONFIG.axisLine}
             tickLine={AXIS_CONFIG.tickLine}
@@ -128,14 +128,14 @@ export default function TrendsChart({ data }: TrendsChartProps) {
             width={80}
             dx={-8}
           />
-          
+
           <Tooltip content={<CustomTooltip />} cursor={{ stroke: CHART_COLORS.grid, strokeWidth: 1 }} />
-          
-          <Area 
-            type="monotone" 
-            dataKey="totalSpent" 
+
+          <Area
+            type="monotone"
+            dataKey="totalSpent"
             stroke={CHART_COLORS.primary}
-            fill="url(#trendAreaGradient)" 
+            fill="url(#trendAreaGradient)"
             isAnimationActive={!reducedMotion}
             animationDuration={getAnimationDuration()}
             animationEasing="ease-out"
@@ -152,11 +152,11 @@ export default function TrendsChart({ data }: TrendsChartProps) {
           />
         </AreaChart>
       </ResponsiveContainer>
-      
+
       {/* Screen reader summary */}
       <div id={summaryId} className="visually-hidden">
-        Monthly spending trend shows {data.length} months of data. 
-        Minimum spending: {formatRand(min)}, Maximum spending: {formatRand(max)}. 
+        Monthly spending trend shows {data.length} months of data.
+        Minimum spending: {formatRand(min)}, Maximum spending: {formatRand(max)}.
         Overall trend is {direction}.
       </div>
     </div>

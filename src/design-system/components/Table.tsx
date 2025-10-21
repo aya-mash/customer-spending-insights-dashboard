@@ -4,7 +4,7 @@
  * Replaces semantic HTML tables with design system component
  */
 
-import { forwardRef, type ReactNode, type CSSProperties } from 'react';
+import React, { forwardRef, type ReactNode, type CSSProperties } from 'react';
 import { surface, text as textColors, radius } from '../tokens';
 import { Box } from './Box';
 import { Card } from './Card';
@@ -36,7 +36,8 @@ export interface TableProps<T = any> {
   maxHeight?: string;
 }
 
-export const Table = forwardRef<HTMLDivElement, TableProps>(
+export const Table = React.memo(
+  forwardRef<HTMLDivElement, TableProps>(
   (
     {
       columns,
@@ -184,7 +185,8 @@ export const Table = forwardRef<HTMLDivElement, TableProps>(
         </Box>
       </Box>
     );
-  }
+  })
 );
 
 Table.displayName = 'Table';
+
