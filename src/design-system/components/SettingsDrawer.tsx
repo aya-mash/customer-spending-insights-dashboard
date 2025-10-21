@@ -4,7 +4,7 @@
  */
 
 import { forwardRef, useEffect, useRef, type CSSProperties } from 'react';
-import { Settings, X, Sun, Monitor, Moon } from 'lucide-react';
+import { Settings2, X, Sun, Monitor, Moon } from 'lucide-react';
 import { brand, surface, text as textColors, spacingNum, radius, transition, easing, zIndex } from '../tokens';
 import { Heading } from './Heading';
 import { Stack } from './Stack';
@@ -158,7 +158,7 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
           {/* Header */}
           <header style={headerStyles}>
             <div style={titleGroupStyles}>
-              <Settings size={20} color={brand.primary} aria-hidden="true" />
+              <Settings2 size={20} color={brand.primary} aria-hidden="true" />
               <Heading level={2} style={{ fontSize: '18px', margin: 0 }}>
                 Settings
               </Heading>

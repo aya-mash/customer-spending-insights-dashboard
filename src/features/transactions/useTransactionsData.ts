@@ -17,6 +17,7 @@ export function useTransactionsData(customerId: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<Transaction[]>([]);
+  const [total, setTotal] = useState(0);
   const [filters, setFilters] = useState<TransactionFilters>({});
   const [sortField, setSortField] = useState<keyof Transaction>('date');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -37,6 +38,12 @@ export function useTransactionsData(customerId: string) {
       newFilters.period = params.get('period') as PeriodPreset;
     }
     
+    const pageParam = params.get('page');
+    if (pageParam) {
+      const pageNum = parseInt(pageParam, 10);
+      if (pageNum > 0) setPage(pageNum);
+    }
+    
     setFilters(newFilters);
   }, [location.search]);
 
@@ -48,15 +55,20 @@ export function useTransactionsData(customerId: string) {
     setLoading(true);
     setError(null);
     
+    // Convert sortField and sortDirection to API format
+    const sortBy = `${sortField}_${sortDirection}` as 'date_desc' | 'date_asc' | 'amount_desc' | 'amount_asc';
+    
     try {
       const result = await transactions(customerId, {
         ...filters,
         limit: perPage,
         offset: (page - 1) * perPage,
+        sortBy,
       }, ac.signal);
       
       if (!ac.signal.aborted) {
         setData(result.transactions);
+        setTotal(result.pagination.total);
         setLoading(false);
       }
     } catch (err) {
@@ -65,23 +77,28 @@ export function useTransactionsData(customerId: string) {
         setLoading(false);
       }
     }
-  }, [customerId, filters, page, perPage]);
+  }, [customerId, filters, page, perPage, sortField, sortDirection]);
 
   useEffect(() => {
     loadData();
     return () => abortRef.current?.abort();
   }, [loadData]);
 
-  const updateFilters = useCallback((newFilters: Partial<TransactionFilters>) => {
+  const updateFilters = useCallback((newFilters: Partial<TransactionFilters & { page?: number }>) => {
     const params = new URLSearchParams(location.search);
     
     Object.entries(newFilters).forEach(([key, value]) => {
-      if (value) {
+      if (value !== undefined && value !== null && value !== '') {
         params.set(key, value.toString());
       } else {
         params.delete(key);
       }
     });
+    
+    // Reset to page 1 when changing filters (except when changing page itself)
+    if (!('page' in newFilters)) {
+      params.set('page', '1');
+    }
     
     navigate(`?${params.toString()}`, { replace: true });
   }, [location.search, navigate]);
@@ -97,8 +114,13 @@ export function useTransactionsData(customerId: string) {
       setSortField(field);
       setSortDirection('desc');
     }
-    setPage(1); // Reset to first page when sorting
-  }, [sortField, sortDirection]);
+    // Page will be reset via updateFilters
+    const params = new URLSearchParams(location.search);
+    params.set('page', '1');
+    navigate(`?${params.toString()}`, { replace: true });
+  }, [sortField, sortDirection, location.search, navigate]);
+
+  const totalPages = Math.ceil(total / perPage);
 
   return {
     loading,
@@ -109,6 +131,8 @@ export function useTransactionsData(customerId: string) {
     sortDirection,
     page,
     perPage,
+    total,
+    totalPages,
     loadData,
     updateFilters,
     clearFilters,

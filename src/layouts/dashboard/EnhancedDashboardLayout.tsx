@@ -5,7 +5,7 @@
 
 import { useState, useEffect, type CSSProperties } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Settings, Home, TrendingUp, CreditCard } from 'lucide-react';
+import { Settings2, Home, TrendingUp, CreditCard } from 'lucide-react';
 import { Navigation, type NavItem } from '../../design-system/components/Navigation';
 import { BottomNav, type BottomNavItem } from '../../design-system/components/BottomNav';
 import { SettingsDrawer } from '../../design-system/components/SettingsDrawer';
@@ -147,7 +147,7 @@ export function EnhancedDashboardLayout() {
             e.currentTarget.style.backgroundColor = 'transparent';
           }}
         >
-          <Settings size={20} />
+          <Settings2 size={20} />
         </button>
       </header>
 

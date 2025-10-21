@@ -17,6 +17,9 @@ export { DonutChart, type DonutChartProps } from './DonutChart';
 export { Navigation, type NavigationProps, type NavItem } from './Navigation';
 export { BottomNav, type BottomNavProps, type BottomNavItem } from './BottomNav';
 export { SettingsDrawer, type SettingsDrawerProps } from './SettingsDrawer';
+export { Pagination, type PaginationProps } from './Pagination';
+export { Select, type SelectProps, type SelectOption } from './Select';
+export { FilterChip, type FilterChipProps } from './FilterChip';
 
 // Default export for convenience
 import { Card } from './Card';
@@ -33,6 +36,9 @@ import { DonutChart } from './DonutChart';
 import { Navigation } from './Navigation';
 import { BottomNav } from './BottomNav';
 import { SettingsDrawer } from './SettingsDrawer';
+import { Pagination } from './Pagination';
+import { Select } from './Select';
+import { FilterChip } from './FilterChip';
 
 export default {
   Card,
@@ -49,4 +55,7 @@ export default {
   Navigation,
   BottomNav,
   SettingsDrawer,
+  Pagination,
+  Select,
+  FilterChip,
 };
