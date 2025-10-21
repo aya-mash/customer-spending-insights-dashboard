@@ -9,6 +9,8 @@ Thumbs.db
 *.bak
 *.tmp
 *.log
+.github/chatmodes
+.github/outputs.md
 
 ###############################
 # Node / Package Managers

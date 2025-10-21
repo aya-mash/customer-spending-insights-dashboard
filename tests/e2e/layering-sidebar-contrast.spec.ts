@@ -18,9 +18,6 @@ test('sidebar nav remains interactive when contrast panel open', async ({ page }
   await expect(page).toHaveURL(/\/transactions/);
 });
 
-// Ensure backdrop does not cover sidebar; clicking backdrop should close panel (if requirement exists)
-// This test just verifies panel stays open after backdrop click if not intended to close; adjust as needed.
-
 test('backdrop click closes contrast panel', async ({ page }) => {
   await page.goto('/?contrastWidget=1');
   const fab = page.getByRole('button', { name: /toggle contrast checker/i });

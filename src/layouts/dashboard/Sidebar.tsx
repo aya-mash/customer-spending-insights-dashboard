@@ -17,10 +17,19 @@ export function Sidebar() {
 
   const baseClass = sidebarCollapsed ? 'dash-sidebar collapsed' : 'dash-sidebar';
   const cls = mobileSidebarOpen ? baseClass + ' open' : baseClass;
+  
   return (
-    <aside className={cls} data-testid="sidebar" aria-label="Primary navigation" aria-hidden={sidebarCollapsed}>
-      <button type="button" className="dash-sidebar-toggle" onClick={toggleSidebar} aria-expanded={!sidebarCollapsed} aria-controls="main-content">{sidebarCollapsed ? 'Open' : 'Collapse'} Nav</button>
-      {!sidebarCollapsed && <NavList onNavigate={() => { /* close on mobile after navigation if desired */ }} />}
+    <aside 
+      className={cls} 
+      data-testid="sidebar" 
+      aria-label="Primary navigation" 
+      aria-hidden={sidebarCollapsed}
+    >
+      {/* NavList now shows icons in collapsed mode, labels when expanded */}
+      <NavList 
+        collapsed={sidebarCollapsed}
+        onNavigate={() => { /* close on mobile after navigation if desired */ }} 
+      />
     </aside>
   );
 }

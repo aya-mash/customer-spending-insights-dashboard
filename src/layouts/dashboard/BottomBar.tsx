@@ -21,10 +21,16 @@ export function BottomBar() {
           onFocus={() => { /* prefetch removed */ }}
         >
           {({ isActive }) => (
-            <span className="dash-bottom-label" aria-current={isActive ? 'page' : undefined}>
-              {/* icon slot fallback (could be improved later) */}
-              <span className="visually-hidden">{isActive ? 'Current page: ' : ''}</span>
-              {item.label}
+            <span className="dash-bottom-nav-inner">
+              {item.icon && (
+                <span className="dash-bottom-icon" aria-hidden="true">
+                  {item.icon}
+                </span>
+              )}
+              <span className="dash-bottom-label" aria-current={isActive ? 'page' : undefined}>
+                <span className="visually-hidden">{isActive ? 'Current page: ' : ''}</span>
+                {item.label}
+              </span>
             </span>
           )}
         </NavLink>
@@ -32,3 +38,4 @@ export function BottomBar() {
     </nav>
   );
 }
+

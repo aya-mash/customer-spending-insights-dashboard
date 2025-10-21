@@ -1,0 +1,542 @@
+/* Base CSS: Reset, Typography, Focus Management, Motion Preferences */
+
+/* Modern CSS Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html,
+body {
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+#root,
+#__next {
+  isolation: isolate;
+}
+
+/* =============================================================================
+   TYPOGRAPHY SYSTEM - Production-grade hierarchy
+   Enterprise banking-level typography with proper scale and rhythm
+   ============================================================================= */
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-normal);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  font-weight: var(--fw-regular);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Display - Hero displays, landing pages */
+.display,
+.text-display {
+  font-size: var(--fs-display);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  color: var(--color-text-strong);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--sp-6);
+}
+
+/* H1 - Page titles (32px, bold) */
+h1 {
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  color: var(--color-text-strong);
+  letter-spacing: -0.01em;
+  margin-bottom: var(--sp-5);
+}
+
+/* H2 - Section headings (24px, semibold) */
+h2 {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  color: var(--color-text-strong);
+  margin-bottom: var(--sp-4);
+}
+
+/* H3 - Card titles, subsection headings (20px, semibold) */
+h3 {
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  color: var(--color-text);
+  margin-bottom: var(--sp-3);
+}
+
+/* H4 - Component headings (18px, medium) */
+h4 {
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-tight);
+  color: var(--color-text);
+  margin-bottom: var(--sp-3);
+}
+
+/* H5, H6 - Smaller headings */
+h5 {
+  font-size: var(--fs-body-lg);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-tight);
+  color: var(--color-text);
+  margin-bottom: var(--sp-2);
+}
+
+h6 {
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-tight);
+  color: var(--color-text-muted);
+  margin-bottom: var(--sp-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Paragraphs and body text */
+p {
+  margin-bottom: var(--sp-4);
+  line-height: var(--lh-normal);
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+/* Body text variants */
+.text-lg,
+.body-lg {
+  font-size: var(--fs-body-lg);
+  line-height: var(--lh-normal);
+}
+
+.text-sm,
+.body-sm {
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-normal);
+}
+
+.caption {
+  font-size: var(--fs-caption);
+  line-height: var(--lh-tight);
+  color: var(--color-text-muted);
+}
+
+/* Text styles and utilities */
+.text-strong,
+strong,
+b {
+  font-weight: var(--fw-bold);
+  color: var(--color-text-strong);
+}
+
+.text-medium {
+  font-weight: var(--fw-medium);
+}
+
+.text-semibold {
+  font-weight: var(--fw-semibold);
+}
+
+.text-muted,
+.muted {
+  color: var(--color-text-muted);
+}
+
+.text-inverse {
+  color: var(--color-text-inverse);
+}
+
+.text-success {
+  color: var(--color-success-dark);
+}
+
+.text-warning {
+  color: var(--color-warning-dark);
+}
+
+.text-error {
+  color: var(--color-error-dark);
+}
+
+.text-info {
+  color: var(--color-info-dark);
+}
+
+/* Links */
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast) var(--ease-standard);
+}
+
+a:hover {
+  color: var(--color-primary-hover);
+  text-decoration: underline;
+}
+
+a:active {
+  color: var(--color-primary-active);
+}
+
+a:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: 2px;
+}
+
+/* Lists */
+ul,
+ol {
+  margin-bottom: var(--sp-4);
+  padding-left: var(--sp-6);
+}
+
+li {
+  margin-bottom: var(--sp-2);
+  line-height: var(--lh-normal);
+}
+
+li:last-child {
+  margin-bottom: 0;
+}
+
+/* Remove list styling for nav lists */
+nav ul,
+nav ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav li {
+  margin-bottom: 0;
+}
+
+/* Code and preformatted text */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+code {
+  background-color: var(--neutral-100);
+  color: var(--color-error-dark);
+  padding: 0.125em 0.25em;
+  border-radius: var(--radius-sm);
+}
+
+pre {
+  background-color: var(--neutral-100);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--sp-4);
+  overflow-x: auto;
+  margin-bottom: var(--sp-4);
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+  color: var(--color-text);
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: 4px solid var(--color-primary);
+  padding-left: var(--sp-4);
+  margin: var(--sp-6) 0;
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+/* Horizontal rule */
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--sp-8) 0;
+}
+
+/* Text alignment utilities */
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Font variant utilities */
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.uppercase {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.lowercase {
+  text-transform: lowercase;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+/* Tabular numbers for financial data */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Truncation utilities */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+/* Focus Management - Only show focus ring on keyboard navigation */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-8);
+}
+
+/* Remove focus outline for mouse users but keep for keyboard users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Visually Hidden Utility */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Skip Link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: var(--sp-16);
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  padding: var(--sp-8) var(--sp-16);
+  text-decoration: none;
+  border-radius: var(--radius-8);
+  z-index: var(--z-max);
+  transition: top var(--transition-fast) var(--ease-standard);
+}
+
+.skip-link:focus {
+  top: var(--sp-16);
+}
+
+/* Selection Styling */
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface-alt);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-8);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  :root {
+    --focus-ring-width: 3px;
+    --focus-ring-offset: 3px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+  
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+  
+  h1,
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}
+
+/* =============================================================================
+   RESPONSIVE TYPOGRAPHY - Mobile overrides (subtle reduction)
+   ============================================================================= */
+@media (max-width: 768px) {
+  body {
+    font-size: var(--fs-15);
+  }
+
+  .display,
+  .text-display {
+    font-size: var(--fs-40);
+  }
+
+  h1,
+  .h1,
+  .text-h1 {
+    font-size: var(--fs-28);
+  }
+
+  h2,
+  .h2,
+  .text-h2 {
+    font-size: var(--fs-24);
+  }
+
+  h3,
+  .h3,
+  .text-h3 {
+    font-size: var(--fs-20);
+  }
+
+  h4,
+  .h4,
+  .text-h4 {
+    font-size: var(--fs-18);
+  }
+
+  h5,
+  .h5,
+  .text-h5 {
+    font-size: var(--fs-16);
+  }
+
+  h6,
+  .h6,
+  .text-h6 {
+    font-size: var(--fs-14);
+  }
+
+  .text-large {
+    font-size: var(--fs-18);
+  }
+
+  .text-small {
+    font-size: var(--fs-13);
+  }
+
+  .text-tiny {
+    font-size: var(--fs-11);
+  }
+}
+

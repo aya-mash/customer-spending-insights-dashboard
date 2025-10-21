@@ -54,7 +54,7 @@ export interface DashboardSlots {
 export interface DashboardOptions {
   defaultSidebarCollapsed?: boolean;
   sidebarWidth?: number | string;
-  brandVariant?: 'capitec' | 'neutral';
+  brandVariant?: 'neutral' | 'dark';
 }
 
 export interface DashboardConfig {

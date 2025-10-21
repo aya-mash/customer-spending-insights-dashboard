@@ -76,7 +76,6 @@ export interface FilterCategory { name: string; color: string; icon: string; }
 export interface DateRangePreset { label: string; value: PeriodPreset; }
 export interface FiltersResponse { categories: FilterCategory[]; dateRangePresets: DateRangePreset[]; }
 
-// Request param helper types
 export interface CategoriesParams { period?: PeriodPreset; startDate?: string; endDate?: string; }
 export interface TransactionsParams {
   limit?: number; offset?: number; category?: string; startDate?: string; endDate?: string; sortBy?: TransactionSort;

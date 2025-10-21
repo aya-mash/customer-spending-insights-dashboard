@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { ContrastCheckerPanel } from './ContrastCheckerPanel';
+import { config } from '../../config/env';
 
 // Dev-only floating action button for contrast checker tool.
-// Visible when in dev mode (import.meta.env.DEV) or URL contains ?devtools=1 or ?contrastWidget=1.
+// Visible when in dev mode for accessibility testing.
 export function ContrastCheckerDev() {
   // Show in dev and test environments (hidden in production) for accessibility and test coverage.
-  const enabled = import.meta.env.DEV || import.meta.env.MODE === 'test';
+  const enabled = config.isDevelopment;
   const [open, setOpen] = useState(false);
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
