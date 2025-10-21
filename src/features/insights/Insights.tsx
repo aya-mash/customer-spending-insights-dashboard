@@ -25,7 +25,7 @@ const TAB_LABELS: Record<TabKey, string> = {
   trends: 'Trends'
 };
 
-export function EnhancedInsights() {
+export function Insights() {
   const [activeTab, setActiveTab] = useState<TabKey>('category');
   const reducedMotion = useReducedMotion();
   const navigate = useNavigate();

@@ -1,12 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import './styles/tokens.css';
 import './styles/base.css';
-import './styles/components.css';
-import './styles/dashboard.css';
-import './styles/tabbed-overview.css';
-import App from './App.tsx';
+import App from './App';
 
 const queryClient = new QueryClient({
   defaultOptions: {

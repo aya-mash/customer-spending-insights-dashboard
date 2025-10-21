@@ -1,5 +1,5 @@
 /**
- * ENHANCED OVERVIEW PAGE
+ * OVERVIEW PAGE
  * Comprehensive dashboard with 8 metric cards, charts, and goals
  * Built with design system components - zero CSS dependencies
  */
@@ -41,7 +41,7 @@ const PERIODS: Array<{ key: PeriodPreset; label: string }> = [
   { key: '1y', label: '1 Year' },
 ];
 
-export function EnhancedOverview() {
+export function Overview() {
   const [activePeriod, setActivePeriod] = useState<PeriodPreset>('30d');
   const customerId = 'user123';
   const navigate = useNavigate();

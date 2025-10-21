@@ -1,7 +1,7 @@
-import { EnhancedOverview } from '../../features/overview/EnhancedOverview';
+import { Overview } from '../../features/overview/Overview';
 
 export function OverviewRoute() {
-  return <EnhancedOverview />;
+  return <Overview />;
 }
 
 export default OverviewRoute;

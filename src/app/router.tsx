@@ -1,6 +1,6 @@
 import { createBrowserRouter, createMemoryRouter } from 'react-router-dom';
 import { Suspense, lazy, createElement, useState, useEffect, Fragment } from 'react';
-import { EnhancedDashboardLayout } from '../layouts/dashboard/EnhancedDashboardLayout';
+import { DashboardLayout } from '../layouts/dashboard/DashboardLayout';
 import { DashboardProvider } from '../layouts/dashboard/DashboardProvider';
 import { dashboardConfig } from './config/dashboard.config';
 import { ErrorFallback } from '../pages/ErrorFallback';
@@ -37,7 +37,7 @@ export const childRoutes = dashboardConfig.routes.map(r => ({ path: r.path, elem
 export const router = createBrowserRouter([
   {
     path: '/',
-  element: createElement(DashboardProvider, { config: dashboardConfig }, createElement(EnhancedDashboardLayout)),
+    element: createElement(DashboardProvider, { config: dashboardConfig }, createElement(DashboardLayout)),
     errorElement: createElement(ErrorFallback),
     children: childRoutes,
   },
@@ -49,7 +49,7 @@ export function buildTestRouter(initialEntries: string[] = ['/']) {
   return createMemoryRouter([
     {
       path: '/',
-      element: createElement(DashboardProvider, { config: dashboardConfig }, createElement(EnhancedDashboardLayout)),
+      element: createElement(DashboardProvider, { config: dashboardConfig }, createElement(DashboardLayout)),
       errorElement: createElement(ErrorFallback),
       children: childRoutes,
     },

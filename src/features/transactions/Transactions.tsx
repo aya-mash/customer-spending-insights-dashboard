@@ -1,5 +1,5 @@
 /**
- * ENHANCED TRANSACTIONS PAGE
+ * TRANSACTIONS PAGE
  * Design system implementation with server-side pagination and sorting
  * Zero semantic HTML outside design system components
  */
@@ -48,7 +48,7 @@ const categoryOptions: SelectOption[] = [
   { label: 'Other', value: 'Other' },
 ];
 
-export function EnhancedTransactions() {
+export function Transactions() {
   const customerId = 'user123';
   const [searchQuery, setSearchQuery] = useState('');
   const { 
@@ -217,7 +217,7 @@ export function EnhancedTransactions() {
             zebraStripe
             emptyMessage="No transactions found."
             stickyHeader
-            maxHeight="calc(100vh - 280px)"
+            maxHeight="calc(100vh - 300px)"
           />
         </Card>
 

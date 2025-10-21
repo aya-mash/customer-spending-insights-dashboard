@@ -1,7 +1,7 @@
-import { EnhancedInsights } from '../../features/insights/EnhancedInsights';
+import { Insights } from '../../features/insights/Insights';
 
 export function InsightsRoute() {
-  return <EnhancedInsights />;
+  return <Insights />;
 }
 
 export default InsightsRoute;

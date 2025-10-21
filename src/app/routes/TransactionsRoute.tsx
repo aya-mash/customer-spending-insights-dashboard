@@ -1,7 +1,7 @@
-import { EnhancedTransactions } from '../../features/transactions/EnhancedTransactions';
+import { Transactions } from '../../features/transactions/Transactions';
 
 export function TransactionsRoute() {
-  return <EnhancedTransactions />;
+  return <Transactions />;
 }
 
 export default TransactionsRoute;
