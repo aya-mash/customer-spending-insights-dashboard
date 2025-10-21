@@ -3,7 +3,7 @@
  * WCAG contrast ratio validator with modern UI
  */
 
-import { useState, useEffect, useMemo, type CSSProperties } from 'react';
+import { useState, useMemo, type CSSProperties } from 'react';
 import { contrastRatio, passesAA, passesAAA } from '../../lib/contrast';
 import { surface, text as textColors, radius, spacing, spacingNum, brand, transition, easing } from '../tokens';
 import { X, RefreshCw, Check, AlertCircle } from 'lucide-react';
@@ -33,14 +33,28 @@ function normalizeHex(input: string): string {
 }
 
 export function ContrastCheckerPanel({ onClose }: Props) {
-  const [fg, setFg] = useState('#FFFFFF');
-  const [bg, setBg] = useState('#2F70EF');
+  const [fgInput, setFgInput] = useState('#FFFFFF');
+  const [bgInput, setBgInput] = useState('#2F70EF');
   const [fgToken, setFgToken] = useState<string>('');
   const [bgToken, setBgToken] = useState<string>('');
   const [isLarge, setIsLarge] = useState(false);
 
-  useEffect(()=>{ if (fgToken) { const v = resolveVar(fgToken); if (v) setFg(v); } },[fgToken]);
-  useEffect(()=>{ if (bgToken) { const v = resolveVar(bgToken); if (v) setBg(v); } },[bgToken]);
+  // Derive hex from token or use input value
+  const fg = useMemo(() => {
+    if (fgToken) {
+      const v = resolveVar(fgToken);
+      return v || fgInput;
+    }
+    return fgInput;
+  }, [fgToken, fgInput]);
+
+  const bg = useMemo(() => {
+    if (bgToken) {
+      const v = resolveVar(bgToken);
+      return v || bgInput;
+    }
+    return bgInput;
+  }, [bgToken, bgInput]);
 
   const ratio = useMemo(()=> contrastRatio(fg,bg), [fg,bg]);
   const ratioStr = ratio.toFixed(2);
@@ -48,7 +62,12 @@ export function ContrastCheckerPanel({ onClose }: Props) {
   const aaa = passesAAA(ratio, isLarge);
 
   function swap() {
-    setFg(bg); setBg(fg); const oldFgToken = fgToken; setFgToken(bgToken); setBgToken(oldFgToken);
+    const oldFgInput = fgInput;
+    const oldFgToken = fgToken;
+    setFgInput(bgInput);
+    setBgInput(oldFgInput);
+    setFgToken(bgToken);
+    setBgToken(oldFgToken);
   }
 
   const panelStyle: CSSProperties = {
@@ -189,7 +208,7 @@ export function ContrastCheckerPanel({ onClose }: Props) {
         <input
           style={inputStyle}
           value={fg}
-          onChange={e=>setFg(normalizeHex(e.target.value))}
+          onChange={e=>setFgInput(normalizeHex(e.target.value))}
           aria-label="Foreground color hex"
           onFocus={e => e.currentTarget.style.borderColor = brand.primary}
           onBlur={e => e.currentTarget.style.borderColor = surface.border}
@@ -216,7 +235,7 @@ export function ContrastCheckerPanel({ onClose }: Props) {
         <input
           style={inputStyle}
           value={bg}
-          onChange={e=>setBg(normalizeHex(e.target.value))}
+          onChange={e=>setBgInput(normalizeHex(e.target.value))}
           aria-label="Background color hex"
           onFocus={e => e.currentTarget.style.borderColor = brand.primary}
           onBlur={e => e.currentTarget.style.borderColor = surface.border}
@@ -268,7 +287,7 @@ export function ContrastCheckerPanel({ onClose }: Props) {
         <button
           type="button"
           style={buttonStyle}
-          onClick={()=>{ setFgToken(''); setBgToken(''); setFg('#FFFFFF'); setBg('#2F70EF'); setIsLarge(false); }}
+          onClick={()=>{ setFgToken(''); setBgToken(''); setFgInput('#FFFFFF'); setBgInput('#2F70EF'); setIsLarge(false); }}
           aria-label="Reset contrast checker"
           onMouseEnter={e => {
             e.currentTarget.style.backgroundColor = surface.hover;

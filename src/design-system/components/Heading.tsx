@@ -41,6 +41,7 @@ export const Heading = React.memo(
 
       return React.createElement(
         Component,
+        // eslint-disable-next-line react-hooks/refs -- forwardRef pattern requires passing ref
         { ref, style: { ...headingStyles, ...style }, ...props },
         children
       );
