@@ -96,12 +96,12 @@ export function Insights() {
         {/* Combined error banner */}
         {showCombinedError && (
           <Card padding={4} style={{ 
-            backgroundColor: '#FEE2E2', 
-            border: `1px solid #EF4444`,
+            backgroundColor: 'var(--color-error-light)', 
+            border: `1px solid var(--color-error)`,
             borderRadius: radius.md 
           }}>
             <Stack direction="vertical" spacing={3}>
-              <Text variant="bodySm" style={{ color: '#991B1B', fontWeight: 600 }}>
+              <Text variant="bodySm" style={{ color: 'var(--color-error-dark)', fontWeight: 600 }}>
                 Failed to load insights data. Please retry.
               </Text>
               <div>
@@ -110,9 +110,9 @@ export function Insights() {
                   size="small" 
                   onClick={loadData}
                   style={{
-                    backgroundColor: '#FFF',
-                    color: '#EF4444',
-                    border: '1px solid #EF4444'
+                    backgroundColor: surface.surface,
+                    color: 'var(--color-error)',
+                    border: '1px solid var(--color-error)'
                   }}
                 >
                   Retry All
@@ -178,21 +178,21 @@ export function Insights() {
 
               {!catLoading && catError && !trendError && (
                 <div role="alert" style={{
-                  backgroundColor: '#FEE2E2',
+                  backgroundColor: 'var(--color-error-light)',
                   padding: spacing[4],
                   borderRadius: radius.md,
-                  border: '1px solid #EF4444'
+                  border: '1px solid var(--color-error)'
                 }}>
                   <Stack direction="vertical" spacing={3}>
-                    <Text variant="bodySm" style={{ color: '#991B1B' }}>{catError}</Text>
+                    <Text variant="bodySm" style={{ color: 'var(--color-error-dark)' }}>{catError}</Text>
                     <Button 
                       variant="secondary" 
                       size="small" 
                       onClick={loadData}
                       style={{
-                        backgroundColor: '#FFF',
-                        color: '#EF4444',
-                        border: '1px solid #EF4444',
+                        backgroundColor: surface.surface,
+                        color: 'var(--color-error)',
+                        border: '1px solid var(--color-error)',
                         alignSelf: 'flex-start'
                       }}
                     >
@@ -254,21 +254,21 @@ export function Insights() {
 
               {!trendLoading && trendError && !catError && (
                 <div role="alert" style={{
-                  backgroundColor: '#FEE2E2',
+                  backgroundColor: 'var(--color-error-light)',
                   padding: spacing[4],
                   borderRadius: radius.md,
-                  border: '1px solid #EF4444'
+                  border: '1px solid var(--color-error)'
                 }}>
                   <Stack direction="vertical" spacing={3}>
-                    <Text variant="bodySm" style={{ color: '#991B1B' }}>{trendError}</Text>
+                    <Text variant="bodySm" style={{ color: 'var(--color-error-dark)' }}>{trendError}</Text>
                     <Button 
                       variant="secondary" 
                       size="small" 
                       onClick={loadData}
                       style={{
-                        backgroundColor: '#FFF',
-                        color: '#EF4444',
-                        border: '1px solid #EF4444',
+                        backgroundColor: surface.surface,
+                        color: 'var(--color-error)',
+                        border: '1px solid var(--color-error)',
                         alignSelf: 'flex-start'
                       }}
                     >

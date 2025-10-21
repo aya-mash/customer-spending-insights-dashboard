@@ -65,7 +65,7 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
           padding: `${spacingNum[2]}px ${spacingNum[3]}px`,
           borderRadius: radius.md,
           fontSize: '14px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          boxShadow: 'var(--shadow-neumorphic-sm)',
         })}>
           <div style={{ fontWeight: 600, marginBottom: '4px' }}>
             {data.name}

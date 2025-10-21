@@ -56,7 +56,7 @@ export const TextField = React.memo(
         : endIcon
         ? `${spacingNum[3]}px ${spacingNum[10]}px ${spacingNum[3]}px ${spacingNum[4]}px`
         : `${spacingNum[3]}px ${spacingNum[4]}px`,
-      borderRadius: radius.lg,
+      borderRadius: radius.md,
       border: variant === 'outlined' 
         ? `1px solid ${error ? '#EF4444' : surface.border}`
         : 'none',
@@ -65,7 +65,8 @@ export const TextField = React.memo(
       fontSize: fontSize.body,
       fontFamily: 'inherit',
       outline: 'none',
-      transition: 'all 0.15s ease',
+      transition: 'all 0.2s ease',
+      boxShadow: 'var(--shadow-neumorphic-inset)',
       ...style,
     };
 

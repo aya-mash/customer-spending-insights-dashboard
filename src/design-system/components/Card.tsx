@@ -10,8 +10,6 @@ import {
   surface,
   spacing,
   radius,
-  shadow,
-  transition,
   easing,
   type Spacing,
   type ResponsiveValue,
@@ -35,14 +33,14 @@ export const Card = React.memo(
       const resolvedPadding = useResponsiveValue(padding);
       const prefersReducedMotion = usePrefersReducedMotion();
 
-    // Memoize base styles with theme-aware tokens
+    // Memoize base styles with neomorphic shadows
     const baseStyles = useMemo(() => createDynamicStyles({
       backgroundColor: surface.surface,
       border: `1px solid ${surface.border}`,
       borderRadius: radius.lg,
       padding: spacing[resolvedPadding as Spacing] || spacing[6],
-      boxShadow: shadow.sm,
-      transition: prefersReducedMotion ? 'none' : `all ${transition.normal} ${easing.standard}`,
+      boxShadow: 'var(--shadow-neumorphic-sm)',
+      transition: prefersReducedMotion ? 'none' : `all 300ms ${easing.standard}`,
       position: 'relative',
     }), [resolvedPadding, prefersReducedMotion]);
 
@@ -51,10 +49,10 @@ export const Card = React.memo(
       default: {},
       primary: {
         borderColor: brand.primary,
-        boxShadow: `0 0 0 1px ${brand.primary}, ${shadow.sm}`,
+        boxShadow: `0 0 0 1px ${brand.primary}, var(--shadow-neumorphic-sm)`,
       },
       elevated: {
-        boxShadow: shadow.md,
+        boxShadow: 'var(--shadow-neumorphic-md)',
       },
     }), []);
 
@@ -65,7 +63,7 @@ export const Card = React.memo(
     const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
       if (hover && !prefersReducedMotion) {
         e.currentTarget.style.transform = 'translateY(-4px)';
-        e.currentTarget.style.boxShadow = shadow.lg;
+        e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-lg)';
         e.currentTarget.style.borderColor = brand.primary;
       }
     }, [hover, prefersReducedMotion]);
@@ -73,7 +71,7 @@ export const Card = React.memo(
     const handleMouseLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
       if (hover) {
         e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = shadow.sm;
+        e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-sm)';
         e.currentTarget.style.borderColor = surface.border;
       }
     }, [hover]);

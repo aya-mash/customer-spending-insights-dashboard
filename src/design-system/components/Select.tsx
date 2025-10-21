@@ -46,7 +46,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     const selectStyle = {
       width: '100%',
       padding: `${spacingNum[3]}px ${spacingNum[4]}px`,
-      borderRadius: radius.lg,
+      borderRadius: radius.md,
       border: `1px solid ${error ? '#EF4444' : surface.border}`,
       backgroundColor: surface.surface,
       color: textColors.primary,
@@ -54,7 +54,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       fontFamily: 'inherit',
       cursor: 'pointer',
       outline: 'none',
-      transition: 'all 0.15s ease',
+      transition: 'all 0.2s ease',
+      boxShadow: 'var(--shadow-neumorphic-inset)',
       ...style,
     };
 

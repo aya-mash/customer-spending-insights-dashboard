@@ -32,6 +32,7 @@ import {
   Divider,
   DonutChart
 } from '../../design-system/components/index';
+import { radius } from '../../design-system/tokens';
 import type { PeriodPreset } from '../../data/models';
 
 const PERIODS: Array<{ key: PeriodPreset; label: string }> = [
@@ -294,14 +295,14 @@ export function Overview() {
                           width: '100%', 
                           height: '8px', 
                           backgroundColor: '#E5E7EB', 
-                          borderRadius: '9999px',
+                          borderRadius: radius.md,
                           overflow: 'hidden'
                         }}>
                           <div style={{
                             width: `${Math.min(progress, 100)}%`,
                             height: '100%',
                             backgroundColor: isOverBudget ? '#EF4444' : progress > 80 ? '#F59E0B' : '#10B981',
-                            borderRadius: '9999px',
+                            borderRadius: radius.md,
                             transition: 'width 0.3s ease'
                           }} />
                         </div>
@@ -365,7 +366,7 @@ export function Overview() {
         ) : (
           <Card padding={8}>
             <Stack spacing={2} align="center">
-              <Clock size={48} style={{ color: '#9CA3AF', strokeWidth: 1.5 }} />
+              <Clock size={48} style={{ color: 'var(--neutral-400)', strokeWidth: 1.5 }} />
               <Text variant="body" color="muted">No recent transactions</Text>
             </Stack>
           </Card>
@@ -381,7 +382,7 @@ function OverviewSkeleton() {
       <Grid columns={{ mobile: 1, tablet: 2, desktop: 4 }} gap={6}>
         {Array.from({ length: 8 }).map((_, i) => (
           <Card key={i} padding={6}>
-            <div style={{ height: '160px', backgroundColor: '#F3F4F6', borderRadius: '8px' }} />
+            <div style={{ height: '160px', backgroundColor: 'var(--neutral-100)', borderRadius: 'var(--radius-md)' }} />
           </Card>
         ))}
       </Grid>

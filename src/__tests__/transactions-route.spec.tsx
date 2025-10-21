@@ -120,14 +120,15 @@ describe('TransactionsRoute', () => {
     await waitFor(() => expect(screen.getByRole('table')).toBeInTheDocument());
     const liveRegion = screen.getByText(/Filters active:/i);
     expect(liveRegion).toBeInTheDocument();
-    const removeCategory = screen.getByRole('button', { name: /Remove category filter/i });
+    const removeCategory = screen.getByRole('button', { name: /Remove Category: Food filter/i });
     fireEvent.click(removeCategory);
-    await waitFor(() => expect(liveRegion.textContent).not.toMatch(/Category Food/));
+    await waitFor(() => expect(liveRegion.textContent).not.toMatch(/Category/));
   });
 
   it('pagination aria-live updates range on next page', async () => {
+    const transactionsSpy = vi.spyOn(client, 'transactions');
     vi.spyOn(client, 'filters').mockResolvedValue(mockFilters);
-    vi.spyOn(client, 'transactions').mockResolvedValue(makePage(60,0,20));
+    transactionsSpy.mockResolvedValueOnce(makePage(60,0,20));
     render(
       <MemoryRouter initialEntries={['/transactions']}>
         <DashboardProvider config={dashboardConfig}>
@@ -136,10 +137,10 @@ describe('TransactionsRoute', () => {
       </MemoryRouter>
     );
     await waitFor(() => expect(screen.getByRole('table')).toBeInTheDocument());
-  screen.getByText(/1–20 of 60/);
+    screen.getByText(/1–20 of 60/);
     const nextBtn = screen.getByRole('button', { name: /Next/i });
-    // mock second page after click
-    (client.transactions as unknown as () => Promise<unknown>) = () => Promise.resolve(makePage(60,20,20));
+    // Mock second page for next click
+    transactionsSpy.mockResolvedValueOnce(makePage(60,20,20));
     fireEvent.click(nextBtn);
     await waitFor(() => expect(screen.getByText(/21–40 of 60/)).toBeInTheDocument());
   });

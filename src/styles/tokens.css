@@ -89,14 +89,14 @@
   --category-utilities-icon: #0891B2;
 
   /* ===========================================================================
-     SURFACE & BACKGROUND COLORS
+     SURFACE & BACKGROUND COLORS (Neomorphic - Soft Whitish Base)
      =========================================================================== */
-  --color-bg: #FFFFFF;                /* Page background */
-  --color-surface: #FFFFFF;           /* Card/component background */
-  --color-surface-alt: #F9FAFB;       /* Alternate surface (hover, zebra stripes) */
-  --color-surface-elevated: #FFFFFF;  /* Elevated surfaces (modals, dropdowns) */
-  --color-border: #E5E7EB;            /* Default borders (1px) */
-  --color-border-strong: #D1D5DB;     /* Emphasized borders */
+  --color-bg: #EBF0F5;                /* Page background - soft whitish-blue base */
+  --color-surface: #EBF0F5;           /* Card/component background - SAME as bg for neomorphism */
+  --color-surface-alt: #F0F4F8;       /* Alternate surface (hover) - slightly lighter */
+  --color-surface-elevated: #EBF0F5;  /* Elevated surfaces - SAME for consistency */
+  --color-border: rgba(163, 177, 198, 0.15); /* Subtle borders (if needed) */
+  --color-border-strong: rgba(163, 177, 198, 0.25); /* Emphasized borders */
   --color-overlay: rgba(0, 0, 0, 0.4); /* Modal/drawer backdrop */
 
   /* ===========================================================================
@@ -169,48 +169,56 @@
   --page-padding-desktop: 32px;
 
   /* ===========================================================================
-     BORDER RADIUS - Rounded corners
+     BORDER RADIUS - Soft Modern (increased for contemporary feel)
      =========================================================================== */
-  --radius-sm: 4px;                   /* Small elements (chips, tags) */
-  --radius-md: 8px;                   /* Buttons, inputs */
-  --radius-lg: 12px;                  /* Cards, panels */
-  --radius-xl: 16px;                  /* Large cards, modals */
-  --radius-2xl: 20px;                 /* Extra large surfaces */
+  --radius-sm: 6px;                   /* Small elements (chips, tags) */
+  --radius-md: 10px;                  /* Buttons, inputs */
+  --radius-lg: 16px;                  /* Cards, panels */
+  --radius-xl: 20px;                  /* Large cards, modals */
+  --radius-2xl: 24px;                 /* Extra large surfaces */
   --radius-full: 9999px;              /* Pills, circular icons */
 
   /* Legacy aliases (maintain compatibility) */
   --radius: var(--radius-lg);
   --radius-2: 2px;
-  --radius-4: var(--radius-sm);
-  --radius-6: 6px;
-  --radius-8: var(--radius-md);
-  --radius-10: 10px;
-  --radius-12: var(--radius-lg);
-  --radius-16: var(--radius-xl);
-  --radius-20: var(--radius-2xl);
-  --radius-24: 24px;
+  --radius-4: 4px;
+  --radius-6: var(--radius-sm);
+  --radius-8: 8px;
+  --radius-10: var(--radius-md);
+  --radius-12: 12px;
+  --radius-16: var(--radius-lg);
+  --radius-20: var(--radius-xl);
+  --radius-24: var(--radius-2xl);
 
   /* ===========================================================================
-     SHADOWS - Elevation with proper depth
-     Uses neutral-900 with opacity for consistent appearance
+     NEOMORPHIC SHADOWS - Soft UI with dual light/shadow (whitish background)
+     Light source: top-left (simulated)
      =========================================================================== */
-  --shadow-xs: 0 1px 2px rgba(17, 24, 39, 0.05);
-  --shadow-sm: 0 1px 3px rgba(17, 24, 39, 0.1), 
-               0 1px 2px rgba(17, 24, 39, 0.06);
-  --shadow-md: 0 4px 6px rgba(17, 24, 39, 0.07), 
-               0 2px 4px rgba(17, 24, 39, 0.06);
-  --shadow-lg: 0 10px 15px rgba(17, 24, 39, 0.1), 
-               0 4px 6px rgba(17, 24, 39, 0.05);
-  --shadow-xl: 0 20px 25px rgba(17, 24, 39, 0.1), 
-               0 8px 10px rgba(17, 24, 39, 0.04);
-  --shadow-2xl: 0 25px 50px rgba(17, 24, 39, 0.15);
-
-  /* Legacy elevation aliases */
-  --elevation-1: var(--shadow-xs);
-  --elevation-2: var(--shadow-sm);
-  --elevation-3: var(--shadow-md);
-  --elevation-4: var(--shadow-lg);
-  --elevation-5: var(--shadow-xl);
+  
+  /* RAISED/EMBOSSED - appears to protrude from surface (like cards, raised buttons) */
+  --shadow-neumorphic-sm: 
+    4px 4px 8px rgba(174, 174, 192, 0.2),
+    -4px -4px 8px rgba(255, 255, 255, 1);
+  --shadow-neumorphic-md: 
+    6px 6px 12px rgba(174, 174, 192, 0.25),
+    -6px -6px 12px rgba(255, 255, 255, 1);
+  --shadow-neumorphic-lg: 
+    8px 8px 16px rgba(174, 174, 192, 0.3),
+    -8px -8px 16px rgba(255, 255, 255, 1);
+  
+  /* DEPRESSED/DEBOSSED - appears to recede into surface (like inputs, inactive tabs) */
+  --shadow-neumorphic-inset: 
+    inset 3px 3px 6px rgba(174, 174, 192, 0.2),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.7);
+  --shadow-neumorphic-pressed: 
+    inset 4px 4px 8px rgba(174, 174, 192, 0.25),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.6);
+  
+  /* RING/OUTLINE - raised border effect */
+  --shadow-neumorphic-ring: 
+    0 0 0 1px rgba(163, 177, 198, 0.15),
+    4px 4px 8px rgba(174, 174, 192, 0.2),
+    -4px -4px 8px rgba(255, 255, 255, 1);
 
   /* ===========================================================================
      TRANSITIONS - Smooth, professional animations
@@ -336,13 +344,13 @@
   --category-utilities-light: #1E3540;
   --category-utilities-icon: #67E8F9;
 
-  /* Surface & background */
-  --color-bg: #0F1419;                /* Page background - deep dark */
-  --color-surface: #1A1F2E;           /* Card background */
-  --color-surface-alt: #222836;       /* Alternate surface */
-  --color-surface-elevated: #2E3546;  /* Elevated surfaces */
-  --color-border: #2E3546;            /* Subtle borders */
-  --color-border-strong: #3D4558;     /* Emphasized borders */
+  /* Surface & background - subtle dark neumorphic base */
+  --color-bg: #1C1E26;                /* Page background - dark gray-blue */
+  --color-surface: #1C1E26;           /* Card background - matches bg */
+  --color-surface-alt: #23252E;       /* Alternate surface */
+  --color-surface-elevated: #1C1E26;  /* Elevated surfaces */
+  --color-border: rgba(255, 255, 255, 0.08); /* Subtle borders */
+  --color-border-strong: rgba(255, 255, 255, 0.12); /* Emphasized borders */
   --color-overlay: rgba(0, 0, 0, 0.7); /* Darker backdrop */
 
   /* Text colors */
@@ -353,17 +361,22 @@
   --color-text-inverse: #0F1419;      /* Text on light backgrounds */
   --color-text-placeholder: #5A6376;
 
-  /* Shadows - softer for dark theme */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5), 
-               0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5), 
-               0 2px 4px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.6), 
-               0 4px 6px rgba(0, 0, 0, 0.5);
-  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.7), 
-               0 8px 10px rgba(0, 0, 0, 0.6);
-  --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.8);
+  /* Neomorphic shadows for dark mode - Inverted (more dark, less light) */
+  --shadow-neumorphic-sm: 
+    5px 5px 10px rgba(0, 0, 0, 0.3),
+    -5px -5px 10px rgba(255, 255, 255, 0.02);
+  --shadow-neumorphic-md: 
+    8px 8px 16px rgba(0, 0, 0, 0.4),
+    -8px -8px 16px rgba(255, 255, 255, 0.02);
+  --shadow-neumorphic-lg: 
+    12px 12px 24px rgba(0, 0, 0, 0.5),
+    -12px -12px 24px rgba(255, 255, 255, 0.03);
+  --shadow-neumorphic-inset: 
+    inset 4px 4px 8px rgba(0, 0, 0, 0.4),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.01);
+  --shadow-neumorphic-pressed: 
+    inset 6px 6px 12px rgba(0, 0, 0, 0.5),
+    inset -6px -6px 12px rgba(255, 255, 255, 0.01);
 
   /* Chart colors */
   --chart-grid: #2E3546;
@@ -414,11 +427,22 @@
     --color-text-disabled: #5A6376;
     --color-text-inverse: #0F1419;
 
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.6), 0 4px 6px rgba(0, 0, 0, 0.5);
-    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.7), 0 8px 10px rgba(0, 0, 0, 0.6);
+    /* Neomorphic shadows for dark mode auto-apply */
+    --shadow-neumorphic-sm: 
+      5px 5px 10px rgba(0, 0, 0, 0.3),
+      -5px -5px 10px rgba(255, 255, 255, 0.02);
+    --shadow-neumorphic-md: 
+      8px 8px 16px rgba(0, 0, 0, 0.4),
+      -8px -8px 16px rgba(255, 255, 255, 0.02);
+    --shadow-neumorphic-lg: 
+      12px 12px 24px rgba(0, 0, 0, 0.5),
+      -12px -12px 24px rgba(255, 255, 255, 0.03);
+    --shadow-neumorphic-inset: 
+      inset 4px 4px 8px rgba(0, 0, 0, 0.4),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.01);
+    --shadow-neumorphic-pressed: 
+      inset 6px 6px 12px rgba(0, 0, 0, 0.5),
+      inset -6px -6px 12px rgba(255, 255, 255, 0.01);
 
     --chart-grid: #2E3546;
     --chart-axis: #5A6376;

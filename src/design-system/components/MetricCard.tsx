@@ -14,7 +14,6 @@ import {
   fontWeight,
   lineHeight,
   radius,
-  shadow,
   transition,
   easing,
 } from '../tokens';
@@ -52,7 +51,7 @@ export const MetricCard = forwardRef<HTMLDivElement, MetricCardProps>(
       border: `1px solid ${surface.border}`,
       borderRadius: radius.lg,
       padding: spacing[6],
-      boxShadow: shadow.sm,
+      boxShadow: 'var(--shadow-neumorphic-sm)',
       transition: `all ${transition.normal} ${easing.standard}`,
       display: 'flex',
       flexDirection: 'column',

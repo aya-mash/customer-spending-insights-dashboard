@@ -6,17 +6,12 @@
 
 import { forwardRef, type CSSProperties } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { brand, surface, text as textColors, spacingNum, radius, transition, easing } from '../tokens';
+import { brand, surface, text as textColors, spacingNum, radius } from '../tokens';
 import { useBreakpoint } from '../index';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
 }
-
-const transitions = {
-  fast: transition.fast,
-  easeStandard: easing.standard,
-};
 
 export interface BottomNavItem {
   id: string;
@@ -43,7 +38,7 @@ export const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
       left: 0,
       right: 0,
       height: '72px',
-      backgroundColor: surface.card,
+      backgroundColor: surface.surface,
       borderTop: `1px solid ${surface.border}`,
       display: 'flex',
       alignItems: 'center',
@@ -51,7 +46,7 @@ export const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
       padding: `${spacingNum[2]}px ${spacingNum[4]}px`,
       paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
       zIndex: 1000,
-      boxShadow: '0 -2px 8px rgba(0, 0, 0, 0.08)',
+      boxShadow: 'var(--shadow-neumorphic-md)',
     });
 
     const navItemStyles = (isActive: boolean) => createDynamicStyles({
@@ -61,13 +56,13 @@ export const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
       justifyContent: 'center',
       gap: `${spacingNum[1]}px`,
       padding: `${spacingNum[2]}px ${spacingNum[3]}px`,
-      borderRadius: radius.lg,
+      borderRadius: radius.md,
       backgroundColor: isActive ? `${brand.primary}15` : 'transparent',
       color: isActive ? brand.primary : textColors.secondary,
       textDecoration: 'none',
       fontSize: '11px',
       fontWeight: isActive ? 600 : 500,
-      transition: `all ${transitions.fast} ${transitions.easeStandard}`,
+      transition: `all 0.2s ease`,
       cursor: 'pointer',
       minWidth: '64px',
       textAlign: 'center',
@@ -77,12 +72,13 @@ export const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      width: '40px',
-      height: '40px',
-      borderRadius: radius.full,
+      width: '44px',
+      height: '44px',
+      borderRadius: radius.md,
       backgroundColor: isActive ? brand.primary : 'transparent',
       color: isActive ? textColors.inverse : textColors.secondary,
-      transition: `all ${transitions.fast} ${transitions.easeStandard}`,
+      transition: `all 0.2s ease`,
+      boxShadow: isActive ? 'var(--shadow-neumorphic-sm)' : 'none',
     });
 
     return (

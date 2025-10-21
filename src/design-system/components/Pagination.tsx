@@ -103,8 +103,8 @@ export const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
     };
 
     const getPillButtonStyle = (isActive: boolean, isDisabled: boolean) => ({
-      minWidth: '40px',
-      height: '40px',
+      minWidth: '44px',
+      height: '44px',
       padding: `0 ${spacingNum[3]}px`,
       borderRadius: radius.full,
       border: isActive
@@ -115,7 +115,7 @@ export const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
       fontSize: '14px',
       fontWeight: isActive ? 600 : 500,
       cursor: isDisabled ? 'not-allowed' : 'pointer',
-      transition: 'all 0.15s ease',
+      transition: 'all 0.2s ease',
       opacity: isDisabled ? 0.5 : 1,
       fontFamily: 'inherit',
       display: 'inline-flex',

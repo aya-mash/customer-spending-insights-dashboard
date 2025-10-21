@@ -1,9 +1,9 @@
 /**
  * STYLE GUIDE
- * Design system tokens and components showcase with integrated contrast checker
+ * Design system tokens and components showcase with integrated contrast checker and neomorphic examples
  */
 
-import { useState, type CSSProperties } from 'react';
+import { useState, useEffect, type CSSProperties } from 'react';
 import { PageLayout, Card, Stack, Grid, Heading, Text, Button, Badge, Divider } from '../design-system/components/index';
 import { 
   brand, 
@@ -20,6 +20,7 @@ import {
 } from '../design-system/tokens';
 import { contrastRatio } from '../lib/contrast';
 import { ContrastCheckerPanel } from '../design-system/components/ContrastCheckerPanel';
+import { Palette } from 'lucide-react';
 
 interface ColorSwatch {
   name: string;
@@ -29,6 +30,20 @@ interface ColorSwatch {
 
 export function StyleGuide() {
   const [copiedToken, setCopiedToken] = useState<string | null>(null);
+  const [showContrastChecker, setShowContrastChecker] = useState(false);
+  const [circleButtonPressed, setCircleButtonPressed] = useState(false);
+  const [squareButtonPressed, setSquareButtonPressed] = useState(false);
+
+  // Close dialog on Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showContrastChecker) {
+        setShowContrastChecker(false);
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [showContrastChecker]);
 
   // Collect all color tokens
   const brandColors: ColorSwatch[] = [
@@ -446,18 +461,354 @@ export function StyleGuide() {
         </Card>
 
         {/* Contrast Checker */}
+        {/* Contrast Checker Section - Now a Dialog */}
         <Card padding={6}>
           <Stack direction="vertical" spacing={4}>
             <div>
               <Heading level={3}>Contrast Checker</Heading>
               <Text variant="body" color="muted" style={{ marginTop: spacing[2] }}>
-                Check color contrast ratios against WCAG AA and AAA standards.
+                Click the floating button (bottom-right) to open the contrast checker dialog.
               </Text>
             </div>
-            <ContrastCheckerPanel />
+          </Stack>
+        </Card>
+
+        {/* Neomorphic Design System Section */}
+        <Card padding={6}>
+          <Stack direction="vertical" spacing={6}>
+            <div>
+              <Heading level={2}>Neomorphic Design System</Heading>
+              <Text variant="body" color="muted" style={{ marginTop: spacing[2] }}>
+                Soft, monochromatic design with subtle shadows creating a molded-from-surface appearance.
+              </Text>
+            </div>
+
+            <Divider />
+
+            {/* Circular Examples */}
+            <div>
+              <Heading level={3} style={{ marginBottom: spacing[4] }}>Circular Elements</Heading>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                gap: spacing[6],
+                marginTop: spacing[4],
+              }}>
+                {/* Raised Button */}
+                <div style={{ textAlign: 'center' }}>
+                  <button
+                    onMouseDown={() => setCircleButtonPressed(true)}
+                    onMouseUp={() => setCircleButtonPressed(false)}
+                    onMouseLeave={() => setCircleButtonPressed(false)}
+                    style={{
+                      width: '100px',
+                      height: '100px',
+                      borderRadius: '50%',
+                      backgroundColor: surface.surface,
+                      border: 'none',
+                      cursor: 'pointer',
+                      boxShadow: circleButtonPressed ? 'var(--shadow-neumorphic-pressed)' : 'var(--shadow-neumorphic-md)',
+                      transition: 'all 200ms ease',
+                      fontSize: fontSize.bodySm,
+                      fontWeight: fontWeight.semibold,
+                      color: brand.primary,
+                    }}
+                  >
+                    Button
+                  </button>
+                  <Text variant="caption" color="muted" style={{ marginTop: spacing[2], display: 'block' }}>
+                    Raised/Embossed
+                  </Text>
+                </div>
+
+                {/* Debossed Input */}
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{
+                    width: '100px',
+                    height: '100px',
+                    borderRadius: '50%',
+                    backgroundColor: surface.surface,
+                    boxShadow: 'var(--shadow-neumorphic-inset)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto',
+                  }}>
+                    <input
+                      type="text"
+                      placeholder="Input"
+                      style={{
+                        width: '70px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        outline: 'none',
+                        textAlign: 'center',
+                        fontSize: fontSize.bodySm,
+                        color: textColors.primary,
+                      }}
+                    />
+                  </div>
+                  <Text variant="caption" color="muted" style={{ marginTop: spacing[2], display: 'block' }}>
+                    Depressed/Debossed
+                  </Text>
+                </div>
+
+                {/* Ring */}
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{
+                    width: '100px',
+                    height: '100px',
+                    borderRadius: '50%',
+                    backgroundColor: surface.surface,
+                    border: `5px solid ${surface.surface}`,
+                    boxShadow: 'var(--shadow-neumorphic-ring)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto',
+                  }}>
+                    <div style={{
+                      width: '70px',
+                      height: '70px',
+                      borderRadius: '50%',
+                      boxShadow: 'var(--shadow-neumorphic-inset)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: fontSize.caption,
+                      color: textColors.muted,
+                    }}>
+                      Ring
+                    </div>
+                  </div>
+                  <Text variant="caption" color="muted" style={{ marginTop: spacing[2], display: 'block' }}>
+                    Raised Ring
+                  </Text>
+                </div>
+              </div>
+            </div>
+
+            <Divider />
+
+            {/* Square Examples */}
+            <div>
+              <Heading level={3} style={{ marginBottom: spacing[4] }}>Rounded Square Elements</Heading>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                gap: spacing[6],
+                marginTop: spacing[4],
+              }}>
+                {/* Square Button */}
+                <div style={{ textAlign: 'center' }}>
+                  <button
+                    onMouseDown={() => setSquareButtonPressed(true)}
+                    onMouseUp={() => setSquareButtonPressed(false)}
+                    onMouseLeave={() => setSquareButtonPressed(false)}
+                    style={{
+                      width: '140px',
+                      height: '100px',
+                      borderRadius: radius.lg,
+                      backgroundColor: surface.surface,
+                      border: 'none',
+                      cursor: 'pointer',
+                      boxShadow: squareButtonPressed ? 'var(--shadow-neumorphic-pressed)' : 'var(--shadow-neumorphic-md)',
+                      transition: 'all 200ms ease',
+                      fontSize: fontSize.bodySm,
+                      fontWeight: fontWeight.semibold,
+                      color: brand.primary,
+                    }}
+                  >
+                    Button
+                  </button>
+                  <Text variant="caption" color="muted" style={{ marginTop: spacing[2], display: 'block' }}>
+                    Raised/Embossed
+                  </Text>
+                </div>
+
+                {/* Square Input */}
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{
+                    width: '140px',
+                    height: '100px',
+                    borderRadius: radius.lg,
+                    backgroundColor: surface.surface,
+                    boxShadow: 'var(--shadow-neumorphic-inset)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto',
+                    padding: spacing[3],
+                  }}>
+                    <input
+                      type="text"
+                      placeholder="Enter..."
+                      style={{
+                        width: '100%',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        outline: 'none',
+                        textAlign: 'center',
+                        fontSize: fontSize.bodySm,
+                        color: textColors.primary,
+                      }}
+                    />
+                  </div>
+                  <Text variant="caption" color="muted" style={{ marginTop: spacing[2], display: 'block' }}>
+                    Depressed/Debossed
+                  </Text>
+                </div>
+
+                {/* Square Ring */}
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{
+                    width: '140px',
+                    height: '100px',
+                    borderRadius: radius.lg,
+                    backgroundColor: surface.surface,
+                    border: `5px solid ${surface.surface}`,
+                    boxShadow: 'var(--shadow-neumorphic-ring)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto',
+                  }}>
+                    <div style={{
+                      width: '100px',
+                      height: '70px',
+                      borderRadius: radius.md,
+                      boxShadow: 'var(--shadow-neumorphic-inset)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: fontSize.caption,
+                      color: textColors.muted,
+                    }}>
+                      Ring
+                    </div>
+                  </div>
+                  <Text variant="caption" color="muted" style={{ marginTop: spacing[2], display: 'block' }}>
+                    Raised Ring
+                  </Text>
+                </div>
+              </div>
+            </div>
+
+            <Divider />
+
+            {/* Tabs Example */}
+            <div>
+              <Heading level={3} style={{ marginBottom: spacing[4] }}>Debossed Tabs</Heading>
+              <div style={{ textAlign: 'center', marginTop: spacing[4] }}>
+                <div style={{
+                  display: 'inline-flex',
+                  gap: spacing[2],
+                  background: surface.surface,
+                  padding: spacing[2],
+                  borderRadius: radius.lg,
+                  boxShadow: 'var(--shadow-neumorphic-inset)',
+                }}>
+                  <button style={{
+                    background: surface.surface,
+                    border: 'none',
+                    padding: `${spacing[3]} ${spacing[4]}`,
+                    borderRadius: radius.md,
+                    fontSize: fontSize.body,
+                    fontWeight: fontWeight.semibold,
+                    color: brand.primary,
+                    cursor: 'pointer',
+                    boxShadow: 'var(--shadow-neumorphic-sm)',
+                    transform: 'translateY(-1px)',
+                  }}>
+                    Active
+                  </button>
+                  <button style={{
+                    background: surface.surface,
+                    border: 'none',
+                    padding: `${spacing[3]} ${spacing[4]}`,
+                    borderRadius: radius.md,
+                    fontSize: fontSize.body,
+                    fontWeight: fontWeight.medium,
+                    color: textColors.muted,
+                    cursor: 'pointer',
+                    boxShadow: 'var(--shadow-neumorphic-inset)',
+                  }}>
+                    Inactive
+                  </button>
+                  <button style={{
+                    background: surface.surface,
+                    border: 'none',
+                    padding: `${spacing[3]} ${spacing[4]}`,
+                    borderRadius: radius.md,
+                    fontSize: fontSize.body,
+                    fontWeight: fontWeight.medium,
+                    color: textColors.muted,
+                    cursor: 'pointer',
+                    boxShadow: 'var(--shadow-neumorphic-inset)',
+                  }}>
+                    Another
+                  </button>
+                </div>
+                <Text variant="caption" color="muted" style={{ marginTop: spacing[3], display: 'block' }}>
+                  Container debossed, active tab raised, inactive tabs recessed
+                </Text>
+              </div>
+            </div>
           </Stack>
         </Card>
       </Stack>
+
+      {/* Floating Action Button (FAB) for Contrast Checker */}
+      <button
+        onClick={() => setShowContrastChecker(true)}
+        style={{
+          position: 'fixed',
+          bottom: spacing[6],
+          right: spacing[6],
+          width: '60px',
+          height: '60px',
+          borderRadius: '50%',
+          backgroundColor: brand.primary,
+          color: textColors.inverse,
+          border: 'none',
+          cursor: 'pointer',
+          boxShadow: 'var(--shadow-neumorphic-lg)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          transition: 'all 200ms ease',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.1)';
+          e.currentTarget.style.boxShadow = shadow['2xl'];
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-lg)';
+        }}
+        aria-label="Open Contrast Checker"
+      >
+        <Palette size={24} />
+      </button>
+
+      {/* Contrast Checker Dialog */}
+      {showContrastChecker && (
+        <>
+          {/* Backdrop - Solid overlay (neomorphic design) */}
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              backgroundColor: surface.overlay,
+              zIndex: 1300,
+            }}
+            onClick={() => setShowContrastChecker(false)}
+          />
+          {/* Dialog */}
+          <ContrastCheckerPanel onClose={() => setShowContrastChecker(false)} />
+        </>
+      )}
     </PageLayout>
   );
 }

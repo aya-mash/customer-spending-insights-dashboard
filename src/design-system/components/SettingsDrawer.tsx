@@ -54,7 +54,7 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
       bottom: 0,
       backgroundColor: surface.overlay,
       zIndex: zIndex.overlay,
-      animation: 'fadeIn 200ms ease-out',
+      animation: 'fadeIn 250ms ease-out',
     });
 
     const drawerStyles = createDynamicStyles({
@@ -62,14 +62,16 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
       top: 0,
       right: 0,
       width: '100%',
-      maxWidth: '360px',
+      maxWidth: '400px',
       height: '100vh',
       backgroundColor: surface.card,
-      boxShadow: '-4px 0 24px rgba(0, 0, 0, 0.12)',
+      boxShadow: '-8px 0 32px rgba(0, 0, 0, 0.12)',
+      borderTopLeftRadius: radius.xl,
+      borderBottomLeftRadius: radius.xl,
       zIndex: zIndex.drawer,
       display: 'flex',
       flexDirection: 'column',
-      animation: 'slideInRight 250ms ease-out',
+      animation: 'slideInRight 300ms cubic-bezier(0.4, 0, 0.2, 1)',
     });
 
     const headerStyles = createDynamicStyles({
@@ -110,9 +112,10 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)',
       gap: `${spacingNum[2]}px`,
-      padding: `${spacingNum[4]}px`,
+      padding: `${spacingNum[3]}px`,
       backgroundColor: surface.surfaceAlt,
-      borderRadius: radius.xl,
+      borderRadius: radius.lg,
+      border: `1px solid ${surface.border}`,
     });
 
     const modeButtonStyles = (isActive: boolean) => createDynamicStyles({
@@ -120,15 +123,16 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
       flexDirection: 'column',
       alignItems: 'center',
       gap: `${spacingNum[2]}px`,
-      padding: `${spacingNum[3]}px ${spacingNum[2]}px`,
-      borderRadius: radius.lg,
+      padding: `${spacingNum[4]}px ${spacingNum[2]}px`,
+      borderRadius: radius.md,
       border: 'none',
       backgroundColor: isActive ? brand.primary : 'transparent',
       color: isActive ? textColors.inverse : textColors.primary,
       fontSize: '13px',
       fontWeight: isActive ? 600 : 500,
       cursor: 'pointer',
-      transition: `all ${transition.fast} ${easing.standard}`,
+      transition: `all ${transition.normal} ${easing.standard}`,
+      boxShadow: isActive ? '0 2px 8px rgba(47, 112, 239, 0.2)' : 'none',
     });
 
     const modes: Array<{ key: 'light' | 'dark' | 'system'; label: string; icon: React.ReactNode }> = [

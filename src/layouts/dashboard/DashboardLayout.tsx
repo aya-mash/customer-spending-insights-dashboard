@@ -10,7 +10,7 @@ import { Navigation, type NavItem } from '../../design-system/components/Navigat
 import { BottomNav, type BottomNavItem } from '../../design-system/components/BottomNav';
 import { SettingsDrawer } from '../../design-system/components/SettingsDrawer';
 import { useThemeContext } from '../../contexts';
-import { brand, surface, spacingNum, zIndex, text as textColors, fontSize, fontWeight } from '../../design-system/tokens';
+import { brand, surface, spacingNum, zIndex, text as textColors, fontSize, fontWeight, radius } from '../../design-system/tokens';
 import { useBreakpoint } from '../../design-system';
 import { DashboardContext } from './DashboardProvider';
 
@@ -73,7 +73,7 @@ export function DashboardLayout() {
     left: isMobile ? 0 : sidebarExpanded ? '240px' : '72px',
     right: 0,
     height: '64px',
-    backgroundColor: surface.card,
+    backgroundColor: surface.surface,
     borderBottom: `1px solid ${surface.border}`,
     display: 'flex',
     alignItems: 'center',
@@ -81,6 +81,7 @@ export function DashboardLayout() {
     padding: `0 ${spacingNum[6]}px`,
     zIndex: zIndex.sticky,
     transition: 'left 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+    boxShadow: 'var(--shadow-neumorphic-sm)',
   });
 
   const logoStyles = createDynamicStyles({
@@ -107,14 +108,15 @@ export function DashboardLayout() {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '40px',
-    height: '40px',
-    borderRadius: '12px',
+    width: '44px',
+    height: '44px',
+    borderRadius: radius.md,
     border: 'none',
     backgroundColor: 'transparent',
     color: brand.primary,
     cursor: 'pointer',
-    transition: 'background-color 150ms ease',
+    transition: 'all 0.2s ease',
+    boxShadow: 'var(--shadow-neumorphic-sm)',
   });
 
   const mainStyles = createDynamicStyles({
@@ -174,10 +176,18 @@ export function DashboardLayout() {
           style={settingsButtonStyles}
           onClick={() => setSettingsOpen(true)}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = surface.hover;
+            e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-md)';
+            e.currentTarget.style.transform = 'translateY(-1px)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-sm)';
+            e.currentTarget.style.transform = 'translateY(0)';
+          }}
+          onMouseDown={(e) => {
+            e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-pressed)';
+          }}
+          onMouseUp={(e) => {
+            e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-sm)';
           }}
         >
           <Settings2 size={20} />

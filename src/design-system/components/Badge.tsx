@@ -51,7 +51,7 @@ export const Badge = React.memo(
           display: 'inline-flex',
           alignItems: 'center',
           padding: `${spacingNum[1]}px ${spacingNum[3]}px`,
-          borderRadius: radius.full,
+          borderRadius: radius.md,
           fontSize: fontSize.bodySm,
           fontWeight: fontWeight.medium,
           backgroundColor: bgColor,
