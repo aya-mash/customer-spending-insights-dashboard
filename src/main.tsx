@@ -5,6 +5,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/components.css';
 import './styles/dashboard.css';
+import './styles/tabbed-overview.css';
 import App from './App.tsx';
 
 const queryClient = new QueryClient({

@@ -1,5 +1,6 @@
 import { useRef, useEffect, useCallback } from 'react';
 import { useThemeChoice } from '../hooks/useThemeChoice';
+import { Settings, X, Sun, Monitor, Moon } from 'lucide-react';
 
 interface SettingsDrawerProps {
   readonly open: boolean;
@@ -73,8 +74,13 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           onKeyDown={handleKeyDown}
         >
           <header className="settings-header">
-            <h2 className="settings-title">Settings</h2>
-            <button type="button" aria-label="Close settings panel" className="settings-close" onClick={onClose}>✕</button>
+            <div className="settings-title-group">
+              <Settings size={20} aria-hidden="true" />
+              <h2 className="settings-title">Settings</h2>
+            </div>
+            <button type="button" aria-label="Close settings panel" className="settings-close" onClick={onClose}>
+              <X size={20} aria-hidden="true" />
+            </button>
           </header>
           <section className="settings-section">
             <div className="mode-group" role="radiogroup" aria-label="Color theme">
@@ -85,7 +91,10 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                 className={mode === 'light' ? 'seg-btn active' : 'seg-btn'}
                 onClick={() => setMode('light')}
                 data-testid="mode-light"
-              >🌞 Light</button>
+              >
+                <Sun size={16} aria-hidden="true" />
+                <span>Light</span>
+              </button>
               <button
                 type="button"
                 role="radio"
@@ -93,7 +102,10 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                 className={mode === 'system' ? 'seg-btn active' : 'seg-btn'}
                 onClick={() => setMode('system')}
                 data-testid="mode-system"
-              >🖥️ System</button>
+              >
+                <Monitor size={16} aria-hidden="true" />
+                <span>System</span>
+              </button>
               <button
                 type="button"
                 role="radio"
@@ -101,7 +113,10 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
                 className={mode === 'dark' ? 'seg-btn active' : 'seg-btn'}
                 onClick={() => setMode('dark')}
                 data-testid="mode-dark"
-              >🌙 Dark</button>
+              >
+                <Moon size={16} aria-hidden="true" />
+                <span>Dark</span>
+              </button>
             </div>
           </section>
         </aside>

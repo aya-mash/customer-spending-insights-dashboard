@@ -1,5 +1,6 @@
 import { memo, useMemo, useCallback } from 'react';
 import { formatRand } from '../../utils/currency';
+import { CreditCard, TrendingUp, Download, ArrowRight } from 'lucide-react';
 
 interface OverviewSummaryProps {
   totalSpent: number;
@@ -104,9 +105,13 @@ export const QuickActions = memo(function QuickActions({
           onClick={onViewTransactions}
           onKeyDown={(e) => handleKeyDown(e, onViewTransactions)}
         >
-          <span className="action-icon" aria-hidden="true">💳</span>
+          <span className="action-icon" aria-hidden="true">
+            <CreditCard size={20} strokeWidth={2} />
+          </span>
           <span className="action-label">View Transactions</span>
-          <span className="action-arrow" aria-hidden="true">→</span>
+          <span className="action-arrow" aria-hidden="true">
+            <ArrowRight size={16} strokeWidth={2} />
+          </span>
         </button>
         
         <button
@@ -115,9 +120,13 @@ export const QuickActions = memo(function QuickActions({
           onClick={onViewInsights}
           onKeyDown={(e) => handleKeyDown(e, onViewInsights)}
         >
-          <span className="action-icon" aria-hidden="true">📊</span>
+          <span className="action-icon" aria-hidden="true">
+            <TrendingUp size={20} strokeWidth={2} />
+          </span>
           <span className="action-label">View Insights</span>
-          <span className="action-arrow" aria-hidden="true">→</span>
+          <span className="action-arrow" aria-hidden="true">
+            <ArrowRight size={16} strokeWidth={2} />
+          </span>
         </button>
         
         <button
@@ -126,7 +135,9 @@ export const QuickActions = memo(function QuickActions({
           onClick={onExportData}
           onKeyDown={(e) => handleKeyDown(e, onExportData)}
         >
-          <span className="action-icon" aria-hidden="true">📥</span>
+          <span className="action-icon" aria-hidden="true">
+            <Download size={20} strokeWidth={2} />
+          </span>
           <span className="action-label">Export Data</span>
           <span className="action-arrow" aria-hidden="true">→</span>
         </button>

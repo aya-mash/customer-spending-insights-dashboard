@@ -5,6 +5,7 @@ import { Header } from './Header.tsx';
 import { Sidebar } from './Sidebar.tsx';
 import { BottomBar } from './BottomBar.tsx';
 import { Outlet } from 'react-router-dom';
+import { Settings } from 'lucide-react';
 
 export function DashboardLayout() {
   const { options, mobileSidebarOpen, setMobileSidebarOpen } = useDashboard();
@@ -30,7 +31,9 @@ export function DashboardLayout() {
           aria-label="Settings"
           className="settings-trigger"
           onClick={() => setSettingsOpen(o => !o)}
-        >⚙️</button>
+        >
+          <Settings size={20} strokeWidth={2} aria-hidden="true" />
+        </button>
       )} />
       <div className="dashboard-body">
         {/* Sidebar (desktop sticky, mobile off-canvas controlled by mobileSidebarOpen) */}

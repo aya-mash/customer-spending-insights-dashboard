@@ -33,17 +33,26 @@ docker run -p 3000:80 spending-dashboard
 - **Transactions**: Filterable, sortable, paginated transaction management
 
 ### Performance & Accessibility
-- 🎯 **Lighthouse Scores**: A11y ≥95%, Perf ≥90%, CLS ≤0.10
-- ♿ **WCAG AA**: Full keyboard navigation, screen reader support, high contrast
-- 📱 **Responsive**: Mobile-first design with touch-friendly interactions
-- ⚡ **Optimized**: Code-split routes, lazy-loaded charts, memoized components
+- 🎯 **Lighthouse Scores**: A11y ≥95%, Perf ≥90%, CLS ≤0.10 (target metrics)
+- ♿ **WCAG AA**: Full keyboard navigation, screen reader support, `:focus-visible` indicators
+- 🎹 **Keyboard**: Tab/Shift+Tab, Enter/Space, Escape (modals), Arrow keys (tabs), skip links
+- 📱 **Responsive**: Mobile-first (320px+), touch-friendly (44px targets), safe-area support (iOS notch)
+- ⚡ **Optimized**: Code-split routes, lazy-loaded charts (DonutChart 26kB, TrendsChart 41kB)
+- 🎨 **Dark Theme**: Auto-detect via `prefers-color-scheme`, manual toggle, persisted to localStorage
+- 🔍 **Screen Readers**: ARIA labels, live regions (`aria-live="polite"`), chart summaries via `aria-describedby`
+- 🎭 **Animations**: Respect `prefers-reduced-motion` (disables chart animations, transforms)
 
 ### Technology Stack
-- **Frontend**: Vite + React 18 + TypeScript (strict)
-- **Charts**: Recharts with lazy loading and accessibility
-- **Styling**: Native CSS with tokens, Grid/Flex, container queries
-- **Testing**: Vitest + Testing Library + Playwright
-- **Mocking**: MSW with deterministic data factories
+- **Frontend**: Vite 7.1.7 + React 19.1.1 + TypeScript (strict mode)
+- **Routing**: React Router DOM 7.9.4 with lazy loading and prefetch
+- **Charts**: Recharts 3.3.0 with accessibility and lazy boundaries
+- **Icons**: Lucide React 0.546.0 (professional icon system, replaces emojis)
+- **Styling**: Native CSS only (Grid/Flex, custom properties, container queries, logical properties)
+- **State**: TanStack React Query 5.90.5 for server state
+- **Testing**: Vitest 3.2.4 + Testing Library + Playwright (E2E)
+- **Mocking**: MSW 2.11.5 with deterministic factories
+- **Storybook**: 8.2.9 for component-driven development
+- **Deployment**: Docker + Nginx with optimized production build
 
 ## 🏗️ Architecture
 
@@ -60,17 +69,38 @@ src/
 
 ## 🎨 Design System
 
-### Tokens
-- **Colors**: Primary/secondary scales, semantic states, dark theme
-- **Spacing**: Consistent scale (sp-1 to sp-64)
-- **Typography**: Type scale with semantic sizes
-- **Elevation**: Shadow system (1-5 levels)
+### Design Tokens (Production-Grade)
+All visual design decisions are centralized in `src/styles/tokens.css`:
+- **Colors**: Primary (#2F70EF blue), Secondary (#1E313E), semantic states, full neutral scale (50-900)
+- **Typography**: Scale from 11px→48px with semantic names (fs-caption, fs-body, fs-h1-h6)
+- **Spacing**: Consistent 4px-based scale (sp-1→sp-64) for margins, padding, gaps
+- **Shadows**: 6-level elevation system (shadow-xs→shadow-2xl) for depth hierarchy
+- **Radius**: Border radius tokens (radius-xs→radius-full) for consistent rounding
+- **Z-Index**: Layered scale (base→dropdown→sticky→fixed→modal→tooltip→toast→max)
+- **Transitions**: Timing tokens (fast 150ms, normal 250ms, slow 350ms) with easing curves
+- **Dark Theme**: Professional dark mode with WCAG AA contrast, optimized for low-light viewing
 
 ### Components
-- **Cards**: Consistent elevation and spacing
-- **Tables**: Zebra rows, sticky headers, mobile cards
-- **Charts**: Accessible with screen reader summaries
-- **Navigation**: Responsive sidebar/bottom bar
+- **Cards**: Elevation levels 1-5, interactive variant with hover lift, consistent spacing
+- **Metric Cards**: 8-metric grid (2-col desktop, 4-col on 1440px+), category-specific icon colors
+- **Tables**: Zebra striping, sticky headers with shadow, right-aligned currency, sortable columns
+- **Charts**: 
+  - DonutChart: Inner label (Top category), rounded segments, click drill-down, SR summaries
+  - TrendsChart: Gradient area/line, compact ticks, tooltip with delta, textual summary
+- **Tabs**: Pill-style with robust ARIA, keyboard Left/Right, strong :focus-visible
+- **Navigation**: 
+  - Desktop: Collapsible sidebar (248px→72px) with icon-only mode, unified header toggle
+  - Mobile: Bottom nav with safe-area support, icon+label column layout
+- **Filters**: Removable category/period pills, "Clear all" button, URL-backed state
+- **Interactive States**: 
+  - Hover: Subtle transforms (translateY, translateX), shadow elevation
+  - Focus: Visible outlines (`:focus-visible` only, no sticky mouse outlines)
+  - Active: Tactile press feedback (reduced lift on buttons, cards)
+
+### Responsive Spacing
+- **Page Padding**: Progressive 24px (mobile) → 32px (tablet) → 48px (desktop)
+- **Max Width**: 1600px with auto centering for large screens
+- **Touch Targets**: Minimum 44×44px enforced (buttons, nav links, chips)
 
 ## 📈 Performance Features
 

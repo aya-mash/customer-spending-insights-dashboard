@@ -1,5 +1,6 @@
-import { SummaryCardPlaceholder, QuickActionsPlaceholder, GoalsListPlaceholder, SummaryCard, QuickActions, GoalsList } from '../../widgets/Overview';
+import { QuickActionsPlaceholder, GoalsListPlaceholder, QuickActions, GoalsList } from '../../widgets/Overview';
 import { Button } from '../../components/Button';
+import { EnhancedOverviewMetrics } from './EnhancedOverviewMetrics';
 import { useOverviewData } from './useOverviewData';
 
 export function OverviewWidgets() {
@@ -10,7 +11,17 @@ export function OverviewWidgets() {
     <>
       {isInitialLoading && (
         <div className="overview-grid" aria-label="Loading overview data" aria-live="polite" aria-busy="true">
-          <SummaryCardPlaceholder />
+          <EnhancedOverviewMetrics
+            summary={{
+              period: '30d',
+              totalSpent: 0,
+              transactionCount: 0,
+              averageTransaction: 0,
+              topCategory: '',
+              comparedToPrevious: { spentChange: 0, transactionChange: 0 },
+            }}
+            isLoading={true}
+          />
           <QuickActionsPlaceholder />
           <GoalsListPlaceholder />
         </div>
@@ -24,8 +35,22 @@ export function OverviewWidgets() {
       )}
       {!isInitialLoading && (hasPartialData || (!isError && summary && goals)) && (
         <div className="overview-grid" aria-label={hasPartialData ? 'Overview partially loaded' : 'Overview data loaded'}>
-          {/* Summary card slot */}
-          {summary ? <SummaryCard summary={summary} /> : <SummaryCardPlaceholder />}
+          {/* Enhanced metrics grid - 8 comprehensive metric cards */}
+          {summary ? (
+            <EnhancedOverviewMetrics summary={summary} />
+          ) : (
+            <EnhancedOverviewMetrics
+              summary={{
+                period: '30d',
+                totalSpent: 0,
+                transactionCount: 0,
+                averageTransaction: 0,
+                topCategory: '',
+                comparedToPrevious: { spentChange: 0, transactionChange: 0 },
+              }}
+              isLoading={true}
+            />
+          )}
           {/* Quick actions are local UI, always show once past initial load */}
           <QuickActions />
           {/* Goals list slot */}

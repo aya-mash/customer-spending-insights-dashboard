@@ -5,6 +5,7 @@ import { Pagination } from '../../components/Pagination';
 import { MobileTransactionList } from './MobileTransactionList';
 import { useMediaQuery } from '../../utils/accessibility';
 import { useTransactionsData } from './useTransactionsData';
+import { CreditCard } from 'lucide-react';
 
 export function TransactionTable() {
   const customerId = 'user123';
@@ -27,7 +28,9 @@ export function TransactionTable() {
   if (data.length === 0) {
     return (
       <div role="status" className="empty-state">
-        <span className="empty-icon" aria-hidden="true">💳</span>
+        <span className="empty-icon" aria-hidden="true">
+          <CreditCard size={48} strokeWidth={1.5} />
+        </span>
         <p>No transactions found.</p>
       </div>
     );
