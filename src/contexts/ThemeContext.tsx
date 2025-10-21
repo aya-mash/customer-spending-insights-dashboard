@@ -1,10 +1,10 @@
 /**
  * THEME PROVIDER
  * Centralized theme management with Context API + localStorage persistence
- * No forced re-renders - CSS custom properties handle visual updates
+ * Instant theme switching via root data attributes and color-scheme
  */
 
-import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
+import { useState, useLayoutEffect, useCallback, useMemo, type ReactNode } from 'react';
 import { ThemeContext } from './theme-context';
 import type { ThemeMode, EffectiveTheme, ThemeContextValue } from './theme-types';
 
@@ -20,13 +20,16 @@ function resolveEffectiveTheme(mode: ThemeMode): EffectiveTheme {
 }
 
 function applyTheme(effective: EffectiveTheme, mode: ThemeMode) {
-  if (mode === 'system') {
-    delete document.documentElement.dataset.theme;
-  } else {
-    document.documentElement.dataset.theme = mode;
-  }
+  const root = document.documentElement;
   
-  // Dispatch custom event for Logo and other components that need to react
+  // ALWAYS set both attributes - never clear them
+  root.dataset.theme = effective;  // The effective theme (what's actually applied)
+  root.dataset.mode = mode;         // The user's selection (system/light/dark)
+  
+  // Set color-scheme for native browser UI
+  root.style.colorScheme = effective;
+  
+  // Dispatch custom event for components that need instant updates
   document.dispatchEvent(new CustomEvent('themechange', { 
     detail: { theme: effective, mode } 
   }));
@@ -42,8 +45,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const [effective, setEffective] = useState<EffectiveTheme>(() => resolveEffectiveTheme(mode));
 
-  // Apply theme to DOM and update effective theme
-  useEffect(() => {
+  // Apply theme to DOM BEFORE paint (prevents flicker)
+  useLayoutEffect(() => {
     const newEffective = resolveEffectiveTheme(mode);
     setEffective(newEffective);
     applyTheme(newEffective, mode);
@@ -57,7 +60,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [mode]);
 
   // Listen for system preference changes when in system mode
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (mode !== 'system') return;
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');

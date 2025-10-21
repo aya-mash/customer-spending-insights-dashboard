@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { formatRand } from '../../utils/currency';
@@ -32,6 +33,14 @@ interface TrendsChartProps {
  */
 export default function TrendsChart({ data }: TrendsChartProps) {
   const reducedMotion = useReducedMotion();
+  
+  // Track theme for instant chart updates
+  const [themeKey, setThemeKey] = useState(0);
+  useEffect(() => {
+    const handleThemeChange = () => setThemeKey(k => k + 1);
+    document.addEventListener('themechange', handleThemeChange);
+    return () => document.removeEventListener('themechange', handleThemeChange);
+  }, []);
 
   const min = Math.min(...data.map(d => d.totalSpent));
   const max = Math.max(...data.map(d => d.totalSpent));
@@ -91,7 +100,7 @@ export default function TrendsChart({ data }: TrendsChartProps) {
 
   return (
     <div className="trends-chart" aria-describedby={summaryId} aria-label="Monthly spending trends area chart">
-      <ResponsiveContainer width="100%" height={340}>
+      <ResponsiveContainer key={`chart-${themeKey}`} width="100%" height={340}>
         <AreaChart
           data={data}
           margin={{ top: 24, right: 24, left: 16, bottom: 24 }}

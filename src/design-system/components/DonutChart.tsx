@@ -3,7 +3,7 @@
  * Design system category breakdown chart with side-by-side legend
  */
 
-import { forwardRef, type CSSProperties } from 'react';
+import { forwardRef, useState, useEffect, type CSSProperties } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { brand, categories as categoryColors, type CategoryName, neutral, text as textColors, spacingNum, radius } from '../tokens';
 import { formatCurrency, usePrefersReducedMotion, useBreakpoint } from '../index';
@@ -39,6 +39,14 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
     const reducedMotion = usePrefersReducedMotion();
     const breakpoint = useBreakpoint();
     const isMobile = breakpoint === 'mobile';
+    
+    // Track theme for instant chart updates
+    const [themeKey, setThemeKey] = useState(0);
+    useEffect(() => {
+      const handleThemeChange = () => setThemeKey(k => k + 1);
+      document.addEventListener('themechange', handleThemeChange);
+      return () => document.removeEventListener('themechange', handleThemeChange);
+    }, []);
 
     const chartData = data.map(item => ({
       name: item.name,
@@ -160,7 +168,7 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
       <div ref={ref} style={containerStyles} aria-describedby={summaryId}>
         {/* Chart */}
         <div style={chartWrapperStyles}>
-          <ResponsiveContainer width="100%" height={height}>
+          <ResponsiveContainer key={`chart-${themeKey}`} width="100%" height={height}>
             <PieChart>
               <Pie
                 data={chartData}
