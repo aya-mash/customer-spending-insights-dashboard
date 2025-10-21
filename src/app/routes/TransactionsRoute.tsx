@@ -1,14 +1,7 @@
-import { TransactionFilters } from '../../features/transactions/TransactionFilters';
-import { TransactionTable } from '../../features/transactions/TransactionTable';
+import { EnhancedTransactions } from '../../features/transactions/EnhancedTransactions';
 
 export function TransactionsRoute() {
-  return (
-    <section aria-labelledby="transactions-heading">
-      <h2 id="transactions-heading">Transactions</h2>
-      <TransactionFilters />
-      <TransactionTable />
-    </section>
-  );
+  return <EnhancedTransactions />;
 }
 
 export default TransactionsRoute;
