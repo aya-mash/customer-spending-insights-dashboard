@@ -38,7 +38,7 @@ export function ErrorPage() {
   }
 
   const handleReload = () => {
-    window.location.reload();
+    globalThis.location.reload();
   };
 
   return (
@@ -86,7 +86,7 @@ export function ErrorPage() {
                 <RefreshCw size={18} aria-hidden="true" />
                 Try Again
               </Button>
-              {window.history.length > 1 && (
+              {globalThis.history.length > 1 && (
                 <Button
                   variant="ghost"
                   size="medium"

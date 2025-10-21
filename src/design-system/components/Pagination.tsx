@@ -102,26 +102,37 @@ export const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
       return pages;
     };
 
-    const getPillButtonStyle = (isActive: boolean, isDisabled: boolean) => ({
-      minWidth: '44px',
-      height: '44px',
-      padding: `0 ${spacingNum[3]}px`,
-      borderRadius: radius.full,
-      border: isActive
-        ? `2px solid ${brand.primary}`
-        : `1px solid ${surface.border}`,
-      backgroundColor: isActive ? brand.primary : surface.surface,
-      color: isActive ? textColors.inverse : isDisabled ? textColors.disabled : textColors.primary,
-      fontSize: '14px',
-      fontWeight: isActive ? 600 : 500,
-      cursor: isDisabled ? 'not-allowed' : 'pointer',
-      transition: 'all 0.2s ease',
-      opacity: isDisabled ? 0.5 : 1,
-      fontFamily: 'inherit',
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    });
+    const getPillButtonStyle = (isActive: boolean, isDisabled: boolean) => {
+      let textColor: string;
+      if (isActive) {
+        textColor = textColors.inverse;
+      } else if (isDisabled) {
+        textColor = textColors.disabled;
+      } else {
+        textColor = textColors.primary;
+      }
+
+      return {
+        minWidth: '44px',
+        height: '44px',
+        padding: `0 ${spacingNum[3]}px`,
+        borderRadius: radius.full,
+        border: isActive
+          ? `2px solid ${brand.primary}`
+          : `1px solid ${surface.border}`,
+        backgroundColor: isActive ? brand.primary : surface.surface,
+        color: textColor,
+        fontSize: '14px',
+        fontWeight: isActive ? 600 : 500,
+        cursor: isDisabled ? 'not-allowed' : 'pointer',
+        transition: 'all 0.2s ease',
+        opacity: isDisabled ? 0.5 : 1,
+        fontFamily: 'inherit',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      };
+    };
 
     const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>, isActive: boolean, isDisabled: boolean) => {
       if (!isActive && !isDisabled) {
@@ -174,45 +185,50 @@ export const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
         )}
 
         {/* Page numbers */}
-        {pages.map((page, index) => {
-          if (page === 'ellipsis') {
-            return (
-              <span
-                key={`ellipsis-${index}`}
-                style={{
-                  minWidth: '40px',
-                  height: '40px',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: textColors.secondary,
-                  fontSize: '14px',
-                  userSelect: 'none',
-                }}
-                aria-hidden="true"
-              >
-                ...
-              </span>
-            );
-          }
+        {(() => {
+          let ellipsisCount = 0;
+          return pages.map((page) => {
+            if (page === 'ellipsis') {
+              ellipsisCount += 1;
+              const ellipsisKey = `ellipsis-${ellipsisCount}`;
+              return (
+                <span
+                  key={ellipsisKey}
+                  style={{
+                    minWidth: '40px',
+                    height: '40px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: textColors.secondary,
+                    fontSize: '14px',
+                    userSelect: 'none',
+                  }}
+                  aria-hidden="true"
+                >
+                  ...
+                </span>
+              );
+            }
 
-          const isActive = page === currentPage;
-          return (
-            <button
-              key={page}
-              type="button"
-              onClick={() => onPageChange(page)}
-              disabled={disabled}
-              style={getPillButtonStyle(isActive, disabled)}
-              onMouseEnter={(e) => handleMouseEnter(e, isActive, disabled)}
-              onMouseLeave={(e) => handleMouseLeave(e, isActive)}
-              aria-label={`Page ${page}`}
-              aria-current={isActive ? 'page' : undefined}
-            >
-              {page}
-            </button>
-          );
-        })}
+            const isActive = page === currentPage;
+            return (
+              <button
+                key={page}
+                type="button"
+                onClick={() => onPageChange(page)}
+                disabled={disabled}
+                style={getPillButtonStyle(isActive, disabled)}
+                onMouseEnter={(e) => handleMouseEnter(e, isActive, disabled)}
+                onMouseLeave={(e) => handleMouseLeave(e, isActive)}
+                aria-label={`Page ${page}`}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                {page}
+              </button>
+            );
+          });
+        })()}
 
         {/* Next button */}
         {showPrevNext && (

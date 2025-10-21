@@ -26,12 +26,19 @@ function createDynamicStyles(styles: CSSProperties): CSSProperties {
 }
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Button style variant */
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+  /** Button size */
   size?: 'small' | 'medium' | 'large';
+  /** Make button full width */
   fullWidth?: boolean;
+  /** Show loading state */
   loading?: boolean;
+  /** Optional icon */
   icon?: ReactNode;
+  /** Icon position */
   iconPosition?: 'left' | 'right';
+  /** Button content */
   children: ReactNode;
 }
 

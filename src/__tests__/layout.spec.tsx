@@ -88,7 +88,7 @@ describe('route generator', () => {
         </DashboardProvider>
       </MemoryRouter>
     );
-    const skip = screen.getByText(/skip to content/i) as HTMLAnchorElement;
+    const skip: HTMLAnchorElement = screen.getByText(/skip to content/i);
     const main = document.getElementById('main-content');
     expect(main).toBeInTheDocument();
     expect(skip).toBeInTheDocument();
@@ -127,12 +127,12 @@ describe('route generator', () => {
     const settingsBtn = screen.getByRole('button', { name: /open settings/i });
     await user.click(settingsBtn);
     // Fixed: Now using semantic radio inputs, check 'checked' property
-    const systemBtn = screen.getByTestId('mode-system') as HTMLInputElement;
+    const systemBtn: HTMLInputElement = screen.getByTestId('mode-system');
     expect(systemBtn.checked).toBe(true);
-    const darkBtn = screen.getByTestId('mode-dark') as HTMLInputElement;
+    const darkBtn: HTMLInputElement = screen.getByTestId('mode-dark');
     await user.click(darkBtn);
     expect(darkBtn.checked).toBe(true);
-    const lightBtn = screen.getByTestId('mode-light') as HTMLInputElement;
+    const lightBtn: HTMLInputElement = screen.getByTestId('mode-light');
     await user.click(lightBtn);
     expect(lightBtn.checked).toBe(true);
   });

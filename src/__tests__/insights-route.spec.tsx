@@ -70,7 +70,7 @@ describe('InsightsRoute', () => {
     
     await waitFor(() => {
       const locDiv = screen.getByTestId('loc');
-      expect(locDiv.getAttribute('data-search')?.includes('category=Food')).toBe(true);
+      expect(locDiv.dataset.search?.includes('category=Food')).toBe(true);
     });
   });
 

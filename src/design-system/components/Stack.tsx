@@ -12,11 +12,17 @@ function createDynamicStyles(styles: CSSProperties): CSSProperties {
 }
 
 export interface StackProps extends HTMLAttributes<HTMLDivElement> {
+  /** Flex direction */
   direction?: 'horizontal' | 'vertical';
+  /** Gap between items */
   spacing?: ResponsiveValue<Spacing> | Spacing;
+  /** Cross-axis alignment */
   align?: 'start' | 'center' | 'end' | 'stretch';
+  /** Main-axis alignment */
   justify?: 'start' | 'center' | 'end' | 'between' | 'around';
+  /** Allow wrapping */
   wrap?: boolean;
+  /** Stack content */
   children: ReactNode;
 }
 
@@ -56,7 +62,7 @@ export const Stack = React.memo(
         return createDynamicStyles({
           display: 'flex',
           flexDirection: direction === 'vertical' ? 'column' : 'row',
-          gap: spacing[resolvedSpacing as Spacing] || spacing[4],
+          gap: spacing[resolvedSpacing] || spacing[4],
           alignItems: alignMap[align],
           justifyContent: justifyMap[justify],
           flexWrap: wrap ? 'wrap' : 'nowrap',

@@ -34,8 +34,8 @@ export function StyleGuide() {
         setShowContrastChecker(false);
       }
     };
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
+    globalThis.addEventListener('keydown', handleEscape);
+    return () => globalThis.removeEventListener('keydown', handleEscape);
   }, [showContrastChecker]);
 
   return (
@@ -694,14 +694,24 @@ export function StyleGuide() {
       {/* Contrast Checker Dialog */}
       {showContrastChecker && (
         <>
-          <div
+          <button
+            type="button"
             style={{
               position: 'fixed',
               inset: 0,
               backgroundColor: 'var(--color-overlay)',
               zIndex: 1300,
+              cursor: 'pointer',
+              border: 'none',
+              padding: 0,
             }}
             onClick={() => setShowContrastChecker(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape' || e.key === 'Esc') {
+                setShowContrastChecker(false);
+              }
+            }}
+            aria-label="Close contrast checker overlay"
           />
           <ContrastCheckerPanel onClose={() => setShowContrastChecker(false)} />
         </>

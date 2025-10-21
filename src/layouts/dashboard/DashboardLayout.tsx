@@ -67,10 +67,19 @@ export function DashboardLayout() {
 
   const bottomNavItems: BottomNavItem[] = navItems;
 
+  let sidebarOffset: number | string;
+  if (isMobile) {
+    sidebarOffset = 0;
+  } else if (sidebarExpanded) {
+    sidebarOffset = '240px';
+  } else {
+    sidebarOffset = '72px';
+  }
+
   const headerStyles = createDynamicStyles({
     position: 'fixed',
     top: 0,
-    left: isMobile ? 0 : sidebarExpanded ? '240px' : '72px',
+    left: sidebarOffset,
     right: 0,
     height: '64px',
     backgroundColor: surface.surface,
@@ -120,7 +129,7 @@ export function DashboardLayout() {
   });
 
   const mainStyles = createDynamicStyles({
-    marginLeft: isMobile ? 0 : sidebarExpanded ? '240px' : '72px',
+    marginLeft: sidebarOffset,
     marginTop: '64px',
     marginBottom: isMobile ? '72px' : 0,
     minHeight: 'calc(100vh - 64px)',

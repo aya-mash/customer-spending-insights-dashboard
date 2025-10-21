@@ -12,8 +12,11 @@ function createDynamicStyles(styles: CSSProperties): CSSProperties {
 }
 
 export interface GridProps extends HTMLAttributes<HTMLDivElement> {
+  /** Number of columns (responsive or fixed) */
   columns?: ResponsiveValue<number> | number;
+  /** Gap between grid items */
   gap?: ResponsiveValue<Spacing> | Spacing;
+  /** Grid content */
   children: ReactNode;
 }
 
@@ -26,7 +29,7 @@ export const Grid = React.memo(
       const gridStyles = useMemo(() => createDynamicStyles({
         display: 'grid',
         gridTemplateColumns: `repeat(${resolvedColumns}, 1fr)`,
-        gap: spacing[resolvedGap as Spacing] || spacing[4],
+        gap: spacing[resolvedGap] || spacing[4],
       }), [resolvedColumns, resolvedGap]);
 
       return (

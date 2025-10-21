@@ -11,7 +11,9 @@ function createDynamicStyles(styles: CSSProperties): CSSProperties {
 }
 
 export interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
+  /** Semantic heading level (1-4 corresponds to h1-h4) */
   level: 1 | 2 | 3 | 4;
+  /** Content to display in the heading */
   children: ReactNode;
 }
 
@@ -35,7 +37,7 @@ export const Heading = React.memo(
         });
       }, [level]);
 
-      const Component = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4';
+      const Component: 'h1' | 'h2' | 'h3' | 'h4' = `h${level}`;
 
       return React.createElement(
         Component,

@@ -11,8 +11,8 @@ import type { ThemeMode, EffectiveTheme, ThemeContextValue } from './theme-types
 const STORAGE_KEY = 'theme-choice';
 
 function getSystemPreference(): EffectiveTheme {
-  if (typeof window === 'undefined') return 'light';
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  if (globalThis.window === undefined) return 'light';
+  return globalThis.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
 function resolveEffectiveTheme(mode: ThemeMode): EffectiveTheme {
@@ -35,10 +35,10 @@ function applyTheme(effective: EffectiveTheme, mode: ThemeMode) {
   }));
 }
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
+export function ThemeProvider({ children }: { readonly children: ReactNode }) {
   // Initialize from localStorage or default to system
-  const [mode, setModeState] = useState<ThemeMode>(() => {
-    if (typeof window === 'undefined') return 'system';
+  const [mode, setMode] = useState<ThemeMode>(() => {
+    if (globalThis.window === undefined) return 'system';
     const stored = localStorage.getItem(STORAGE_KEY) as ThemeMode | null;
     return (stored === 'light' || stored === 'dark' || stored === 'system') ? stored : 'system';
   });
@@ -63,7 +63,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useLayoutEffect(() => {
     if (mode !== 'system') return;
 
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const mediaQuery = globalThis.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = () => {
       const newEffective = getSystemPreference();
       setEffective(newEffective);
@@ -74,12 +74,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [mode]);
 
-  const setMode = useCallback((newMode: ThemeMode) => {
-    setModeState(newMode);
-  }, []);
-
   const cycle = useCallback(() => {
-    setModeState(prev => {
+    setMode((prev: ThemeMode) => {
       if (prev === 'system') return 'dark';
       if (prev === 'dark') return 'light';
       return 'system';

@@ -5,7 +5,7 @@ import { vi, beforeEach } from 'vitest';
 beforeEach(() => {
 	localStorage.clear();
 	sessionStorage.clear();
-	document.documentElement.removeAttribute('data-theme');
+	delete document.documentElement.dataset.theme;
 });
 
 // Polyfill ResizeObserver for Recharts responsive container during tests.
@@ -27,10 +27,8 @@ class RO {
 // Provide a loose global interface for adding ResizeObserver
 interface GlobalWithRO { ResizeObserver?: typeof RO }
 const g = globalThis as unknown as GlobalWithRO;
-// Fixed: Compare with undefined directly instead of using typeof
-if (g.ResizeObserver === undefined) {
-	g.ResizeObserver = RO;
-}
+// Fixed: Use nullish coalescing operator for cleaner assignment
+g.ResizeObserver ??= RO;
 
 // Mock window.matchMedia for theme detection
 // Fixed: Use globalThis.window instead of window for ES2020 compatibility

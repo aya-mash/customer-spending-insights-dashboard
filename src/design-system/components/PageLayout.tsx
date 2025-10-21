@@ -12,9 +12,13 @@ function createDynamicStyles(styles: CSSProperties): CSSProperties {
 }
 
 export interface PageLayoutProps extends HTMLAttributes<HTMLDivElement> {
+  /** Optional page title */
   title?: string;
+  /** Optional subtitle or description */
   subtitle?: string;
+  /** Optional action buttons or controls */
   actions?: ReactNode;
+  /** Main content of the page */
   children: ReactNode;
 }
 

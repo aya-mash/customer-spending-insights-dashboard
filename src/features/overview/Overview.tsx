@@ -43,6 +43,21 @@ const PERIODS: Array<{ key: PeriodPreset; label: string }> = [
   { key: '1y', label: '1 Year' },
 ];
 
+// Period selector component (extracted outside Overview)
+interface PeriodSelectorProps {
+  activePeriod: PeriodPreset;
+  onPeriodChange: (period: PeriodPreset) => void;
+}
+
+const PeriodSelector = ({ activePeriod, onPeriodChange }: PeriodSelectorProps) => (
+  <Tabs
+    items={PERIODS.map(p => ({ key: p.key, label: p.label }))}
+    activeTab={activePeriod}
+    onChange={(key) => onPeriodChange(key as PeriodPreset)}
+    aria-label="Time period selection"
+  />
+);
+
 export function Overview() {
   const [activePeriod, setActivePeriod] = useState<PeriodPreset>('30d');
   const customerId = 'user123';
@@ -85,7 +100,8 @@ export function Overview() {
 
   const mostFrequentCategory = categoryData.length > 0
     ? categoryData.reduce((prev, current) => 
-        (current.transactionCount || 0) > (prev.transactionCount || 0) ? current : prev
+        (current.transactionCount || 0) > (prev.transactionCount || 0) ? current : prev,
+        categoryData[0]
       ).name
     : 'N/A';
 
@@ -93,21 +109,11 @@ export function Overview() {
     ? goalsData.reduce((sum, goal) => sum + (goal.currentSpent / goal.monthlyBudget) * 100, 0) / goalsData.length
     : 0;
 
-  // Period selector component
-  const PeriodSelector = () => (
-    <Tabs
-      items={PERIODS.map(p => ({ key: p.key, label: p.label }))}
-      activeTab={activePeriod}
-      onChange={(key) => setActivePeriod(key as PeriodPreset)}
-      aria-label="Time period selection"
-    />
-  );
-
   return (
     <PageLayout
       // title="Spending Overview"
       subtitle={`View your financial summary for the past ${PERIODS.find(p => p.key === activePeriod)?.label.toLowerCase()}`}
-      actions={<PeriodSelector />}
+      actions={<PeriodSelector activePeriod={activePeriod} onPeriodChange={setActivePeriod} />}
     >
       {/* If some data loaded but at least one resource failed, surface an inline alert with a retry */}
       {isError && hasPartialData && (
@@ -128,10 +134,10 @@ export function Overview() {
           label="Total Spent"
           value={formatCurrency(totalSpent)}
           icon={<DollarSign size={24} />}
-          trend={spentChange !== 0 ? {
+          trend={spentChange === 0 ? undefined : {
             value: spentChange,
             direction: spentChange > 0 ? 'up' : 'down'
-          } : undefined}
+          }}
           variant="primary"
           data-testid="summary-total"
         />
@@ -213,7 +219,11 @@ export function Overview() {
           label="Budget Status"
           value={`${budgetStatus.toFixed(0)}%`}
           icon={<Target size={24} />}
-          variant={budgetStatus > 100 ? 'error' : budgetStatus > 80 ? 'warning' : 'success'}
+          variant={(() => {
+            if (budgetStatus > 100) return 'error';
+            if (budgetStatus > 80) return 'warning';
+            return 'success';
+          })()}
         />
 
         {/* Card 8: Period */}
@@ -277,11 +287,25 @@ export function Overview() {
                     const progress = (goal.currentSpent / goal.monthlyBudget) * 100;
                     const isOverBudget = progress > 100;
                     
+                    let progressVariant: 'error' | 'warning' | 'success';
+                    let progressColor: string;
+                    
+                    if (isOverBudget) {
+                      progressVariant = 'error';
+                      progressColor = '#EF4444';
+                    } else if (progress > 80) {
+                      progressVariant = 'warning';
+                      progressColor = '#F59E0B';
+                    } else {
+                      progressVariant = 'success';
+                      progressColor = '#10B981';
+                    }
+                    
                     return (
                       <Stack key={goal.id} spacing={2}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <Text variant="body" weight="medium">{goal.category}</Text>
-                          <Badge variant={isOverBudget ? 'error' : progress > 80 ? 'warning' : 'success'}>
+                          <Badge variant={progressVariant}>
                             {progress.toFixed(0)}%
                           </Badge>
                         </div>
@@ -296,7 +320,7 @@ export function Overview() {
                           <div style={{
                             width: `${Math.min(progress, 100)}%`,
                             height: '100%',
-                            backgroundColor: isOverBudget ? '#EF4444' : progress > 80 ? '#F59E0B' : '#10B981',
+                            backgroundColor: progressColor,
                             borderRadius: radius.md,
                             transition: 'width 0.3s ease'
                           }} />
@@ -375,8 +399,8 @@ function OverviewSkeleton() {
   return (
     <PageLayout>
       <Grid columns={{ mobile: 1, tablet: 2, desktop: 4 }} gap={6}>
-        {Array.from({ length: 8 }).map((_, i) => (
-          <Card key={i} padding={6}>
+        {Array.from({ length: 8 }, (_, i) => `skeleton-${i}`).map((key) => (
+          <Card key={key} padding={6}>
             <div style={{ height: '160px', backgroundColor: 'var(--neutral-100)', borderRadius: 'var(--radius-md)' }} />
           </Card>
         ))}

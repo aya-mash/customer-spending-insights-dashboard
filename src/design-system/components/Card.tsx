@@ -21,9 +21,13 @@ function createDynamicStyles(styles: CSSProperties): CSSProperties {
 }
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  /** Card visual style */
   variant?: 'default' | 'primary' | 'elevated';
+  /** Enable hover effect */
   hover?: boolean;
+  /** Padding inside card */
   padding?: ResponsiveValue<Spacing> | Spacing;
+  /** Card content */
   children: ReactNode;
 }
 
@@ -38,7 +42,7 @@ export const Card = React.memo(
       backgroundColor: surface.surface,
       border: `1px solid ${surface.border}`,
       borderRadius: radius.lg,
-      padding: spacing[resolvedPadding as Spacing] || spacing[6],
+      padding: spacing[resolvedPadding] || spacing[6],
       boxShadow: 'var(--shadow-neumorphic-sm)',
       transition: prefersReducedMotion ? 'none' : `all 300ms ${easing.standard}`,
       position: 'relative',
@@ -76,16 +80,28 @@ export const Card = React.memo(
       }
     }, [hover]);
 
+    const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        onClick(e as unknown as React.MouseEvent<HTMLDivElement>);
+      }
+    }, [onClick]);
+
+    // Only render as interactive if onClick is provided
+    const interactiveProps = onClick ? {
+      onClick,
+      onKeyDown: handleKeyDown,
+      role: 'button' as const,
+      tabIndex: 0,
+      style: { cursor: 'pointer', ...baseStyles, ...variantStyles[variant], ...hoverStyles, ...style },
+    } : {
+      style: { ...baseStyles, ...variantStyles[variant], ...hoverStyles, ...style },
+    };
+
     return (
       <div
         ref={ref}
-        style={{
-          ...baseStyles,
-          ...variantStyles[variant],
-          ...hoverStyles,
-          ...style,
-        }}
-        onClick={onClick}
+        {...interactiveProps}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         {...props}

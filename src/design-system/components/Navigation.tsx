@@ -113,10 +113,9 @@ export const Navigation = forwardRef<HTMLElement, NavigationProps>(
     });
 
     return (
-      <aside
+      <nav
         ref={ref}
         style={sidebarStyles}
-        role="navigation"
         aria-label="Main navigation"
       >
         {/* Toggle button */}
@@ -151,7 +150,7 @@ export const Navigation = forwardRef<HTMLElement, NavigationProps>(
         </button>
 
         {/* Nav items */}
-        <nav
+        <div
           style={{
             display: "flex",
             flexDirection: "column",
@@ -184,8 +183,8 @@ export const Navigation = forwardRef<HTMLElement, NavigationProps>(
               </Link>
             );
           })}
-        </nav>
-      </aside>
+        </div>
+      </nav>
     );
   }
 );

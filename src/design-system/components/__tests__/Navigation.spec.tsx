@@ -33,8 +33,8 @@ describe('Navigation', () => {
         <Navigation items={mockNavItems} />
       </MockRouter>
     );
-    // Navigation renders (may have nested nav elements)
-    const navElements = container.querySelectorAll('[role="navigation"]');
+    // Navigation renders as semantic <nav> element
+    const navElements = container.querySelectorAll('nav');
     expect(navElements.length).toBeGreaterThan(0);
   });
 
@@ -44,8 +44,8 @@ describe('Navigation', () => {
         <Navigation items={mockNavItems} />
       </MockRouter>
     );
-    // Navigation rendered successfully
-    expect(container.querySelector('aside')).toBeInTheDocument();
+    // Navigation rendered successfully as <nav> element
+    expect(container.querySelector('nav')).toBeInTheDocument();
   });
 });
 

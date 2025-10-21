@@ -19,13 +19,108 @@ const PIE_CONFIG = {
 };
 
 function getCategoryColor(name: string): string {
-  const key = name.toLowerCase().replace(/\s+/g, '') as CategoryName;
+  const key = name.toLowerCase().replaceAll(/\s+/g, '') as CategoryName;
   return categoryColors[key]?.main || brand.primary;
 }
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
 }
+
+// Custom tooltip component
+interface TooltipPayload {
+  payload: { name: string; amount: number; percentage: number };
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayload[];
+}
+
+const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
+  if (!active || !payload?.[0]) return null;
+
+  const data = payload[0].payload;
+  return (
+    <div style={createDynamicStyles({
+      backgroundColor: neutral[900],
+      color: textColors.inverse,
+      padding: `${spacingNum[2]}px ${spacingNum[3]}px`,
+      borderRadius: radius.md,
+      fontSize: '14px',
+      boxShadow: 'var(--shadow-neumorphic-sm)',
+    })}>
+      <div style={{ fontWeight: 600, marginBottom: '4px' }}>
+        {data.name}
+      </div>
+      <div style={{ fontSize: '13px', opacity: 0.9 }}>
+        {formatCurrency(data.amount)} ({data.percentage?.toFixed(1)}%)
+      </div>
+    </div>
+  );
+};
+
+// Legend chip component
+interface ChartDataItem {
+  name: string;
+  amount: number;
+  percentage: number;
+  color: string;
+}
+
+interface LegendChipProps {
+  item: ChartDataItem;
+  onSegmentClick?: (category: string) => void;
+}
+
+const LegendChip = ({ item, onSegmentClick }: LegendChipProps) => (
+  <button
+    type="button"
+    onClick={onSegmentClick ? () => onSegmentClick(item.name) : undefined}
+    style={createDynamicStyles({
+      display: 'flex',
+      alignItems: 'center',
+      gap: `${spacingNum[2]}px`,
+      padding: `${spacingNum[2]}px ${spacingNum[3]}px`,
+      borderRadius: radius.full,
+      border: `1px solid ${item.color}`,
+      backgroundColor: 'transparent',
+      cursor: onSegmentClick ? 'pointer' : 'default',
+      transition: 'all 0.2s ease',
+      fontSize: '13px',
+      fontWeight: 500,
+      color: textColors.primary,
+      whiteSpace: 'nowrap',
+    })}
+    onMouseEnter={(e) => {
+      if (onSegmentClick) {
+        e.currentTarget.style.backgroundColor = item.color;
+        e.currentTarget.style.color = textColors.inverse;
+      }
+    }}
+    onMouseLeave={(e) => {
+      if (onSegmentClick) {
+        e.currentTarget.style.backgroundColor = 'transparent';
+        e.currentTarget.style.color = textColors.primary;
+      }
+    }}
+    aria-label={`${item.name}: ${formatCurrency(item.amount)}, ${item.percentage?.toFixed(1)}% of total`}
+  >
+    <span
+      style={createDynamicStyles({
+        width: '10px',
+        height: '10px',
+        borderRadius: '50%',
+        backgroundColor: item.color,
+      })}
+      aria-hidden="true"
+    />
+    <span>{item.name}</span>
+    <span style={{ marginLeft: 'auto', fontWeight: 600 }}>
+      {formatCurrency(item.amount)}
+    </span>
+  </button>
+);
 
 export interface DonutChartProps {
   data: CategoryItem[];
@@ -58,81 +153,6 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
     const top = data[0];
     const summaryId = 'category-donut-summary';
 
-    // Custom tooltip
-    const CustomTooltip = ({ active, payload }: { 
-      active?: boolean; 
-      payload?: Array<{ payload: { name: string; amount: number; percentage: number } }> 
-    }) => {
-      if (!active || !payload?.[0]) return null;
-
-      const data = payload[0].payload;
-      return (
-        <div style={createDynamicStyles({
-          backgroundColor: neutral[900],
-          color: textColors.inverse,
-          padding: `${spacingNum[2]}px ${spacingNum[3]}px`,
-          borderRadius: radius.md,
-          fontSize: '14px',
-          boxShadow: 'var(--shadow-neumorphic-sm)',
-        })}>
-          <div style={{ fontWeight: 600, marginBottom: '4px' }}>
-            {data.name}
-          </div>
-          <div style={{ fontSize: '13px', opacity: 0.9 }}>
-            {formatCurrency(data.amount)} ({data.percentage?.toFixed(1)}%)
-          </div>
-        </div>
-      );
-    };
-
-    // Legend pill chip
-    const LegendChip = ({ item }: { item: typeof chartData[0] }) => (
-      <button
-        type="button"
-        onClick={onSegmentClick ? () => onSegmentClick(item.name) : undefined}
-        style={createDynamicStyles({
-          display: 'flex',
-          alignItems: 'center',
-          gap: `${spacingNum[2]}px`,
-          padding: `${spacingNum[2]}px ${spacingNum[3]}px`,
-          borderRadius: radius.full,
-          border: `1px solid ${item.color}`,
-          backgroundColor: 'transparent',
-          cursor: onSegmentClick ? 'pointer' : 'default',
-          transition: 'all 0.2s ease',
-          fontSize: '13px',
-          fontWeight: 500,
-          color: textColors.primary,
-          whiteSpace: 'nowrap',
-        })}
-        onMouseEnter={(e) => {
-          if (onSegmentClick) {
-            e.currentTarget.style.backgroundColor = item.color;
-            e.currentTarget.style.color = textColors.inverse;
-          }
-        }}
-        onMouseLeave={(e) => {
-          if (onSegmentClick) {
-            e.currentTarget.style.backgroundColor = 'transparent';
-            e.currentTarget.style.color = textColors.primary;
-          }
-        }}
-        aria-label={`${item.name}: ${formatCurrency(item.amount)}, ${item.percentage?.toFixed(1)}% of total`}
-      >
-        <span
-          style={createDynamicStyles({
-            width: '10px',
-            height: '10px',
-            borderRadius: '50%',
-            backgroundColor: item.color,
-          })}
-          aria-hidden="true"
-        />
-        <span>{item.name}</span>
-        <span style={{ opacity: 0.7, fontSize: '12px' }}>{formatCurrency(item.amount)}</span>
-      </button>
-    );
-
     const containerStyles = createDynamicStyles({
       display: 'flex',
       flexDirection: isMobile ? 'column' : 'row',
@@ -162,6 +182,9 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
       gap: `${spacingNum[2]}px`,
       flex: 1,
       minWidth: 0,
+      listStyle: 'none',
+      padding: 0,
+      margin: 0,
     });
 
     return (
@@ -211,11 +234,16 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
         </div>
 
         {/* Legend */}
-        <div style={legendStyles} role="list" aria-label="Category legend">
+        <ul style={legendStyles} aria-label="Category legend">
           {data.slice(0, 6).map((item) => (
-            <LegendChip key={item.name} item={chartData.find(c => c.name === item.name)!} />
+            <li key={item.name} style={{ display: 'flex' }}>
+              <LegendChip 
+                item={chartData.find(c => c.name === item.name)!} 
+                onSegmentClick={onSegmentClick}
+              />
+            </li>
           ))}
-        </div>
+        </ul>
 
         {/* Screen reader summary */}
         <div id={summaryId} style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>

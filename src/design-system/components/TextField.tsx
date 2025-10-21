@@ -7,11 +7,17 @@ import React, { forwardRef, type InputHTMLAttributes } from 'react';
 import { surface, text as textColors, radius, spacingNum, fontSize, fontWeight, brand } from '../tokens';
 
 export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
+  /** Label text displayed above the input field */
   label?: string;
+  /** Error message displayed below the input field */
   error?: string;
+  /** Whether the input should take full width of its container */
   fullWidth?: boolean;
+  /** Visual style variant of the input field */
   variant?: 'filled' | 'outlined';
+  /** Icon element displayed at the start (left) of the input */
   startIcon?: React.ReactNode;
+  /** Icon element displayed at the end (right) of the input */
   endIcon?: React.ReactNode;
 }
 
@@ -49,17 +55,25 @@ export const TextField = React.memo(
       alignItems: 'center',
     };
 
+    // Calculate padding based on icon presence
+    let inputPadding: string;
+    if (startIcon) {
+      inputPadding = `${spacingNum[3]}px ${spacingNum[4]}px ${spacingNum[3]}px ${spacingNum[10]}px`;
+    } else if (endIcon) {
+      inputPadding = `${spacingNum[3]}px ${spacingNum[10]}px ${spacingNum[3]}px ${spacingNum[4]}px`;
+    } else {
+      inputPadding = `${spacingNum[3]}px ${spacingNum[4]}px`;
+    }
+
+    // Calculate border based on variant and error state
+    const borderColor = error ? '#EF4444' : surface.border;
+    const border = variant === 'outlined' ? `1px solid ${borderColor}` : 'none';
+
     const inputStyle = {
       width: '100%',
-      padding: startIcon 
-        ? `${spacingNum[3]}px ${spacingNum[4]}px ${spacingNum[3]}px ${spacingNum[10]}px`
-        : endIcon
-        ? `${spacingNum[3]}px ${spacingNum[10]}px ${spacingNum[3]}px ${spacingNum[4]}px`
-        : `${spacingNum[3]}px ${spacingNum[4]}px`,
+      padding: inputPadding,
       borderRadius: radius.md,
-      border: variant === 'outlined' 
-        ? `1px solid ${error ? '#EF4444' : surface.border}`
-        : 'none',
+      border,
       backgroundColor: variant === 'filled' ? surface.surfaceAlt : surface.surface,
       color: textColors.primary,
       fontSize: fontSize.body,

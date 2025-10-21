@@ -41,9 +41,9 @@ describe('RadioGroup', () => {
       />
     );
 
-    const option1 = screen.getByDisplayValue('option1') as HTMLInputElement;
-    const option2 = screen.getByDisplayValue('option2') as HTMLInputElement;
-    const option3 = screen.getByDisplayValue('option3') as HTMLInputElement;
+    const option1: HTMLInputElement = screen.getByDisplayValue('option1');
+    const option2: HTMLInputElement = screen.getByDisplayValue('option2');
+    const option3: HTMLInputElement = screen.getByDisplayValue('option3');
 
     expect(option1.checked).toBe(false);
     expect(option2.checked).toBe(true);

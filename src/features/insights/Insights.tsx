@@ -154,17 +154,17 @@ export function Insights() {
               )}
 
               {!catLoading && !catError && catData && catData.categories.length === 0 && (
-                <div 
-                  role="status" 
+                <output
                   style={{ 
                     textAlign: 'center', 
                     padding: spacing[8],
-                    color: textColors.secondary 
+                    color: textColors.secondary,
+                    display: 'block'
                   }}
                 >
                   <div style={{ fontSize: '48px', marginBottom: spacing[4] }}>🍃</div>
                   <Text variant="bodySm">No data for this period.</Text>
-                </div>
+                </output>
               )}
             </Stack>
           </Card>
@@ -224,17 +224,17 @@ export function Insights() {
               )}
 
               {!trendLoading && !trendError && trendData && trendData.trends.length === 0 && (
-                <div 
-                  role="status" 
+                <output
                   style={{ 
                     textAlign: 'center', 
                     padding: spacing[8],
-                    color: textColors.secondary 
+                    color: textColors.secondary,
+                    display: 'block'
                   }}
                 >
                   <div style={{ fontSize: '48px', marginBottom: spacing[4] }}>📉</div>
                   <Text variant="bodySm">No data for this period.</Text>
-                </div>
+                </output>
               )}
             </Stack>
           </Card>
@@ -245,7 +245,7 @@ export function Insights() {
 }
 
 // Loading skeletons
-function CategorySkeleton({ reducedMotion }: { reducedMotion: boolean }) {
+function CategorySkeleton({ reducedMotion }: { readonly reducedMotion: boolean }) {
   const shimmerStyle: CSSProperties = reducedMotion 
     ? { animation: 'none' } 
     : { 
@@ -276,9 +276,9 @@ function CategorySkeleton({ reducedMotion }: { reducedMotion: boolean }) {
       
       {/* Legend skeleton */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[3] }}>
-        {Array.from({ length: 5 }).map((_, i) => (
+        {Array.from({ length: 5 }, (_, i) => (
           <div 
-            key={i}
+            key={`category-skeleton-${i}`}
             style={{
               height: '32px',
               backgroundColor: '#f0f0f0',
@@ -292,7 +292,7 @@ function CategorySkeleton({ reducedMotion }: { reducedMotion: boolean }) {
   );
 }
 
-function TrendsSkeleton({ reducedMotion }: { reducedMotion: boolean }) {
+function TrendsSkeleton({ reducedMotion }: { readonly reducedMotion: boolean }) {
   const shimmerStyle: CSSProperties = reducedMotion 
     ? { animation: 'none' } 
     : { 
@@ -325,9 +325,9 @@ function TrendsSkeleton({ reducedMotion }: { reducedMotion: boolean }) {
         justifyContent: 'space-between',
         gap: spacing[2] 
       }}>
-        {Array.from({ length: 6 }).map((_, i) => (
+        {Array.from({ length: 6 }, (_, i) => (
           <div 
-            key={i}
+            key={`trends-skeleton-${i}`}
             style={{
               width: '60px',
               height: '20px',

@@ -21,8 +21,11 @@ function createDynamicStyles(styles: CSSProperties): CSSProperties {
 }
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
+  /** Category name for category-specific styling */
   category?: CategoryName;
+  /** Visual variant for semantic states */
   variant?: 'default' | 'success' | 'warning' | 'error' | 'info';
+  /** Content to display in the badge */
   children: ReactNode;
 }
 

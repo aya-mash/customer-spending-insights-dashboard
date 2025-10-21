@@ -16,8 +16,8 @@ import { breakpoints, mediaQueries, type Breakpoint, type ResponsiveValue } from
  */
 export function useBreakpoint(): Breakpoint {
   const [breakpoint, setBreakpoint] = useState<Breakpoint>(() => {
-    if (typeof window === 'undefined') return 'desktop';
-    const width = window.innerWidth;
+    if (globalThis.window === undefined) return 'desktop';
+    const width = globalThis.window.innerWidth;
     if (width >= breakpoints.wide) return 'wide';
     if (width >= breakpoints.desktopLg) return 'desktopLg';
     if (width >= breakpoints.desktop) return 'desktop';
@@ -28,7 +28,7 @@ export function useBreakpoint(): Breakpoint {
 
   useEffect(() => {
     const handleResize = () => {
-      const width = window.innerWidth;
+      const width = globalThis.window.innerWidth;
       let newBreakpoint: Breakpoint;
       if (width >= breakpoints.wide) newBreakpoint = 'wide';
       else if (width >= breakpoints.desktopLg) newBreakpoint = 'desktopLg';
@@ -42,8 +42,8 @@ export function useBreakpoint(): Breakpoint {
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    globalThis.window.addEventListener('resize', handleResize);
+    return () => globalThis.window.removeEventListener('resize', handleResize);
   }, [breakpoint]);
 
   return breakpoint;
@@ -55,24 +55,17 @@ export function useBreakpoint(): Breakpoint {
  */
 export function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia(query).matches;
+    if (globalThis.window === undefined) return false;
+    return globalThis.window.matchMedia(query).matches;
   });
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia(query);
+    const mediaQuery = globalThis.window.matchMedia(query);
     const handleChange = (e: MediaQueryListEvent) => setMatches(e.matches);
     
     // Modern browsers
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleChange);
-      return () => mediaQuery.removeEventListener('change', handleChange);
-    }
-    // Legacy browsers
-    else {
-      mediaQuery.addListener(handleChange);
-      return () => mediaQuery.removeListener(handleChange);
-    }
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, [query]);
 
   return matches;
@@ -111,7 +104,7 @@ export function useResponsiveValue<T>(values: ResponsiveValue<T> | T): T {
   const breakpoint = useBreakpoint();
   
   if (typeof values !== 'object' || values === null || !('mobile' in values)) {
-    return values as T;
+    return values;
   }
 
   const { mobile, tablet, desktop } = values;
@@ -138,7 +131,7 @@ export function getResponsiveValue<T>(
   currentBreakpoint: Breakpoint
 ): T {
   if (typeof values !== 'object' || values === null || !('mobile' in values)) {
-    return values as T;
+    return values;
   }
 
   const { mobile, tablet, desktop } = values;
@@ -256,9 +249,9 @@ export function getGridColumns(columns: GridColumns | number): string {
  * Convert hex to rgba
  */
 export function hexToRgba(hex: string, alpha: number): string {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
+  const r = Number.parseInt(hex.slice(1, 3), 16);
+  const g = Number.parseInt(hex.slice(3, 5), 16);
+  const b = Number.parseInt(hex.slice(5, 7), 16);
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
@@ -308,8 +301,8 @@ export function formatNumber(num: number, decimals: number = 1): string {
   if (num >= 1_000_000) {
     return `${(num / 1_000_000).toFixed(decimals)}M`;
   }
-  if (num >= 1_000) {
-    return `${(num / 1_000).toFixed(decimals)}k`;
+  if (num >= 1000) {
+    return `${(num / 1000).toFixed(decimals)}k`;
   }
   return num.toString();
 }
@@ -380,12 +373,12 @@ export function useKeyboardUser(): boolean {
       setIsKeyboardUser(false);
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('mousedown', handleMouseDown);
+    globalThis.window.addEventListener('keydown', handleKeyDown);
+    globalThis.window.addEventListener('mousedown', handleMouseDown);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('mousedown', handleMouseDown);
+      globalThis.window.removeEventListener('keydown', handleKeyDown);
+      globalThis.window.removeEventListener('mousedown', handleMouseDown);
     };
   }, []);
 

@@ -11,6 +11,7 @@ function createDynamicStyles(styles: CSSProperties): CSSProperties {
 }
 
 export interface DividerProps extends HTMLAttributes<HTMLHRElement> {
+  /** Spacing around divider */
   spacing?: Spacing;
 }
 

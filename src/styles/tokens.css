@@ -274,6 +274,43 @@
   --chart-neutral: var(--neutral-500);
   --chart-grid: var(--neutral-200);
   --chart-axis: var(--neutral-400);
+
+  /* ===========================================================================
+     LEGACY TOKENS - Maintain backward compatibility
+     =========================================================================== */
+  /* Legacy semantic colors */
+  --brand-success: #10B981;
+  --brand-warning: #F59E0B;
+  --brand-danger: var(--color-error);
+  --color-muted: var(--color-text-muted);
+  --color-danger: var(--color-error);
+
+  /* Legacy layout dimensions */
+  --header-height: 64px;
+  --bottom-bar-height: 56px;
+  --sidebar-width: 248px;
+  --sidebar-width-collapsed: 72px;
+  --panel-gap: 20px;
+
+  /* Legacy layering - properly ordered stack */
+  --z-bottom-bar: var(--z-fixed);      /* 30 - Bottom navigation */
+  --z-header: var(--z-fixed);          /* 30 - Top header */
+  --z-sidebar: 35;                     /* 35 - Sidebar (above header/bottom, below modal) */
+  --z-overlay: var(--z-modal-backdrop); /* 40 - Overlay/backdrop */
+  --z-settings: var(--z-modal);        /* 50 - Settings drawer */
+  --z-fab: var(--z-toast);             /* 80 - Floating action button */
+  --z-panel: var(--z-max);             /* 999 - Top panel */
+
+  /* Legacy easing (use --ease-* tokens instead) */
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Legacy focus ring */
+  --focus-ring-color: var(--color-primary);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* Legacy backdrop */
+  --backdrop-color: var(--color-overlay);
 }
 
 /* =============================================================================
@@ -448,46 +485,3 @@
     --chart-axis: #5A6376;
   }
 }
-
-/* =============================================================================
-   LEGACY TOKENS - Maintain backward compatibility
-   These will be gradually deprecated as components migrate to new tokens
-   ============================================================================= */
-
-:root {
-  /* Legacy semantic colors */
-  --brand-success: #10B981;
-  --brand-warning: #F59E0B;
-  --brand-danger: var(--color-error);
-  --color-muted: var(--color-text-muted);
-  --color-danger: var(--color-error);
-
-  /* Layout dimensions */
-  --header-height: 64px;
-  --bottom-bar-height: 56px;
-  --sidebar-width: 248px;
-  --sidebar-width-collapsed: 72px;
-  --panel-gap: 20px;
-
-  /* Legacy layering - properly ordered stack */
-  --z-bottom-bar: var(--z-fixed);      /* 30 - Bottom navigation */
-  --z-header: var(--z-fixed);          /* 30 - Top header */
-  --z-sidebar: 35;                     /* 35 - Sidebar (above header/bottom, below modal) */
-  --z-overlay: var(--z-modal-backdrop); /* 40 - Overlay/backdrop */
-  --z-settings: var(--z-modal);        /* 50 - Settings drawer */
-  --z-fab: var(--z-toast);             /* 80 - Floating action button */
-  --z-panel: var(--z-max);             /* 999 - Top panel */
-
-
-  /* Legacy easing (use --ease-* tokens instead) */
-  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
-
-  /* Focus ring */
-  --focus-ring-color: var(--color-primary);
-  --focus-ring-width: 2px;
-  --focus-ring-offset: 2px;
-
-  /* Backdrop */
-  --backdrop-color: var(--color-overlay);
-}
-

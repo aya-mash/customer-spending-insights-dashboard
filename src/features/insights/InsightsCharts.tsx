@@ -42,7 +42,7 @@ export function InsightsCharts() {
           <button onClick={loadData} className="btn btn--secondary btn--small">Retry All</button>
         </div>
       )}
-      <div role="tablist" aria-label="Insights panels" className="insights-tabs" onKeyDown={onKeyDown}>
+      <div role="tablist" aria-label="Insights panels" className="insights-tabs" tabIndex={0} onKeyDown={onKeyDown}>
         <button
           role="tab"
           id="tab-category"
@@ -89,10 +89,10 @@ export function InsightsCharts() {
             </Suspense>
           )}
           {!catLoading && !catError && catData && catData.categories.length === 0 && (
-            <div role="status" className="empty-state">
+            <output className="empty-state">
               <span className="empty-icon" aria-hidden="true">🍃</span>
               <p>No data for this period.</p>
-            </div>
+            </output>
           )}
         </div>
         <div
@@ -117,10 +117,10 @@ export function InsightsCharts() {
             </Suspense>
           )}
           {!trendLoading && !trendError && trendData && trendData.trends.length === 0 && (
-            <div role="status" className="empty-state">
+            <output className="empty-state">
               <span className="empty-icon" aria-hidden="true">📉</span>
               <p>No data for this period.</p>
-            </div>
+            </output>
           )}
         </div>
       </div>
@@ -129,28 +129,31 @@ export function InsightsCharts() {
 }
 
 // Component skeletons for loading states
-function shimmerStyle(reduced: boolean) {
-  return reduced ? { animation: 'none' } : {};
+function getShimmerStyle(reducedMotion: boolean) {
+  if (reducedMotion) {
+    return { animation: 'none' };
+  }
+  return {};
 }
 
-function CategorySkeleton({ reducedMotion }: { reducedMotion: boolean }) {
+function CategorySkeleton({ reducedMotion }: { readonly reducedMotion: boolean }) {
   return (
     <div className="category-skeleton" aria-label="Loading category insights">
-      <div className="sk-circle" style={shimmerStyle(reducedMotion)} />
+      <div className="sk-circle" style={getShimmerStyle(reducedMotion)} />
       <ul className="sk-legend">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <li key={i} className="sk-row" style={shimmerStyle(reducedMotion)} />
+        {Array.from({ length: 5 }, (_, i) => (
+          <li key={`category-skeleton-${i}`} className="sk-row" style={getShimmerStyle(reducedMotion)} />
         ))}
       </ul>
     </div>
   );
 }
 
-function TrendsSkeleton({ reducedMotion }: { reducedMotion: boolean }) {
+function TrendsSkeleton({ reducedMotion }: { readonly reducedMotion: boolean }) {
   return (
     <div className="trends-skeleton" aria-label="Loading trends insights">
-      <div className="sk-line" style={shimmerStyle(reducedMotion)} />
-      <div className="sk-bars" style={shimmerStyle(reducedMotion)} />
+      <div className="sk-line" style={getShimmerStyle(reducedMotion)} />
+      <div className="sk-bars" style={getShimmerStyle(reducedMotion)} />
     </div>
   );
 }

@@ -12,6 +12,8 @@ import { Stack } from './Stack';
 import { Text } from './Text';
 import { RadioGroup, type RadioOption } from './RadioGroup';
 
+type ThemeMode = 'light' | 'dark' | 'system';
+
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
 }
@@ -19,8 +21,8 @@ function createDynamicStyles(styles: CSSProperties): CSSProperties {
 export interface SettingsDrawerProps {
   open: boolean;
   onClose: () => void;
-  mode: 'light' | 'dark' | 'system';
-  onModeChange: (mode: 'light' | 'dark' | 'system') => void;
+  mode: ThemeMode;
+  onModeChange: (mode: ThemeMode) => void;
 }
 
 export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
@@ -137,7 +139,6 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
           style={overlayStyles} 
           onClick={onClose} 
           aria-hidden="true"
-          role="presentation"
         />
 
         {/* Drawer - Accessible side panel */}

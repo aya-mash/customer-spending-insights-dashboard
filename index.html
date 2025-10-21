@@ -19,7 +19,7 @@
           var effective;
           
           if (mode === 'system') {
-            effective = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            effective = globalThis.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
           } else {
             effective = mode;
           }

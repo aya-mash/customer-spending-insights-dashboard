@@ -11,9 +11,13 @@ function createDynamicStyles(styles: CSSProperties): CSSProperties {
 }
 
 export interface TextProps extends HTMLAttributes<HTMLParagraphElement> {
+  /** Text size variant */
   variant?: 'body' | 'bodyLg' | 'bodySm' | 'caption';
+  /** Text color */
   color?: 'primary' | 'muted' | 'strong' | 'inverse' | 'disabled';
+  /** Font weight */
   weight?: FontWeight;
+  /** Text content */
   children: ReactNode;
 }
 

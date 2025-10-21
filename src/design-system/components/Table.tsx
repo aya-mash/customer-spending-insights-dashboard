@@ -23,16 +23,27 @@ export interface TableColumn<T = any> {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface TableProps<T = any> {
+  /** Array of column definitions specifying keys, labels, and rendering */
   columns: TableColumn<T>[];
+  /** Array of data rows to display in the table */
   data: T[];
+  /** Function to extract unique key from each row for React key prop */
   keyExtractor: (row: T) => string;
+  /** Callback function when a column header is clicked for sorting */
   onSort?: (key: string) => void;
+  /** The key of the currently sorted column */
   sortKey?: string;
+  /** The current sort direction (ascending or descending) */
   sortDirection?: 'asc' | 'desc';
+  /** Whether to apply alternating row background colors */
   zebraStripe?: boolean;
+  /** Whether the table is in a loading state */
   loading?: boolean;
+  /** Message to display when table has no data */
   emptyMessage?: string;
+  /** Whether the header row should stick to the top while scrolling */
   stickyHeader?: boolean;
+  /** Maximum height of the table container before scrolling */
   maxHeight?: string;
 }
 
@@ -94,22 +105,34 @@ export const Table = React.memo(
       userSelect: 'none',
     };
 
-    const sortButtonStyle = (col: TableColumn): CSSProperties => ({
-      width: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: col.align === 'right' ? 'flex-end' : col.align === 'center' ? 'center' : 'flex-start',
-      gap: '8px',
-      padding: '0',
-      border: 'none',
-      background: 'transparent',
-      color: textColors.secondary,
-      fontWeight: 600,
-      fontSize: '14px',
-      fontFamily: 'inherit',
-      cursor: 'pointer',
-      userSelect: 'none',
-    });
+    const sortButtonStyle = (col: TableColumn): CSSProperties => {
+      // Calculate justifyContent based on alignment
+      let justifyContent: 'flex-start' | 'center' | 'flex-end';
+      if (col.align === 'right') {
+        justifyContent = 'flex-end';
+      } else if (col.align === 'center') {
+        justifyContent = 'center';
+      } else {
+        justifyContent = 'flex-start';
+      }
+
+      return {
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent,
+        gap: '8px',
+        padding: '0',
+        border: 'none',
+        background: 'transparent',
+        color: textColors.secondary,
+        fontWeight: 600,
+        fontSize: '14px',
+        fontFamily: 'inherit',
+        cursor: 'pointer',
+        userSelect: 'none',
+      };
+    };
 
     const getRowStyle = (idx: number): CSSProperties => ({
       backgroundColor: zebraStripe && idx % 2 === 0 ? 'transparent' : surface.surfaceAlt,
@@ -170,14 +193,14 @@ export const Table = React.memo(
                     key={col.key}
                     as="th"
                     style={headerCellStyle}
+                    aria-sort={col.sortable ? getAriaSort(col.key) : undefined}
                   >
                     {col.sortable ? (
                       <button
                         type="button"
                         onClick={() => handleHeaderClick(col)}
                         style={sortButtonStyle(col)}
-                        aria-label={`${col.label}`}
-                        aria-sort={getAriaSort(col.key)}
+                        aria-label={`Sort by ${col.label}`}
                       >
                         <span>{col.label}</span>
                         <span>{renderSortIcon(col.key)}</span>
@@ -198,16 +221,20 @@ export const Table = React.memo(
                   as="tr"
                   style={getRowStyle(idx)}
                 >
-                  {columns.map((col) => (
-                    <Box
-                      key={col.key}
-                      as="td"
-                      style={cellStyle(col)}
-                    >
-                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                      {col.render ? col.render((row as any)[col.key], row) : (row as any)[col.key]}
-                    </Box>
-                  ))}
+                  {columns.map((col) => {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const rowData = row as Record<string, any>;
+                    const cellValue = rowData[col.key];
+                    return (
+                      <Box
+                        key={col.key}
+                        as="td"
+                        style={cellStyle(col)}
+                      >
+                        {col.render ? col.render(cellValue, row) : cellValue}
+                      </Box>
+                    );
+                  })}
                 </Box>
               ))}
             </Box>
