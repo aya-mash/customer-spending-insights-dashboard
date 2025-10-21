@@ -44,17 +44,20 @@ export function useThrottle<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay: number
 ): T {
-  const lastRun = useRef(Date.now());
+  const lastRun = useRef(0);
+  
+  useEffect(() => {
+    lastRun.current = Date.now();
+  }, []);
 
-  return useCallback(
-    ((...args) => {
-      if (Date.now() - lastRun.current >= delay) {
-        callback(...args);
-        lastRun.current = Date.now();
-      }
-    }) as T,
-    [callback, delay]
-  );
+  const throttledCallback = useCallback((...args: Parameters<T>) => {
+    if (Date.now() - lastRun.current >= delay) {
+      callback(...args);
+      lastRun.current = Date.now();
+    }
+  }, [callback, delay]);
+
+  return throttledCallback as T;
 }
 
 // Memoized selector hook

@@ -48,6 +48,7 @@ export function ThemeProvider({ children }: { readonly children: ReactNode }) {
   // Apply theme to DOM BEFORE paint (prevents flicker)
   useLayoutEffect(() => {
     const newEffective = resolveEffectiveTheme(mode);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Synchronizing derived state from mode prop
     setEffective(newEffective);
     applyTheme(newEffective, mode);
 

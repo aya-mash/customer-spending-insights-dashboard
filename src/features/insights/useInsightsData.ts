@@ -39,6 +39,7 @@ export function useInsightsData(customerId: string) {
     }
   }, [customerId]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- Loading data on mount and when loadData changes
   useEffect(() => { loadData(); return () => abortRef.current?.abort(); }, [loadData]);
 
   return {

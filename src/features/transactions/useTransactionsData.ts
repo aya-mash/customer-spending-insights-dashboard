@@ -41,9 +41,10 @@ export function useTransactionsData(customerId: string) {
     const pageParam = params.get('page');
     if (pageParam) {
       const pageNum = parseInt(pageParam, 10);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Synchronizing with URL query params
       if (pageNum > 0) setPage(pageNum);
     }
-    
+     
     setFilters(newFilters);
   }, [location.search]);
 
@@ -80,6 +81,7 @@ export function useTransactionsData(customerId: string) {
   }, [customerId, filters, page, perPage, sortField, sortDirection]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Loading data on mount and when loadData changes
     loadData();
     return () => abortRef.current?.abort();
   }, [loadData]);
