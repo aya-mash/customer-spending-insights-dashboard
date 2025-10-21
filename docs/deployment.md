@@ -2,7 +2,76 @@
 
 ## Deployment Options
 
-### Docker Deployment (Recommended)
+### AWS Amplify Deployment (Recommended)
+
+AWS Amplify provides a fully managed hosting service with built-in CI/CD for frontend applications.
+
+#### Prerequisites
+- AWS Account
+- AWS Amplify CLI installed (optional, for advanced configuration)
+- GitHub/GitLab/Bitbucket repository connected to AWS Amplify
+
+#### Setup Steps
+
+1. **Connect Your Repository to Amplify**
+   - Go to [AWS Amplify Console](https://console.aws.amazon.com/amplify/)
+   - Click "New app" → "Host web app"
+   - Connect your Git provider (GitHub recommended)
+   - Select your repository and branch (`main` for production, `develop` for staging)
+
+2. **Configure Build Settings**
+   The `amplify.yml` file in the root directory contains the build configuration:
+   ```yaml
+   version: 1
+   frontend:
+     phases:
+       preBuild:
+         commands:
+           - yarn install --frozen-lockfile
+       build:
+         commands:
+           - yarn build
+     artifacts:
+       baseDirectory: dist
+       files:
+         - '**/*'
+     cache:
+       paths:
+         - node_modules/**/*
+   ```
+
+3. **Environment Variables**
+   Configure the following environment variables in Amplify Console:
+   - `NODE_ENV`: production
+   - `VITE_API_BASE_URL`: Your API endpoint URL (if applicable)
+   - Any other custom environment variables your app needs
+
+4. **Deploy**
+   - Amplify will automatically deploy on every push to your configured branch
+   - You can also manually trigger deployments from the Amplify Console
+
+#### Branch-Based Deployments
+- `main` branch → Production environment
+- `develop` branch → Staging/Integration environment
+- Feature branches → Preview deployments
+
+#### Custom Domain Setup
+1. In Amplify Console, go to "Domain management"
+2. Add your custom domain
+3. Follow DNS configuration instructions
+4. Amplify will automatically provision SSL certificates
+
+#### Performance Optimizations
+Amplify automatically provides:
+- Global CDN distribution
+- Automatic SSL/TLS certificates
+- HTTP/2 support
+- Compression (gzip/brotli)
+- Cache-control headers for static assets
+
+---
+
+### Docker Deployment (Alternative)
 
 #### Dockerfile
 ```dockerfile

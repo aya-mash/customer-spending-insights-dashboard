@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { config } from '../config/env';
 
 // Intersection Observer hook for lazy loading
 export function useLazyLoad<T extends HTMLElement>() {
@@ -110,7 +111,7 @@ export function trackBundlePerformance() {
       };
 
       // Track performance metrics in development
-      if (import.meta.env.DEV) {
+      if (config.isDevelopment) {
         console.log('Bundle Performance Metrics:', metrics);
       }
     }

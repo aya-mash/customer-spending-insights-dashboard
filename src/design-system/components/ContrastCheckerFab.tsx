@@ -7,9 +7,10 @@ import { useState, useEffect, type CSSProperties } from 'react';
 import { ContrastCheckerPanel } from './ContrastCheckerPanel';
 import { brand, surface, radius, spacing, transition, easing } from '../tokens';
 import { Palette } from 'lucide-react';
+import { config } from '../../config/env';
 
 export function ContrastCheckerDev() {
-  const enabled = import.meta.env.DEV || import.meta.env.MODE === 'test';
+  const enabled = config.isDevelopment;
   const [open, setOpen] = useState(false);
   
   useEffect(() => {

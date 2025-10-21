@@ -1,0 +1,27 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - yarn install --frozen-lockfile
+    build:
+      commands:
+        # Build based on the branch (main = production, develop = staging)
+        - |
+          if [ "$AWS_BRANCH" = "main" ]; then
+            echo "Building for production..."
+            yarn build
+          elif [ "$AWS_BRANCH" = "develop" ]; then
+            echo "Building for staging..."
+            yarn build:staging
+          else
+            echo "Building for development..."
+            yarn build:dev
+          fi
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*

@@ -3,13 +3,16 @@ import { createRoot } from 'react-dom/client';
 import './styles/tokens.css';
 import './styles/base.css';
 import App from './App';
+import { config } from './config/env';
 
-if (import.meta.env.DEV) {
+// Enable MSW in development or when explicitly enabled
+if (config.enableMocks) {
   try {
     const { worker } = await import('./mocks/browser.ts');
     await worker.start({ onUnhandledRequest: 'bypass' });
-  } catch {
-    // Service worker failed to start, continue without mocks
+    console.log('[MSW] Mock Service Worker started');
+  } catch (error) {
+    console.warn('[MSW] Failed to start Service Worker:', error);
   }
 }
 

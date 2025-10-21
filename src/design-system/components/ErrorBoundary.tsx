@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import type { ReactNode } from 'react';
+import { config } from '../../config/env';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -18,7 +19,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: unknown, info: unknown) {
-    if (import.meta.env.DEV) {
+    if (config.isDevelopment) {
       console.error('ErrorBoundary caught an error', error, info);
     }
   }

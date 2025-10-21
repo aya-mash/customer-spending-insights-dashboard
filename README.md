@@ -6,21 +6,35 @@ A production-ready React TypeScript dashboard for analyzing customer spending pa
 
 ```bash
 # Install dependencies
-npm install
+yarn install
 
 # Start development server
-npm run dev
+yarn dev
 
 # Build for production  
-npm run build
+yarn build
 
 # Run tests
-npm test
+yarn test
 
 # Run Storybook
-npm run storybook
+yarn storybook
+```
 
-# Docker deployment
+## 📦 Deployment
+
+### AWS Amplify (Recommended)
+This project is configured for seamless deployment on AWS Amplify:
+
+1. Connect your repository to [AWS Amplify Console](https://console.aws.amazon.com/amplify/)
+2. Amplify will automatically detect the `amplify.yml` configuration
+3. Set up environment variables if needed
+4. Deploy automatically on every push
+
+See [docs/deployment.md](docs/deployment.md) for detailed deployment instructions.
+
+### Alternative: Docker
+```bash
 docker build -t spending-dashboard .
 docker run -p 3000:80 spending-dashboard
 ```
@@ -52,7 +66,7 @@ docker run -p 3000:80 spending-dashboard
 - **Testing**: Vitest 3.2.4 + Testing Library + Playwright (E2E)
 - **Mocking**: MSW 2.11.5 with deterministic factories
 - **Storybook**: 8.2.9 for component-driven development
-- **Deployment**: Docker + Nginx with optimized production build
+- **Deployment**: AWS Amplify with automatic CI/CD
 
 ## 🏗️ Architecture
 
@@ -124,6 +138,53 @@ Run Playwright smoke tests:
 ```powershell
 yarn playwright test
 ```
+
+## 🔧 Environment Configuration
+
+This project uses environment-specific configuration files to manage different deployment environments:
+
+### Environment Files
+- **`.env.development`**: Local development (default when running `yarn dev`)
+- **`.env.staging`**: Integration/staging environment (deployed from `develop` branch)
+- **`.env.production`**: Production environment (deployed from `main` branch)
+- **`.env.example`**: Template file showing all available variables
+
+### Available Variables
+All environment variables must be prefixed with `VITE_` to be exposed to the client:
+
+- `VITE_ENV`: Environment name (`development`, `staging`, `production`)
+- `VITE_API_BASE_URL`: Backend API base URL
+- `VITE_APP_NAME`: Application display name
+- `VITE_ENABLE_MOCKS`: Enable MSW mock service worker (`true`/`false`)
+
+### Usage in Code
+Access environment variables through the type-safe config module:
+
+```typescript
+import { config } from './config/env';
+
+// Available properties:
+config.env              // 'development' | 'staging' | 'production'
+config.apiBaseUrl       // API base URL
+config.appName          // Application name
+config.enableMocks      // Boolean for MSW
+config.isDevelopment    // true if env === 'development'
+config.isStaging        // true if env === 'staging'
+config.isProduction     // true if env === 'production'
+```
+
+### Build Scripts
+- `yarn dev`: Start dev server with development env
+- `yarn dev:staging`: Start dev server with staging env
+- `yarn build`: Production build
+- `yarn build:staging`: Staging build
+- `yarn build:dev`: Development build
+
+### AWS Amplify Configuration
+The `amplify.yml` file automatically detects the deployment branch and uses the appropriate build command:
+- `main` branch → `yarn build` (production)
+- `develop` branch → `yarn build:staging` (staging)
+- Other branches → `yarn build:dev` (development)
 
 ## Local Development
 Install deps & start dev server:
