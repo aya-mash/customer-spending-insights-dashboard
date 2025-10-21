@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { ContrastCheckerPanel } from './ContrastCheckerPanel';
+import { ContrastCheckerPanel } from '../design-system/components/ContrastCheckerPanel';
 
 const meta: Meta<typeof ContrastCheckerPanel> = {
   title: 'Accessibility/ContrastCheckerPanel',

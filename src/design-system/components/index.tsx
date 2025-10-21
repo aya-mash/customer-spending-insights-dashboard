@@ -23,6 +23,13 @@ export { Select, type SelectProps, type SelectOption } from './Select';
 export { FilterChip, type FilterChipProps } from './FilterChip';
 export { Table, type TableProps, type TableColumn } from './Table';
 export { TextField, type TextFieldProps } from './TextField';
+export { default as TrendsChart } from './TrendsChart';
+export { ContrastCheckerPanel } from './ContrastCheckerPanel';
+export { ContrastCheckerDev } from './ContrastCheckerFab';
+export { ErrorPage } from './ErrorPage';
+export { ErrorBoundary } from './ErrorBoundary';
+export { Logo } from './Logo';
+export { AsyncSection as Skeleton } from './Skeleton';
 
 // Default export for convenience
 import { Box } from './Box';

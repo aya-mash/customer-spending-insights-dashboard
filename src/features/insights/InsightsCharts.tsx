@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useReducedMotion } from '../../utils/accessibility';
 import { useInsightsData } from './useInsightsData';
 
-const DonutChart = lazy(() => import('../../components/charts/DonutChart'));
-const TrendsChart = lazy(() => import('../../components/charts/TrendsChart'));
+const DonutChart = lazy(() => import('../../design-system/components/DonutChart').then(m => ({ default: m.DonutChart })));
+const TrendsChart = lazy(() => import('../../design-system/components/TrendsChart'));
 
 // Accessible tab ids
 const TAB_KEYS = ['category', 'trends'] as const;

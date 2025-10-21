@@ -19,7 +19,7 @@ import {
   categories
 } from '../design-system/tokens';
 import { contrastRatio } from '../lib/contrast';
-import { ContrastCheckerPanel } from '../components/ContrastChecker/ContrastCheckerPanel';
+import { ContrastCheckerPanel } from '../design-system/components/ContrastCheckerPanel';
 
 interface ColorSwatch {
   name: string;

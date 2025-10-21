@@ -14,7 +14,7 @@ import { brand, text as textColors, surface, radius, spacing } from '../../desig
 import { DonutChart } from '../../design-system/components/DonutChart';
 
 // Lazy load trends chart
-const TrendsChart = lazy(() => import('../../components/charts/TrendsChart'));
+const TrendsChart = lazy(() => import('../../design-system/components/TrendsChart'));
 
 // Tab configuration
 const TAB_KEYS = ['category', 'trends'] as const;

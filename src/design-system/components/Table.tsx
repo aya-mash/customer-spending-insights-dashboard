@@ -86,15 +86,29 @@ export const Table = React.memo(
       zIndex: 10,
     };
 
-    const headerCellStyle = (col: TableColumn, isSortable: boolean): CSSProperties => ({
+    const headerCellStyle: CSSProperties = {
       padding: '12px 16px',
-      textAlign: col.align || 'left',
       fontWeight: 600,
       fontSize: '14px',
       color: textColors.secondary,
-      cursor: isSortable ? 'pointer' : 'default',
       userSelect: 'none',
-      width: col.width,
+    };
+
+    const sortButtonStyle = (col: TableColumn): CSSProperties => ({
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: col.align === 'right' ? 'flex-end' : col.align === 'center' ? 'center' : 'flex-start',
+      gap: '8px',
+      padding: '0',
+      border: 'none',
+      background: 'transparent',
+      color: textColors.secondary,
+      fontWeight: 600,
+      fontSize: '14px',
+      fontFamily: 'inherit',
+      cursor: 'pointer',
+      userSelect: 'none',
     });
 
     const getRowStyle = (idx: number): CSSProperties => ({
@@ -118,6 +132,11 @@ export const Table = React.memo(
     const renderSortIcon = (colKey: string) => {
       if (sortKey !== colKey) return null;
       return sortDirection === 'asc' ? ' ↑' : ' ↓';
+    };
+
+    const getAriaSort = (colKey: string): 'ascending' | 'descending' | 'none' | undefined => {
+      if (sortKey !== colKey) return 'none';
+      return sortDirection === 'asc' ? 'ascending' : 'descending';
     };
 
     if (loading) {
@@ -150,13 +169,24 @@ export const Table = React.memo(
                   <Box
                     key={col.key}
                     as="th"
-                    style={headerCellStyle(col, !!col.sortable)}
-                    onClick={() => handleHeaderClick(col)}
+                    style={headerCellStyle}
                   >
-                    <Stack direction="horizontal" spacing={2} align="center" justify={col.align === 'right' ? 'end' : 'start'}>
-                      <span>{col.label}</span>
-                      {col.sortable && <span>{renderSortIcon(col.key)}</span>}
-                    </Stack>
+                    {col.sortable ? (
+                      <button
+                        type="button"
+                        onClick={() => handleHeaderClick(col)}
+                        style={sortButtonStyle(col)}
+                        aria-label={`${col.label}`}
+                        aria-sort={getAriaSort(col.key)}
+                      >
+                        <span>{col.label}</span>
+                        <span>{renderSortIcon(col.key)}</span>
+                      </button>
+                    ) : (
+                      <div style={{ textAlign: col.align || 'left' }}>
+                        {col.label}
+                      </div>
+                    )}
                   </Box>
                 ))}
               </Box>

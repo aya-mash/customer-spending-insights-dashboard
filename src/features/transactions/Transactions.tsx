@@ -62,6 +62,8 @@ export function Transactions() {
     sortField, 
     sortDirection, 
     page, 
+    perPage,
+    total,
     totalPages 
   } = useTransactionsData(customerId);
 
@@ -180,27 +182,41 @@ export function Transactions() {
 
             {/* Active Filters */}
             {hasActiveFilters && (
-              <Stack direction="horizontal" spacing={3} wrap>
-                {filters.category && (
-                  <FilterChip
-                    label={`Category: ${filters.category}`}
-                    onRemove={() => updateFilters({ category: undefined })}
-                  />
-                )}
-                {filters.period && (
-                  <FilterChip
-                    label={`Period: ${periodOptions.find(o => o.value === filters.period)?.label}`}
-                    onRemove={() => updateFilters({ period: undefined })}
-                  />
-                )}
-                <Button 
-                  variant="ghost" 
-                  size="small" 
-                  onClick={clearFilters}
+              <div>
+                <div
+                  style={{
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    color: '#6B7280',
+                    marginBottom: '8px',
+                  }}
+                  aria-live="polite"
+                  aria-atomic="true"
                 >
-                  Clear all
-                </Button>
-              </Stack>
+                  Filters active: {[filters.category, filters.period].filter(Boolean).length}
+                </div>
+                <Stack direction="horizontal" spacing={3} wrap>
+                  {filters.category && (
+                    <FilterChip
+                      label={`Category: ${filters.category}`}
+                      onRemove={() => updateFilters({ category: undefined })}
+                    />
+                  )}
+                  {filters.period && (
+                    <FilterChip
+                      label={`Period: ${periodOptions.find(o => o.value === filters.period)?.label}`}
+                      onRemove={() => updateFilters({ period: undefined })}
+                    />
+                  )}
+                  <Button 
+                    variant="ghost" 
+                    size="small" 
+                    onClick={clearFilters}
+                  >
+                    Clear all
+                  </Button>
+                </Stack>
+              </div>
             )}
           </Stack>
         </Card>
@@ -230,6 +246,9 @@ export function Transactions() {
               onPageChange={(newPage) => updateFilters({ page: newPage })}
               maxVisible={7}
               showPrevNext
+              itemsPerPage={perPage}
+              totalItems={total}
+              showRange
             />
           </Stack>
         )}

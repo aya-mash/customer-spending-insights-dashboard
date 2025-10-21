@@ -15,6 +15,9 @@ export interface PaginationProps extends Omit<HTMLAttributes<HTMLDivElement>, 'o
   maxVisible?: number;
   showPrevNext?: boolean;
   disabled?: boolean;
+  itemsPerPage?: number;
+  totalItems?: number;
+  showRange?: boolean;
 }
 
 export const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
@@ -26,6 +29,9 @@ export const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
       maxVisible = 7,
       showPrevNext = true,
       disabled = false,
+      itemsPerPage = 20,
+      totalItems,
+      showRange = true,
       style,
       ...props
     },
@@ -35,12 +41,24 @@ export const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
 
     const containerStyle = {
       display: 'flex',
+      flexDirection: 'column' as const,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: `${spacingNum[3]}px`,
+      ...style,
+    };
+
+    const controlsStyle = {
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       gap: `${spacingNum[2]}px`,
       flexWrap: 'wrap' as const,
-      ...style,
     };
+
+    // Calculate range
+    const startItem = totalItems ? (currentPage - 1) * itemsPerPage + 1 : 0;
+    const endItem = totalItems ? Math.min(currentPage * itemsPerPage, totalItems) : 0;
 
     const getPageNumbers = (): (number | 'ellipsis')[] => {
       if (totalPages <= maxVisible) {
@@ -122,9 +140,26 @@ export const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
     const pages = getPageNumbers();
 
     return (
-      <nav ref={ref} style={containerStyle} aria-label="Pagination" {...props}>
-        {/* Previous button */}
-        {showPrevNext && (
+      <div ref={ref} style={containerStyle} {...props}>
+        {/* Range display */}
+        {showRange && totalItems && (
+          <div
+            style={{
+              fontSize: '14px',
+              color: textColors.secondary,
+              fontWeight: 500,
+            }}
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {startItem}–{endItem} of {totalItems}
+          </div>
+        )}
+
+        {/* Navigation controls */}
+        <nav style={controlsStyle} aria-label="Pagination">
+          {/* Previous button */}
+          {showPrevNext && (
           <button
             type="button"
             onClick={() => onPageChange(currentPage - 1)}
@@ -193,7 +228,8 @@ export const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
             <ChevronRight size={18} />
           </button>
         )}
-      </nav>
+        </nav>
+      </div>
     );
   }
 );

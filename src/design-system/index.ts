@@ -433,6 +433,9 @@ export { ErrorPage } from './components/ErrorPage';
 export { ErrorBoundary } from './components/ErrorBoundary';
 export { Logo } from './components/Logo';
 export { AsyncSection as Skeleton } from './components/Skeleton';
+export { default as TrendsChart } from './components/TrendsChart';
+export { ContrastCheckerPanel } from './components/ContrastCheckerPanel';
+export { ContrastCheckerDev as ContrastCheckerFab } from './components/ContrastCheckerFab';
 
 // =============================================================================
 export { default as tokens } from './tokens';
