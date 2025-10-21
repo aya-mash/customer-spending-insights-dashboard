@@ -1,0 +1,466 @@
+/**
+ * DESIGN TOKENS - TypeScript Design System
+ * Complete token system mirroring CSS custom properties with type safety
+ * Source of truth for all visual design decisions
+ * 
+ * Brand Identity:
+ * - Primary: #2F70EF (Capitec Royal Blue) - Trust, stability, professionalism
+ * - Accent: #4111A4 (Capitec Purple) - Innovation, premium
+ */
+
+// =============================================================================
+// BRAND COLORS (CSS Variable Bridge)
+// =============================================================================
+
+export const brand = {
+  get primary() { return getComputedStyle(document.documentElement).getPropertyValue('--brand-primary').trim() || '#2F70EF'; },
+  get primaryHover() { return getComputedStyle(document.documentElement).getPropertyValue('--brand-primary-hover').trim() || '#1E5CD8'; },
+  get primaryActive() { return getComputedStyle(document.documentElement).getPropertyValue('--brand-primary-active').trim() || '#0F47B5'; },
+  get secondary() { return getComputedStyle(document.documentElement).getPropertyValue('--brand-secondary').trim() || '#1E313E'; },
+  get secondaryHover() { return getComputedStyle(document.documentElement).getPropertyValue('--brand-secondary-hover').trim() || '#152530'; },
+  get accent() { return getComputedStyle(document.documentElement).getPropertyValue('--brand-secondary').trim() || '#4111A4'; },
+  get accentHover() { return '#2E0B73'; },
+} as const;
+
+// =============================================================================
+// NEUTRAL PALETTE (50-900 scale)
+// =============================================================================
+
+// =============================================================================
+// NEUTRAL PALETTE (CSS Variable Bridge)
+// =============================================================================
+
+export const neutral = {
+  get 50() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-50').trim() || '#F9FAFB'; },
+  get 100() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-100').trim() || '#F3F4F6'; },
+  get 200() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-200').trim() || '#E5E7EB'; },
+  get 300() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-300').trim() || '#D1D5DB'; },
+  get 400() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-400').trim() || '#9CA3AF'; },
+  get 500() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-500').trim() || '#6B7280'; },
+  get 600() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-600').trim() || '#4B5563'; },
+  get 700() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-700').trim() || '#374151'; },
+  get 800() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-800').trim() || '#1F2937'; },
+  get 900() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-900').trim() || '#111827'; },
+} as const;
+
+// =============================================================================
+// SEMANTIC COLORS
+// =============================================================================
+
+export const semantic = {
+  success: '#10B981',
+  successLight: '#D1FAE5',
+  successDark: '#047857',
+  
+  warning: '#F59E0B',
+  warningLight: '#FEF3C7',
+  warningDark: '#D97706',
+  
+  error: '#EF4444',
+  errorLight: '#FEE2E2',
+  errorDark: '#DC2626',
+  
+  info: '#3B82F6',
+  infoLight: '#DBEAFE',
+  infoDark: '#1D4ED8',
+} as const;
+
+// =============================================================================
+// CATEGORY COLORS (Financial Spending)
+// =============================================================================
+
+export const categories = {
+  groceries: {
+    main: '#10B981',
+    light: '#D1FAE5',
+    icon: '#059669',
+  },
+  entertainment: {
+    main: '#8B5CF6',
+    light: '#EDE9FE',
+    icon: '#7C3AED',
+  },
+  transport: {
+    main: '#F59E0B',
+    light: '#FEF3C7',
+    icon: '#D97706',
+  },
+  dining: {
+    main: '#EF4444',
+    light: '#FEE2E2',
+    icon: '#DC2626',
+  },
+  shopping: {
+    main: '#EC4899',
+    light: '#FCE7F3',
+    icon: '#DB2777',
+  },
+  utilities: {
+    main: '#06B6D4',
+    light: '#CFFAFE',
+    icon: '#0891B2',
+  },
+} as const;
+
+// =============================================================================
+// SURFACE & BACKGROUND COLORS
+// =============================================================================
+
+// =============================================================================
+// SURFACE COLORS (CSS Variable Bridge)
+// =============================================================================
+
+export const surface = {
+  get bg() { return getComputedStyle(document.documentElement).getPropertyValue('--color-bg').trim() || '#FFFFFF'; },
+  get surface() { return getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim() || '#FFFFFF'; },
+  get card() { return getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim() || '#FFFFFF'; },
+  get surfaceAlt() { return getComputedStyle(document.documentElement).getPropertyValue('--color-surface-alt').trim() || '#F9FAFB'; },
+  get surfaceElevated() { return getComputedStyle(document.documentElement).getPropertyValue('--color-surface-elevated').trim() || '#FFFFFF'; },
+  get hover() { return getComputedStyle(document.documentElement).getPropertyValue('--color-surface-alt').trim() || '#F3F4F6'; },
+  get border() { return getComputedStyle(document.documentElement).getPropertyValue('--color-border').trim() || '#E5E7EB'; },
+  get borderStrong() { return getComputedStyle(document.documentElement).getPropertyValue('--color-border-strong').trim() || '#D1D5DB'; },
+  get overlay() { return getComputedStyle(document.documentElement).getPropertyValue('--color-overlay').trim() || 'rgba(0, 0, 0, 0.4)'; },
+} as const;
+
+// =============================================================================
+// TEXT COLORS
+// =============================================================================
+
+// =============================================================================
+// TEXT COLORS (CSS Variable Bridge)
+// =============================================================================
+
+export const text = {
+  get primary() { return getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim() || '#1F2937'; },
+  get secondary() { return getComputedStyle(document.documentElement).getPropertyValue('--color-text-muted').trim() || '#6B7280'; },
+  get strong() { return getComputedStyle(document.documentElement).getPropertyValue('--color-text-strong').trim() || '#111827'; },
+  get muted() { return getComputedStyle(document.documentElement).getPropertyValue('--color-text-muted').trim() || '#6B7280'; },
+  get disabled() { return getComputedStyle(document.documentElement).getPropertyValue('--color-text-disabled').trim() || '#9CA3AF'; },
+  get inverse() { return getComputedStyle(document.documentElement).getPropertyValue('--color-text-inverse').trim() || '#FFFFFF'; },
+  get placeholder() { return getComputedStyle(document.documentElement).getPropertyValue('--color-text-placeholder').trim() || '#9CA3AF'; },
+} as const;
+
+// =============================================================================
+// SPACING SCALE (4px base unit)
+// =============================================================================
+
+export const spacing = {
+  1: '4px',
+  2: '8px',
+  3: '12px',
+  4: '16px',
+  5: '20px',
+  6: '24px',
+  8: '32px',
+  10: '40px',
+  12: '48px',
+  16: '64px',
+} as const;
+
+// Numeric versions for calculations
+export const spacingNum = {
+  1: 4,
+  2: 8,
+  3: 12,
+  4: 16,
+  5: 20,
+  6: 24,
+  8: 32,
+  10: 40,
+  12: 48,
+  16: 64,
+} as const;
+
+// =============================================================================
+// RESPONSIVE PAGE PADDING
+// =============================================================================
+
+export const pagePadding = {
+  mobile: '16px',
+  tablet: '24px',
+  desktop: '32px',
+} as const;
+
+// =============================================================================
+// TYPOGRAPHY SCALE
+// =============================================================================
+
+export const fontSize = {
+  display: '48px',
+  h1: '32px',
+  h2: '24px',
+  h3: '20px',
+  h4: '18px',
+  bodyLg: '16px',
+  body: '14px',
+  bodySm: '12px',
+  caption: '11px',
+  label: '14px',
+} as const;
+
+export const fontSizeNum = {
+  display: 48,
+  h1: 32,
+  h2: 24,
+  h3: 20,
+  h4: 18,
+  bodyLg: 16,
+  body: 14,
+  bodySm: 12,
+  caption: 11,
+  label: 14,
+} as const;
+
+export const lineHeight = {
+  tight: 1.2,
+  normal: 1.5,
+  relaxed: 1.75,
+} as const;
+
+export const fontWeight = {
+  regular: 400,
+  medium: 500,
+  semibold: 600,
+  bold: 700,
+} as const;
+
+export const fontFamily = {
+  sans: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  mono: '"SF Mono", Monaco, "Cascadia Code", "Courier New", monospace',
+} as const;
+
+// =============================================================================
+// BORDER RADIUS - Soft Modern
+// =============================================================================
+
+export const radius = {
+  sm: '6px',
+  md: '10px',
+  lg: '16px',
+  xl: '20px',
+  '2xl': '24px',
+  full: '9999px',
+} as const;
+
+// =============================================================================
+// SHADOWS - Soft Modern Elevation (softer, more diffused)
+// =============================================================================
+
+export const shadow = {
+  xs: '0 1px 2px rgba(17, 24, 39, 0.04)',
+  sm: '0 2px 4px rgba(17, 24, 39, 0.06), 0 1px 2px rgba(17, 24, 39, 0.04)',
+  md: '0 4px 8px rgba(17, 24, 39, 0.08), 0 2px 4px rgba(17, 24, 39, 0.04)',
+  lg: '0 8px 16px rgba(17, 24, 39, 0.10), 0 4px 6px rgba(17, 24, 39, 0.06)',
+  xl: '0 12px 24px rgba(17, 24, 39, 0.12), 0 8px 12px rgba(17, 24, 39, 0.06)',
+  '2xl': '0 20px 40px rgba(17, 24, 39, 0.16), 0 12px 16px rgba(17, 24, 39, 0.08)',
+} as const;
+
+// =============================================================================
+// TRANSITIONS
+// =============================================================================
+
+export const transition = {
+  fast: '150ms',
+  normal: '250ms',
+  slow: '350ms',
+} as const;
+
+export const easing = {
+  standard: 'cubic-bezier(0.4, 0, 0.2, 1)',
+  decelerate: 'cubic-bezier(0, 0, 0.2, 1)',
+  accelerate: 'cubic-bezier(0.4, 0, 1, 1)',
+} as const;
+
+// =============================================================================
+// BREAKPOINTS (Mobile-First)
+// =============================================================================
+
+export const breakpoints = {
+  mobile: 320,
+  mobileLg: 480,
+  tablet: 768,
+  desktop: 1024,
+  desktopLg: 1440,
+  wide: 1920,
+} as const;
+
+export const breakpointsPx = {
+  mobile: '320px',
+  mobileLg: '480px',
+  tablet: '768px',
+  desktop: '1024px',
+  desktopLg: '1440px',
+  wide: '1920px',
+} as const;
+
+// Media query strings (mobile-first)
+export const mediaQueries = {
+  mobile: `(min-width: ${breakpointsPx.mobile})`,
+  mobileLg: `(min-width: ${breakpointsPx.mobileLg})`,
+  tablet: `(min-width: ${breakpointsPx.tablet})`,
+  desktop: `(min-width: ${breakpointsPx.desktop})`,
+  desktopLg: `(min-width: ${breakpointsPx.desktopLg})`,
+  wide: `(min-width: ${breakpointsPx.wide})`,
+} as const;
+
+// =============================================================================
+// Z-INDEX SCALE
+// =============================================================================
+
+export const zIndex = {
+  base: 0,
+  dropdown: 1000,
+  sticky: 1100,
+  fixed: 1200,
+  overlay: 1300,
+  modalBackdrop: 1300,
+  drawer: 1400,
+  modal: 1400,
+  popover: 1500,
+  tooltip: 1600,
+} as const;
+
+// =============================================================================
+// FOCUS RING
+// =============================================================================
+
+export const focus = {
+  ringWidth: '3px',
+  ringColor: brand.primary,
+  ringOffset: '2px',
+} as const;
+
+// =============================================================================
+// LAYOUT CONSTRAINTS
+// =============================================================================
+
+export const layout = {
+  maxWidth: '1440px',
+  contentMaxWidth: '1280px',
+  sidebarWidth: '240px',
+  sidebarCollapsedWidth: '64px',
+  headerHeight: '64px',
+  bottomBarHeight: '72px',
+} as const;
+
+// =============================================================================
+// TOUCH TARGETS
+// =============================================================================
+
+export const touchTarget = {
+  minimum: '44px',
+  comfortable: '48px',
+} as const;
+
+// =============================================================================
+// RESPONSIVE TYPOGRAPHY (Mobile-First)
+// =============================================================================
+
+export interface ResponsiveValue<T> {
+  mobile: T;
+  tablet?: T;
+  desktop?: T;
+}
+
+export const responsiveTypography = {
+  display: {
+    mobile: fontSizeNum.h1, // 32px
+    tablet: 40,
+    desktop: fontSizeNum.display, // 48px
+  },
+  h1: {
+    mobile: fontSize.h2, // 24px
+    tablet: '28px',
+    desktop: fontSize.h1, // 32px
+  },
+  h2: {
+    mobile: fontSize.h3, // 20px
+    tablet: '22px',
+    desktop: fontSize.h2, // 24px
+  },
+  h3: {
+    mobile: fontSize.h4, // 18px
+    tablet: fontSize.h3, // 20px
+    desktop: fontSize.h3, // 20px
+  },
+} as const;
+
+// =============================================================================
+// RESPONSIVE SPACING
+// =============================================================================
+
+export const responsiveSpacing = {
+  pageX: {
+    mobile: pagePadding.mobile,
+    tablet: pagePadding.tablet,
+    desktop: pagePadding.desktop,
+  },
+  pageY: {
+    mobile: spacing[6],
+    tablet: spacing[8],
+    desktop: spacing[12],
+  },
+  sectionGap: {
+    mobile: spacing[6],
+    tablet: spacing[8],
+    desktop: spacing[12],
+  },
+  cardPadding: {
+    mobile: spacing[4],
+    tablet: spacing[5],
+    desktop: spacing[6],
+  },
+  gridGap: {
+    mobile: spacing[4],
+    tablet: spacing[5],
+    desktop: spacing[6],
+  },
+} as const;
+
+// =============================================================================
+// UTILITY TYPE EXPORTS
+// =============================================================================
+
+export type Spacing = keyof typeof spacing;
+export type FontSize = keyof typeof fontSize;
+export type FontWeight = keyof typeof fontWeight;
+export type Radius = keyof typeof radius;
+export type Shadow = keyof typeof shadow;
+export type Breakpoint = keyof typeof breakpoints;
+export type CategoryName = keyof typeof categories;
+
+// =============================================================================
+// TOKEN COLLECTIONS (for iteration)
+// =============================================================================
+
+export const tokens = {
+  brand,
+  neutral,
+  semantic,
+  categories,
+  surface,
+  text,
+  spacing,
+  spacingNum,
+  pagePadding,
+  fontSize,
+  fontSizeNum,
+  lineHeight,
+  fontWeight,
+  fontFamily,
+  radius,
+  shadow,
+  transition,
+  easing,
+  breakpoints,
+  breakpointsPx,
+  mediaQueries,
+  zIndex,
+  focus,
+  layout,
+  touchTarget,
+  responsiveTypography,
+  responsiveSpacing,
+} as const;
+
+export default tokens;

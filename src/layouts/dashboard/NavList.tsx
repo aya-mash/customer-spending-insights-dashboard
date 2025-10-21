@@ -10,12 +10,12 @@ function triggerPrefetch(path: string) {
 
 function isPage(item: NavigationItem): item is NavigationPageItem { return item.type === 'page'; }
 
-export function NavList({ onNavigate }: Readonly<{ onNavigate?: () => void }>) {
+export function NavList({ collapsed = false, onNavigate }: Readonly<{ collapsed?: boolean; onNavigate?: () => void }>) {
   const { navigation } = useDashboard();
 
   const pages: NavigationPageItem[] = navigation.filter(isPage).filter(i => !i.hidden);
   return (
-    <ul className="dash-nav-list">
+    <ul className={collapsed ? 'dash-nav-list collapsed' : 'dash-nav-list'}>
       {pages.map(item => (
         <li key={item.id} className="dash-nav-item">
           <NavLink
@@ -28,7 +28,18 @@ export function NavList({ onNavigate }: Readonly<{ onNavigate?: () => void }>) {
             className={({ isActive }) => isActive ? 'active' : undefined}
           >
             {({ isActive }) => (
-              <span className="dash-nav-label" aria-current={isActive ? 'page' : undefined}>{item.label}</span>
+              <>
+                {item.icon && (
+                  <span className="dash-nav-icon" aria-hidden="true">
+                    {item.icon}
+                  </span>
+                )}
+                {!collapsed && (
+                  <span className="dash-nav-label" aria-current={isActive ? 'page' : undefined}>
+                    {item.label}
+                  </span>
+                )}
+              </>
             )}
           </NavLink>
         </li>

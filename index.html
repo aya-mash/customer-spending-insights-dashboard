@@ -10,15 +10,24 @@
   </head>
   <body>
     <script>
+      // Pre-hydration theme bootstrap - prevents FOUC
       (function(){
         try {
           var key='theme-choice';
           var stored=localStorage.getItem(key);
-          if(stored && stored!=='system') {
-            document.documentElement.dataset.theme = stored;
+          var mode = (stored==='light' || stored==='dark' || stored==='system') ? stored : 'system';
+          var effective;
+          
+          if (mode === 'system') {
+            effective = globalThis.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
           } else {
-            delete document.documentElement.dataset.theme;
+            effective = mode;
           }
+          
+          var root = document.documentElement;
+          root.dataset.theme = effective;  // What's actually applied
+          root.dataset.mode = mode;         // User's choice
+          root.style.colorScheme = effective;
         } catch(e) {
           console.warn('Theme init failed', e);
         }

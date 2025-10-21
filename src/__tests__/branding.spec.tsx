@@ -1,17 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 import { buildTestRouter } from '../app/router';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from '../App';
 
 function renderApp(path='/' ) {
-  const qc = new QueryClient();
   const testRouter = buildTestRouter([path]);
-  return render(
-    <QueryClientProvider client={qc}>
-      <App router={testRouter} />
-    </QueryClientProvider>
-  );
+  return render(<App router={testRouter} />);
 }
 
 describe('Branding assets', () => {
@@ -19,7 +13,7 @@ describe('Branding assets', () => {
     const { getByAltText, getByRole, getByTestId } = renderApp('/');
     const img = getByAltText(/spending insights/i) as HTMLImageElement;
     expect(img.src).toMatch(/logo-light\.svg/);
-  const settingsBtn = getByRole('button', { name: /^settings$/i });
+    const settingsBtn = getByRole('button', { name: /open settings/i });
     fireEvent.click(settingsBtn);
     const darkBtn = getByTestId('mode-dark');
     fireEvent.click(darkBtn);

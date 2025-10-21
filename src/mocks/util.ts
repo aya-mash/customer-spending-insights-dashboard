@@ -1,5 +1,3 @@
-// Utility helpers for mock data generation.
-
 export function seededRandom(seed: number) {
   let value = seed % 2147483647;
   if (value <= 0) value += 2147483646;

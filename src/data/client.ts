@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosResponse } from 'axios';
+import { config } from '../config/env';
 import type {
   Profile,
   SpendingSummary,
@@ -14,9 +15,8 @@ import type {
   TrendsParams,
 } from './models';
 
-// Base URL: same-origin relative by default; can be overridden via VITE_API_BASE.
-// Example: VITE_API_BASE=http://localhost:3000/api/customers
-const baseURL = (import.meta as unknown as { env: Record<string,string|undefined> }).env.VITE_API_BASE || '/api/customers';
+// Use configured API base URL
+const baseURL = `${config.apiBaseUrl}/customers`;
 
 const instance: AxiosInstance = axios.create({
   baseURL,
@@ -24,15 +24,17 @@ const instance: AxiosInstance = axios.create({
   headers: { Accept: 'application/json' },
 });
 
-// Dev-only logging interceptor.
-if (import.meta.env.DEV) {
+// Logging interceptor for non-production environments
+if (!config.isProduction) {
   instance.interceptors.response.use(
     (res: AxiosResponse) => {
       console.debug('[api]', res.config.method?.toUpperCase(), res.config.url, res.status);
       return res;
     },
     (err: unknown) => {
-      if (err instanceof Error) console.warn('[api error]', err.message);
+      if (err instanceof Error) {
+        console.warn('[api error]', err.message);
+      }
       return Promise.reject(err instanceof Error ? err : new Error('Request failed'));
     },
   );

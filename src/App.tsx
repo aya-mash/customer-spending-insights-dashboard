@@ -1,17 +1,23 @@
-import { ContrastCheckerDev } from './components/ContrastChecker/ContrastCheckerFab';
-import { RouterProvider } from 'react-router-dom';
-// Type for router instance isn't exported cleanly; using 'any' with lint disable for this single prop.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface AppProps { readonly router?: any }
-import { router as defaultRouter } from './app/router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider } from './contexts';
+import AppShell, { type AppShellProps } from './app/AppShell';
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60_000,
+      retry: 2,
+    },
+  },
+});
 
-function App({ router = defaultRouter }: Readonly<AppProps>) {
+function App(props: Readonly<AppShellProps>) {
   return (
-    <>
-      <RouterProvider router={router} />
-      <ContrastCheckerDev />
-    </>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AppShell {...props} />
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 

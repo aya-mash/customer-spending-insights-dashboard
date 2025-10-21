@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import { config } from '../config/env';
 
 export function useNavigationTimings() {
   const loc = useLocation();
@@ -7,7 +8,7 @@ export function useNavigationTimings() {
   useEffect(() => {
     const now = performance.now();
     const duration = now - startRef.current;
-    if (import.meta.env.DEV) {
+    if (config.isDevelopment) {
       console.log(`[nav] Route '${loc.pathname}' rendered in ${duration.toFixed(1)}ms`);
     }
     startRef.current = performance.now();

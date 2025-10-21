@@ -1,54 +1,133 @@
 # Customer Spending Insights Dashboard
 
-Project documentation expansion in progress.
+A production-ready React TypeScript dashboard for analyzing customer spending patterns with enterprise-grade performance, accessibility, and responsive design.
 
-## Key Features
-- System-aware light/dark theme with manual override & reset.
-- Semantic CSS custom properties (design tokens) targeting WCAG AA.
-- Accessible theme toggle (`aria-pressed`) & skip navigation link.
-- Lazy routes + hover prefetch for faster perceived navigation.
-- Skeleton loaders with `aria-busy` and polite live region content swap.
-- Dev-only Contrast Checker (tokens dropdowns, hex inputs, swap/reset, large text toggle, ESC close).
-- Adaptive logo & favicon per theme.
-- Unit-tested contrast utilities (`src/lib/contrast.ts`).
-- Playwright smoke tests (theme persistence, contrast ratio correctness).
-- Storybook component explorer.
-- Typed axios data client + deterministic MSW API mocks (see `docs/api-contracts.md`).
+## 🚀 Quick Start
 
-## Accessibility Statement
-We aim for WCAG 2.1 AA compliance:
-- Contrast: ≥ 4.5:1 normal text; ≥ 3:1 large text (≥24px normal or ≥19px bold approximated).
-- Keyboard: All interactive elements focusable with visible outline; ESC closes the dev contrast panel.
-- Color scheme: `color-scheme: light dark` enables native UI theming alignment.
-- Live regions: Async content replaces skeleton within a polite `aria-live` container to avoid disruption.
+```bash
+# Install dependencies
+yarn install
 
-Planned improvements: Reduced-motion alternatives, more granular focus management, expanded screen reader announcements.
+# Start development server
+yarn dev
 
-## Theming & Tokens
-Source tokens live in `src/styles/tokens.css` (semantic, not raw HSL brand values) and are applied via `data-theme` attribute switching. User preference is persisted while a reset control restores system `prefers-color-scheme` behavior.
+# Build for production  
+yarn build
 
-## Dev Contrast Checker
-The floating action button appears when:
-- In development (`import.meta.env.DEV`) OR
-- URL has `?devtools=1` or `?contrastWidget=1` query.
+# Run tests
+yarn test
 
-Panel capabilities:
-- Dropdown tokens resolve current computed values.
-- Normalizes hex input (short syntax -> full #RRGGBB, strips invalid chars).
-- Large text toggle adjusts AA/AAA thresholds.
-- Swap & Reset controls; ESC closes panel.
-
-Utilities underpinning it: `src/lib/contrast.ts` (relative luminance, ratio, AA/AAA evaluation, large text helpers).
-
-## Storybook
-Launch interactive component explorer:
-```powershell
+# Run Storybook
 yarn storybook
 ```
-Build static story bundle:
-```powershell
-yarn storybook:build
+
+## 📦 Deployment
+
+### AWS Amplify (Recommended)
+This project is configured for seamless deployment on AWS Amplify:
+
+1. Connect your repository to [AWS Amplify Console](https://console.aws.amazon.com/amplify/)
+2. Amplify will automatically detect the `amplify.yml` configuration
+3. Set up environment variables if needed
+4. Deploy automatically on every push
+
+See [docs/deployment.md](docs/deployment.md) for detailed deployment instructions.
+
+### Alternative: Docker
+```bash
+docker build -t spending-dashboard .
+docker run -p 3000:80 spending-dashboard
 ```
+
+## 📊 Features
+
+### Dashboard Views
+- **Overview**: 30-day spending summary with goals and quick actions
+- **Insights**: Interactive donut charts and trend analysis with drill-down
+- **Transactions**: Filterable, sortable, paginated transaction management
+
+### Performance & Accessibility
+- 🎯 **Lighthouse Scores**: A11y ≥95%, Perf ≥90%, CLS ≤0.10 (target metrics)
+- ♿ **WCAG AA**: Full keyboard navigation, screen reader support, `:focus-visible` indicators
+- 🎹 **Keyboard**: Tab/Shift+Tab, Enter/Space, Escape (modals), Arrow keys (tabs), skip links
+- 📱 **Responsive**: Mobile-first (320px+), touch-friendly (44px targets), safe-area support (iOS notch)
+- ⚡ **Optimized**: Code-split routes, lazy-loaded charts (DonutChart 26kB, TrendsChart 41kB)
+- 🎨 **Dark Theme**: Auto-detect via `prefers-color-scheme`, manual toggle, persisted to localStorage
+- 🔍 **Screen Readers**: ARIA labels, live regions (`aria-live="polite"`), chart summaries via `aria-describedby`
+- 🎭 **Animations**: Respect `prefers-reduced-motion` (disables chart animations, transforms)
+
+### Technology Stack
+- **Frontend**: Vite 7.1.7 + React 19.1.1 + TypeScript (strict mode)
+- **Routing**: React Router DOM 7.9.4 with lazy loading and prefetch
+- **Charts**: Recharts 3.3.0 with accessibility and lazy boundaries
+- **Icons**: Lucide React 0.546.0 (professional icon system, replaces emojis)
+- **Styling**: Native CSS only (Grid/Flex, custom properties, container queries, logical properties)
+- **State**: TanStack React Query 5.90.5 for server state
+- **Testing**: Vitest 3.2.4 + Testing Library + Playwright (E2E)
+- **Mocking**: MSW 2.11.5 with deterministic factories
+- **Storybook**: 8.2.9 for component-driven development
+- **Deployment**: AWS Amplify with automatic CI/CD
+
+## 🏗️ Architecture
+
+```
+src/
+├── app/              # Router, shell, config
+├── components/       # Reusable UI components 
+├── features/         # Feature-specific modules
+├── data/             # API client, models, mocks
+├── styles/           # Design tokens, base styles
+├── utils/            # Performance, accessibility utilities
+└── hooks/            # Custom React hooks
+```
+
+## 🎨 Design System
+
+### Design Tokens (Production-Grade)
+All visual design decisions are centralized in `src/styles/tokens.css`:
+- **Colors**: Primary (#2F70EF blue), Secondary (#1E313E), semantic states, full neutral scale (50-900)
+- **Typography**: Scale from 11px→48px with semantic names (fs-caption, fs-body, fs-h1-h6)
+- **Spacing**: Consistent 4px-based scale (sp-1→sp-64) for margins, padding, gaps
+- **Shadows**: 6-level elevation system (shadow-xs→shadow-2xl) for depth hierarchy
+- **Radius**: Border radius tokens (radius-xs→radius-full) for consistent rounding
+- **Z-Index**: Layered scale (base→dropdown→sticky→fixed→modal→tooltip→toast→max)
+- **Transitions**: Timing tokens (fast 150ms, normal 250ms, slow 350ms) with easing curves
+- **Dark Theme**: Professional dark mode with WCAG AA contrast, optimized for low-light viewing
+
+### Components
+- **Cards**: Elevation levels 1-5, interactive variant with hover lift, consistent spacing
+- **Metric Cards**: 8-metric grid (2-col desktop, 4-col on 1440px+), category-specific icon colors
+- **Tables**: Zebra striping, sticky headers with shadow, right-aligned currency, sortable columns
+- **Charts**: 
+  - DonutChart: Inner label (Top category), rounded segments, click drill-down, SR summaries
+  - TrendsChart: Gradient area/line, compact ticks, tooltip with delta, textual summary
+- **Tabs**: Pill-style with robust ARIA, keyboard Left/Right, strong :focus-visible
+- **Navigation**: 
+  - Desktop: Collapsible sidebar (248px→72px) with icon-only mode, unified header toggle
+  - Mobile: Bottom nav with safe-area support, icon+label column layout
+- **Filters**: Removable category/period pills, "Clear all" button, URL-backed state
+- **Interactive States**: 
+  - Hover: Subtle transforms (translateY, translateX), shadow elevation
+  - Focus: Visible outlines (`:focus-visible` only, no sticky mouse outlines)
+  - Active: Tactile press feedback (reduced lift on buttons, cards)
+
+### Responsive Spacing
+- **Page Padding**: Progressive 24px (mobile) → 32px (tablet) → 48px (desktop)
+- **Max Width**: 1600px with auto centering for large screens
+- **Touch Targets**: Minimum 44×44px enforced (buttons, nav links, chips)
+
+## 📈 Performance Features
+
+### Code Splitting
+- **Routes**: Each page lazy-loaded separately
+- **Charts**: DonutChart (26kB), TrendsChart (41kB) 
+- **Main Bundle**: 310kB optimized
+
+### Optimization
+- **LazyImage**: Intersection observer loading
+- **VirtualizedList**: Window-based rendering for large datasets
+- **Memoization**: Smart re-render prevention
+- **Bundle Analysis**: Performance monitoring utilities
 
 ## Tests
 Run unit/integration (Vitest):
@@ -59,6 +138,53 @@ Run Playwright smoke tests:
 ```powershell
 yarn playwright test
 ```
+
+## 🔧 Environment Configuration
+
+This project uses environment-specific configuration files to manage different deployment environments:
+
+### Environment Files
+- **`.env.development`**: Local development (default when running `yarn dev`)
+- **`.env.staging`**: Integration/staging environment (deployed from `develop` branch)
+- **`.env.production`**: Production environment (deployed from `main` branch)
+- **`.env.example`**: Template file showing all available variables
+
+### Available Variables
+All environment variables must be prefixed with `VITE_` to be exposed to the client:
+
+- `VITE_ENV`: Environment name (`development`, `staging`, `production`)
+- `VITE_API_BASE_URL`: Backend API base URL
+- `VITE_APP_NAME`: Application display name
+- `VITE_ENABLE_MOCKS`: Enable MSW mock service worker (`true`/`false`)
+
+### Usage in Code
+Access environment variables through the type-safe config module:
+
+```typescript
+import { config } from './config/env';
+
+// Available properties:
+config.env              // 'development' | 'staging' | 'production'
+config.apiBaseUrl       // API base URL
+config.appName          // Application name
+config.enableMocks      // Boolean for MSW
+config.isDevelopment    // true if env === 'development'
+config.isStaging        // true if env === 'staging'
+config.isProduction     // true if env === 'production'
+```
+
+### Build Scripts
+- `yarn dev`: Start dev server with development env
+- `yarn dev:staging`: Start dev server with staging env
+- `yarn build`: Production build
+- `yarn build:staging`: Staging build
+- `yarn build:dev`: Development build
+
+### AWS Amplify Configuration
+The `amplify.yml` file automatically detects the deployment branch and uses the appropriate build command:
+- `main` branch → `yarn build` (production)
+- `develop` branch → `yarn build:staging` (staging)
+- Other branches → `yarn build:dev` (development)
 
 ## Local Development
 Install deps & start dev server:
