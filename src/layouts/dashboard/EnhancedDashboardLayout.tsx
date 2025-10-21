@@ -11,13 +11,15 @@ import { BottomNav, type BottomNavItem } from '../../design-system/components/Bo
 import { SettingsDrawer } from '../../design-system/components/SettingsDrawer';
 import { useThemeChoice } from '../../hooks/useThemeChoice';
 import { brand, surface, spacingNum, zIndex } from '../../design-system/tokens';
-import { useBreakpoint } from '../../design-system';
+import { useBreakpoint, useTheme } from '../../design-system';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
 }
 
 export function EnhancedDashboardLayout() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _ = useTheme(); // Force re-render on theme change
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { mode, setMode } = useThemeChoice();

@@ -9,6 +9,7 @@ import { brand, surface, text as textColors, spacingNum, radius, transition, eas
 import { Heading } from './Heading';
 import { Stack } from './Stack';
 import { Text } from './Text';
+import { useTheme } from '../useTheme';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -23,6 +24,8 @@ export interface SettingsDrawerProps {
 
 export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
   ({ open, onClose, mode, onModeChange }, ref) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const _ = useTheme(); // Force re-render on theme change
     const panelRef = useRef<HTMLElement | null>(null);
 
     // Close on Escape

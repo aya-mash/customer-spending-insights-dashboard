@@ -9,34 +9,38 @@
  */
 
 // =============================================================================
-// BRAND COLORS
+// BRAND COLORS (CSS Variable Bridge)
 // =============================================================================
 
 export const brand = {
-  primary: '#2F70EF',
-  primaryHover: '#1E5CD8',
-  primaryActive: '#0F47B5',
-  secondary: '#1E313E',
-  secondaryHover: '#152530',
-  accent: '#4111A4',
-  accentHover: '#2E0B73',
+  get primary() { return getComputedStyle(document.documentElement).getPropertyValue('--brand-primary').trim() || '#2F70EF'; },
+  get primaryHover() { return getComputedStyle(document.documentElement).getPropertyValue('--brand-primary-hover').trim() || '#1E5CD8'; },
+  get primaryActive() { return getComputedStyle(document.documentElement).getPropertyValue('--brand-primary-active').trim() || '#0F47B5'; },
+  get secondary() { return getComputedStyle(document.documentElement).getPropertyValue('--brand-secondary').trim() || '#1E313E'; },
+  get secondaryHover() { return getComputedStyle(document.documentElement).getPropertyValue('--brand-secondary-hover').trim() || '#152530'; },
+  get accent() { return getComputedStyle(document.documentElement).getPropertyValue('--brand-secondary').trim() || '#4111A4'; },
+  get accentHover() { return '#2E0B73'; },
 } as const;
 
 // =============================================================================
 // NEUTRAL PALETTE (50-900 scale)
 // =============================================================================
 
+// =============================================================================
+// NEUTRAL PALETTE (CSS Variable Bridge)
+// =============================================================================
+
 export const neutral = {
-  50: '#F9FAFB',
-  100: '#F3F4F6',
-  200: '#E5E7EB',
-  300: '#D1D5DB',
-  400: '#9CA3AF',
-  500: '#6B7280',
-  600: '#4B5563',
-  700: '#374151',
-  800: '#1F2937',
-  900: '#111827',
+  get 50() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-50').trim() || '#F9FAFB'; },
+  get 100() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-100').trim() || '#F3F4F6'; },
+  get 200() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-200').trim() || '#E5E7EB'; },
+  get 300() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-300').trim() || '#D1D5DB'; },
+  get 400() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-400').trim() || '#9CA3AF'; },
+  get 500() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-500').trim() || '#6B7280'; },
+  get 600() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-600').trim() || '#4B5563'; },
+  get 700() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-700').trim() || '#374151'; },
+  get 800() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-800').trim() || '#1F2937'; },
+  get 900() { return getComputedStyle(document.documentElement).getPropertyValue('--neutral-900').trim() || '#111827'; },
 } as const;
 
 // =============================================================================
@@ -102,30 +106,38 @@ export const categories = {
 // SURFACE & BACKGROUND COLORS
 // =============================================================================
 
+// =============================================================================
+// SURFACE COLORS (CSS Variable Bridge)
+// =============================================================================
+
 export const surface = {
-  bg: '#FFFFFF',
-  surface: '#FFFFFF',
-  card: '#FFFFFF',
-  surfaceAlt: '#F9FAFB',
-  surfaceElevated: '#FFFFFF',
-  hover: '#F3F4F6',
-  border: '#E5E7EB',
-  borderStrong: '#D1D5DB',
-  overlay: 'rgba(0, 0, 0, 0.4)',
+  get bg() { return getComputedStyle(document.documentElement).getPropertyValue('--color-bg').trim() || '#FFFFFF'; },
+  get surface() { return getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim() || '#FFFFFF'; },
+  get card() { return getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim() || '#FFFFFF'; },
+  get surfaceAlt() { return getComputedStyle(document.documentElement).getPropertyValue('--color-surface-alt').trim() || '#F9FAFB'; },
+  get surfaceElevated() { return getComputedStyle(document.documentElement).getPropertyValue('--color-surface-elevated').trim() || '#FFFFFF'; },
+  get hover() { return getComputedStyle(document.documentElement).getPropertyValue('--color-surface-alt').trim() || '#F3F4F6'; },
+  get border() { return getComputedStyle(document.documentElement).getPropertyValue('--color-border').trim() || '#E5E7EB'; },
+  get borderStrong() { return getComputedStyle(document.documentElement).getPropertyValue('--color-border-strong').trim() || '#D1D5DB'; },
+  get overlay() { return getComputedStyle(document.documentElement).getPropertyValue('--color-overlay').trim() || 'rgba(0, 0, 0, 0.4)'; },
 } as const;
 
 // =============================================================================
 // TEXT COLORS
 // =============================================================================
 
+// =============================================================================
+// TEXT COLORS (CSS Variable Bridge)
+// =============================================================================
+
 export const text = {
-  primary: '#1F2937',
-  secondary: '#6B7280',
-  strong: '#111827',
-  muted: '#6B7280',
-  disabled: '#9CA3AF',
-  inverse: '#FFFFFF',
-  placeholder: '#9CA3AF',
+  get primary() { return getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim() || '#1F2937'; },
+  get secondary() { return getComputedStyle(document.documentElement).getPropertyValue('--color-text-muted').trim() || '#6B7280'; },
+  get strong() { return getComputedStyle(document.documentElement).getPropertyValue('--color-text-strong').trim() || '#111827'; },
+  get muted() { return getComputedStyle(document.documentElement).getPropertyValue('--color-text-muted').trim() || '#6B7280'; },
+  get disabled() { return getComputedStyle(document.documentElement).getPropertyValue('--color-text-disabled').trim() || '#9CA3AF'; },
+  get inverse() { return getComputedStyle(document.documentElement).getPropertyValue('--color-text-inverse').trim() || '#FFFFFF'; },
+  get placeholder() { return getComputedStyle(document.documentElement).getPropertyValue('--color-text-placeholder').trim() || '#9CA3AF'; },
 } as const;
 
 // =============================================================================

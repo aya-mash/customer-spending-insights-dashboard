@@ -426,4 +426,7 @@ export function getChartLabel(value: number, isSmallScreen: boolean): string {
 // =============================================================================
 
 export * from './tokens';
+export { useTheme, useEffectiveTheme } from './useTheme';
+
+// =============================================================================
 export { default as tokens } from './tokens';

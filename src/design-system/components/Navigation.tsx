@@ -9,6 +9,7 @@ import { forwardRef, type CSSProperties } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { brand, surface, text as textColors, spacingNum, radius, transition, easing } from '../tokens';
 import { useBreakpoint } from '../index';
+import { useTheme } from '../useTheme';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -35,6 +36,8 @@ export interface NavigationProps {
 
 export const Navigation = forwardRef<HTMLElement, NavigationProps>(
   ({ items, isExpanded = false, onToggle }, ref) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const _ = useTheme(); // Force re-render on theme change
     const location = useLocation();
     const breakpoint = useBreakpoint();
     const isMobile = breakpoint === 'mobile';
