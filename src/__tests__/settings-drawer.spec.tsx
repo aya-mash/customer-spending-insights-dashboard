@@ -24,14 +24,15 @@ describe('SettingsDrawer', () => {
     const { getByRole, getByTestId } = renderApp();
     const trigger = getByRole('button', { name: /open settings/i });
     fireEvent.click(trigger);
-    const lightBtn = getByTestId('mode-light');
-    const systemBtn = getByTestId('mode-system');
-    const darkBtn = getByTestId('mode-dark');
+    // Fixed: Now using semantic radio inputs, check 'checked' property
+    const lightBtn = getByTestId('mode-light') as HTMLInputElement;
+    const systemBtn = getByTestId('mode-system') as HTMLInputElement;
+    const darkBtn = getByTestId('mode-dark') as HTMLInputElement;
     // Default is system
-    expect(systemBtn).toHaveAttribute('aria-checked', 'true');
+    expect(systemBtn.checked).toBe(true);
     fireEvent.click(darkBtn);
-    expect(darkBtn).toHaveAttribute('aria-checked', 'true');
+    expect(darkBtn.checked).toBe(true);
     fireEvent.click(lightBtn);
-    expect(lightBtn).toHaveAttribute('aria-checked', 'true');
+    expect(lightBtn.checked).toBe(true);
   });
 });

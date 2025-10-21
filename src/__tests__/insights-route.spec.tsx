@@ -40,7 +40,8 @@ describe('InsightsRoute', () => {
     const categoryTab = screen.getByRole('tab', { name: /By Category/i });
     const trendsTab = screen.getByRole('tab', { name: /Trends/i });
     expect(categoryTab).toHaveAttribute('aria-selected', 'true');
-    fireEvent.keyDown(categoryTab.parentElement!, { key: 'ArrowRight' });
+    // Fire keyDown on the tab button itself, not the parent
+    fireEvent.keyDown(categoryTab, { key: 'ArrowRight' });
     expect(trendsTab).toHaveAttribute('aria-selected', 'true');
   });
 

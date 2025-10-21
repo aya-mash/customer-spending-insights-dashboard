@@ -44,9 +44,14 @@ export default function TrendsChart({ data }: TrendsChartProps) {
 
   const min = Math.min(...data.map(d => d.totalSpent));
   const max = Math.max(...data.map(d => d.totalSpent));
-  const direction = data.length >= 2
-    ? data[data.length - 1].totalSpent > data[0].totalSpent ? 'upward' : 'downward'
-    : 'stable';
+  
+  // Fix nested ternary - use explicit if-else for better readability
+  let direction: 'upward' | 'downward' | 'stable' = 'stable';
+  if (data.length >= 2) {
+    const lastValue = data[data.length - 1].totalSpent;
+    const firstValue = data[0].totalSpent;
+    direction = lastValue > firstValue ? 'upward' : 'downward';
+  }
 
   const summaryId = 'trends-chart-summary';
 

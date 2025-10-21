@@ -1,22 +1,40 @@
 import '@testing-library/jest-dom';
-import { vi } from 'vitest';
+import { vi, beforeEach } from 'vitest';
+
+// Clear localStorage before each test to prevent theme persistence between tests
+beforeEach(() => {
+	localStorage.clear();
+	sessionStorage.clear();
+	document.documentElement.removeAttribute('data-theme');
+});
 
 // Polyfill ResizeObserver for Recharts responsive container during tests.
+// Fixed: Replace empty methods with explicit no-op implementations
 class RO {
-	observe() {}
-	unobserve() {}
-	disconnect() {}
+	// No-op: ResizeObserver mock for testing - does not track observations
+	observe(): void {
+		// Intentionally empty - mock implementation
+	}
+	unobserve(): void {
+		// Intentionally empty - mock implementation
+	}
+	disconnect(): void {
+		// Intentionally empty - mock implementation
+	}
 }
+
 // Only assign if missing to avoid interfering with jsdom updates.
 // Provide a loose global interface for adding ResizeObserver
 interface GlobalWithRO { ResizeObserver?: typeof RO }
 const g = globalThis as unknown as GlobalWithRO;
-if (typeof g.ResizeObserver === 'undefined') {
+// Fixed: Compare with undefined directly instead of using typeof
+if (g.ResizeObserver === undefined) {
 	g.ResizeObserver = RO;
 }
 
 // Mock window.matchMedia for theme detection
-Object.defineProperty(window, 'matchMedia', {
+// Fixed: Use globalThis.window instead of window for ES2020 compatibility
+Object.defineProperty(globalThis.window, 'matchMedia', {
   writable: true,
   value: vi.fn().mockImplementation((query: string) => ({
     matches: false,

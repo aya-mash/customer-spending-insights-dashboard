@@ -1,8 +1,6 @@
-/* eslint-disable */
-/* tslint:disable */
-
 /**
  * Mock Service Worker.
+ * Fixed: Removed unused eslint-disable directive
  * @see https://github.com/mswjs/msw
  * - Please do NOT modify this file.
  */

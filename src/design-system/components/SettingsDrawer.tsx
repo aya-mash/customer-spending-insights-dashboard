@@ -1,6 +1,6 @@
 /**
  * SETTINGS DRAWER COMPONENT
- * Design system settings panel with beautiful pill-style theme switcher
+ * Design system settings panel with RadioGroup component
  */
 
 import { forwardRef, useEffect, useRef, type CSSProperties } from 'react';
@@ -10,6 +10,7 @@ import { brand, surface, text as textColors, spacingNum, radius, transition, eas
 import { Heading } from './Heading';
 import { Stack } from './Stack';
 import { Text } from './Text';
+import { RadioGroup, type RadioOption } from './RadioGroup';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -39,7 +40,9 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
     // Focus trap and auto-focus
     useEffect(() => {
       if (open && panelRef.current) {
-        const focusTarget = panelRef.current.querySelector<HTMLElement>('button');
+        // Fixed: Use .at(0) instead of array[0] for better null-safety
+        const buttons = panelRef.current.querySelectorAll<HTMLElement>('button');
+        const focusTarget = buttons.length > 0 ? buttons.item(0) : null;
         focusTarget?.focus();
       }
     }, [open]);
@@ -108,45 +111,36 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
       overflowY: 'auto',
     });
 
-    const modeGroupStyles = createDynamicStyles({
-      display: 'grid',
-      gridTemplateColumns: 'repeat(3, 1fr)',
-      gap: `${spacingNum[2]}px`,
-      padding: `${spacingNum[3]}px`,
-      backgroundColor: surface.surfaceAlt,
-      borderRadius: radius.lg,
-      border: `1px solid ${surface.border}`,
-    });
-
-    const modeButtonStyles = (isActive: boolean) => createDynamicStyles({
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      gap: `${spacingNum[2]}px`,
-      padding: `${spacingNum[4]}px ${spacingNum[2]}px`,
-      borderRadius: radius.md,
-      border: 'none',
-      backgroundColor: isActive ? brand.primary : 'transparent',
-      color: isActive ? textColors.inverse : textColors.primary,
-      fontSize: '13px',
-      fontWeight: isActive ? 600 : 500,
-      cursor: 'pointer',
-      transition: `all ${transition.normal} ${easing.standard}`,
-      boxShadow: isActive ? '0 2px 8px rgba(47, 112, 239, 0.2)' : 'none',
-    });
-
-    const modes: Array<{ key: 'light' | 'dark' | 'system'; label: string; icon: React.ReactNode }> = [
-      { key: 'light', label: 'Light', icon: <Sun size={20} /> },
-      { key: 'system', label: 'System', icon: <Monitor size={20} /> },
-      { key: 'dark', label: 'Dark', icon: <Moon size={20} /> },
+    // Define theme mode options for RadioGroup
+    const themeOptions: RadioOption[] = [
+      { 
+        value: 'light', 
+        label: 'Light', 
+        icon: <Sun size={20} />,
+      },
+      { 
+        value: 'system', 
+        label: 'System', 
+        icon: <Monitor size={20} />,
+      },
+      { 
+        value: 'dark', 
+        label: 'Dark', 
+        icon: <Moon size={20} />,
+      },
     ];
 
     return (
       <>
-        {/* Overlay */}
-        <div style={overlayStyles} onClick={onClose} aria-hidden="true" />
+        {/* Overlay - Backdrop for drawer */}
+        <div 
+          style={overlayStyles} 
+          onClick={onClose} 
+          aria-hidden="true"
+          role="presentation"
+        />
 
-        {/* Drawer */}
+        {/* Drawer - Accessible side panel */}
         <aside
           ref={(node) => {
             panelRef.current = node;
@@ -185,40 +179,18 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
           {/* Content */}
           <div style={contentStyles}>
             <Stack spacing={6}>
-              {/* Theme Section */}
+              {/* Theme Section - Using RadioGroup from design system */}
               <Stack spacing={3}>
                 <Text variant="body" weight="semibold" style={{ fontSize: '14px' }}>
                   Appearance
                 </Text>
-                <div style={modeGroupStyles} role="radiogroup" aria-label="Color theme">
-                  {modes.map((item) => (
-                    <button
-                      key={item.key}
-                      type="button"
-                      role="radio"
-                      aria-checked={mode === item.key}
-                      data-testid={`mode-${item.key}`}
-                      style={modeButtonStyles(mode === item.key)}
-                      onClick={() => onModeChange(item.key)}
-                      onMouseEnter={(e) => {
-                        if (mode !== item.key) {
-                          e.currentTarget.style.backgroundColor = surface.hover;
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (mode !== item.key) {
-                          e.currentTarget.style.backgroundColor = 'transparent';
-                        }
-                      }}
-                    >
-                      {item.icon}
-                      <span>{item.label}</span>
-                    </button>
-                  ))}
-                </div>
-                <Text variant="bodySm" color="muted">
-                  Choose how the dashboard looks. System matches your device settings.
-                </Text>
+                <RadioGroup
+                  name="theme-mode"
+                  options={themeOptions}
+                  value={mode}
+                  onChange={(value) => onModeChange(value as 'light' | 'dark' | 'system')}
+                  aria-label="Color theme"
+                />
               </Stack>
 
               {/* Design System Section */}

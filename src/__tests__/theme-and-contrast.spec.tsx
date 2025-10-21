@@ -11,33 +11,39 @@ function renderApp(path = "/") {
 describe("Theme with SettingsDrawer", () => {
   it("defaults to system (no data-theme attribute and no localStorage key)", () => {
     const { container } = renderApp("/");
-    expect(
-      container.ownerDocument.documentElement.dataset.theme
-    ).toBeUndefined();
+    // System mode sets data-theme to the effective theme (light, since matchMedia mock returns matches: false)
+    // and data-mode to 'system'. localStorage should be empty.
+    expect(container.ownerDocument.documentElement.dataset.theme).toBe("light");
+    expect(container.ownerDocument.documentElement.dataset.mode).toBe("system");
     expect(localStorage.getItem("theme-choice")).toBeNull();
   });
-  it("selecting Dark sets data-theme and localStorage, selecting System clears both", () => {
+  it("selecting Dark sets data-theme and localStorage, selecting System clears localStorage", () => {
     const { getByRole, getByTestId, container } = renderApp("/");
     const settingsBtn = getByRole("button", { name: /open settings/i });
     fireEvent.click(settingsBtn);
-    const darkBtn = getByTestId("mode-dark");
+    // Click the radio input directly
+    const darkBtn = getByTestId("mode-dark") as HTMLInputElement;
     fireEvent.click(darkBtn);
     expect(container.ownerDocument.documentElement.dataset.theme).toBe("dark");
+    expect(container.ownerDocument.documentElement.dataset.mode).toBe("dark");
     expect(localStorage.getItem("theme-choice")).toBe("dark");
-    const systemBtn = getByTestId("mode-system");
+    const systemBtn = getByTestId("mode-system") as HTMLInputElement;
     fireEvent.click(systemBtn);
-    expect(
-      container.ownerDocument.documentElement.dataset.theme
-    ).toBeUndefined();
+    // System mode still sets data-theme to effective theme (light from system preference)
+    // but clears localStorage and sets mode to 'system'
+    expect(container.ownerDocument.documentElement.dataset.theme).toBe("light");
+    expect(container.ownerDocument.documentElement.dataset.mode).toBe("system");
     expect(localStorage.getItem("theme-choice")).toBeNull();
   });
   it('selecting Light sets explicit data-theme="light" and persists', () => {
     const { getByRole, getByTestId, container } = renderApp("/");
     const settingsBtn = getByRole("button", { name: /open settings/i });
     fireEvent.click(settingsBtn);
-    const lightBtn = getByTestId("mode-light");
+    // Click the radio input directly
+    const lightBtn = getByTestId("mode-light") as HTMLInputElement;
     fireEvent.click(lightBtn);
     expect(container.ownerDocument.documentElement.dataset.theme).toBe("light");
+    expect(container.ownerDocument.documentElement.dataset.mode).toBe("light");
     expect(localStorage.getItem("theme-choice")).toBe("light");
   });
 });

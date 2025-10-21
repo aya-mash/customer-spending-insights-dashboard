@@ -126,13 +126,14 @@ describe('route generator', () => {
     );
     const settingsBtn = screen.getByRole('button', { name: /open settings/i });
     await user.click(settingsBtn);
-    const systemBtn = screen.getByTestId('mode-system');
-    expect(systemBtn).toHaveAttribute('aria-checked', 'true');
-    const darkBtn = screen.getByTestId('mode-dark');
+    // Fixed: Now using semantic radio inputs, check 'checked' property
+    const systemBtn = screen.getByTestId('mode-system') as HTMLInputElement;
+    expect(systemBtn.checked).toBe(true);
+    const darkBtn = screen.getByTestId('mode-dark') as HTMLInputElement;
     await user.click(darkBtn);
-    expect(darkBtn).toHaveAttribute('aria-checked', 'true');
-    const lightBtn = screen.getByTestId('mode-light');
+    expect(darkBtn.checked).toBe(true);
+    const lightBtn = screen.getByTestId('mode-light') as HTMLInputElement;
     await user.click(lightBtn);
-    expect(lightBtn).toHaveAttribute('aria-checked', 'true');
+    expect(lightBtn.checked).toBe(true);
   });
 });
