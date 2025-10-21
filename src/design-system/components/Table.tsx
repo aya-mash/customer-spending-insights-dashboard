@@ -45,6 +45,8 @@ export interface TableProps<T = any> {
   stickyHeader?: boolean;
   /** Maximum height of the table container before scrolling */
   maxHeight?: string;
+  /** Accessible label for the table */
+  'aria-label'?: string;
 }
 
 export const Table = React.memo(
@@ -62,6 +64,7 @@ export const Table = React.memo(
       emptyMessage = 'No data available',
       stickyHeader = false,
       maxHeight = '600px',
+      'aria-label': ariaLabel,
       ...props
     },
     ref
@@ -185,7 +188,7 @@ export const Table = React.memo(
     return (
       <Box ref={ref} style={containerStyle} {...props}>
         <Box style={tableWrapperStyle}>
-          <Box as="table" style={tableStyle}>
+          <Box as="table" style={tableStyle} role="table" aria-label={ariaLabel}>
             <Box as="thead" style={headerStyle}>
               <Box as="tr">
                 {columns.map((col) => (
@@ -200,10 +203,9 @@ export const Table = React.memo(
                         type="button"
                         onClick={() => handleHeaderClick(col)}
                         style={sortButtonStyle(col)}
-                        aria-label={`Sort by ${col.label}`}
                       >
                         <span>{col.label}</span>
-                        <span>{renderSortIcon(col.key)}</span>
+                        <span aria-hidden="true">{renderSortIcon(col.key)}</span>
                       </button>
                     ) : (
                       <div style={{ textAlign: col.align || 'left' }}>
