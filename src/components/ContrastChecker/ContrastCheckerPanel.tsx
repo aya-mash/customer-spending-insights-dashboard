@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { contrastRatio, passesAA, passesAAA } from '../../lib/contrast';
 
 interface Props { readonly onClose?: () => void }
@@ -27,15 +27,28 @@ function normalizeHex(input: string): string {
 }
 
 export function ContrastCheckerPanel({ onClose }: Props) {
-  const [fg, setFg] = useState('#FFFFFF');
-  const [bg, setBg] = useState('#2F70EF');
+  const [fgInput, setFgInput] = useState('#FFFFFF');
+  const [bgInput, setBgInput] = useState('#2F70EF');
   const [fgToken, setFgToken] = useState<string>('');
   const [bgToken, setBgToken] = useState<string>('');
   const [isLarge, setIsLarge] = useState(false);
 
-  // Update hex when token selection changes
-  useEffect(()=>{ if (fgToken) { const v = resolveVar(fgToken); if (v) setFg(v); } },[fgToken]);
-  useEffect(()=>{ if (bgToken) { const v = resolveVar(bgToken); if (v) setBg(v); } },[bgToken]);
+  // Derive hex from token or use input value
+  const fg = useMemo(() => {
+    if (fgToken) {
+      const v = resolveVar(fgToken);
+      return v || fgInput;
+    }
+    return fgInput;
+  }, [fgToken, fgInput]);
+
+  const bg = useMemo(() => {
+    if (bgToken) {
+      const v = resolveVar(bgToken);
+      return v || bgInput;
+    }
+    return bgInput;
+  }, [bgToken, bgInput]);
 
   const ratio = useMemo(()=> contrastRatio(fg,bg), [fg,bg]);
   const ratioStr = ratio.toFixed(2);
@@ -43,7 +56,12 @@ export function ContrastCheckerPanel({ onClose }: Props) {
   const aaa = passesAAA(ratio, isLarge);
 
   function swap() {
-    setFg(bg); setBg(fg); const oldFgToken = fgToken; setFgToken(bgToken); setBgToken(oldFgToken);
+    const oldFgInput = fgInput;
+    const oldFgToken = fgToken;
+    setFgInput(bgInput);
+    setBgInput(oldFgInput);
+    setFgToken(bgToken);
+    setBgToken(oldFgToken);
   }
 
   return (
@@ -58,7 +76,7 @@ export function ContrastCheckerPanel({ onClose }: Props) {
           <span>
             <input
               value={fg}
-              onChange={e=>setFg(normalizeHex(e.target.value))}
+              onChange={e=>setFgInput(normalizeHex(e.target.value))}
               aria-label="Foreground color hex"
             />
           </span>
@@ -81,7 +99,7 @@ export function ContrastCheckerPanel({ onClose }: Props) {
           <span>
             <input
               value={bg}
-              onChange={e=>setBg(normalizeHex(e.target.value))}
+              onChange={e=>setBgInput(normalizeHex(e.target.value))}
               aria-label="Background color hex"
             />
           </span>
@@ -110,7 +128,7 @@ export function ContrastCheckerPanel({ onClose }: Props) {
         </label>
         <div style={{display:'flex', gap:'8px', marginTop:'4px'}}>
           <button type="button" onClick={swap} aria-label="Swap foreground and background">Swap</button>
-          <button type="button" onClick={()=>{ setFgToken(''); setBgToken(''); setFg('#FFFFFF'); setBg('#2F70EF'); setIsLarge(false); }} aria-label="Reset contrast checker">Reset</button>
+          <button type="button" onClick={()=>{ setFgToken(''); setBgToken(''); setFgInput('#FFFFFF'); setBgInput('#2F70EF'); setIsLarge(false); }} aria-label="Reset contrast checker">Reset</button>
         </div>
         <div className="contrast-preview" style={{background:bg,color:fg, fontSize: isLarge ? '24px':'16px'}} aria-label={`Preview text contrast ratio ${ratioStr}`}>Aa Ratio {ratioStr}:1</div>
         <p className="contrast-results">AA {aa ? 'Pass' : 'Fail'} · AAA {aaa ? 'Pass' : 'Fail'} (Large text threshold 3:1)</p>
