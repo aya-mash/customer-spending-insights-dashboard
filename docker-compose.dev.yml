@@ -21,7 +21,8 @@ services:
       - VITE_ENABLE_MOCKS=true
     working_dir: /workspace
     command: sh -c "yarn install && npx msw init public --save && yarn dev:docker"
-    user: node
+    # Start as root, then switch to node user after fixing permissions
+    user: root
     stdin_open: true
     tty: true
 

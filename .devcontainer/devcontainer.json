@@ -53,8 +53,14 @@
     }
   },
   
+  // Use containerUser to override docker-compose user setting
+  "containerUser": "node",
+  
+  // Update remote user
+  "updateRemoteUserUID": true,
+  
   // Post-create command to run after container is created
-  "postCreateCommand": "yarn install && npx msw init public --save",
+  "postCreateCommand": "sudo chown -R node:node /workspace && yarn install && npx msw init public --save",
   
   // Post-start command to run after container starts
   "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
