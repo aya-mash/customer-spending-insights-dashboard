@@ -237,37 +237,45 @@ export function Transactions() {
         </div>
 
         {/* Transactions Table */}
-        <Card padding={1}>
-          <Table
-            columns={columns}
-            data={filteredData}
-            keyExtractor={(row) => row.id}
-            onSort={(key) => sort(key as keyof Transaction)}
-            sortKey={sortField}
-            sortDirection={sortDirection}
-            zebraStripe
-            emptyMessage="No transactions found."
-            stickyHeader
-            maxHeight="calc(100vh - 300px)"
-            aria-label="Transactions table"
-          />
-        </Card>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <Stack align="center">
-            <Pagination
-              currentPage={page}
-              totalPages={totalPages}
-              onPageChange={(newPage) => updateFilters({ page: newPage })}
-              maxVisible={7}
-              showPrevNext
-              itemsPerPage={perPage}
-              totalItems={total}
-              showRange
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '16px',
+          height: 'calc(100vh - 280px)',
+          minHeight: '400px'
+        }}>
+          <Card padding={1} style={{ flex: 1, overflow: 'hidden' }}>
+            <Table
+              columns={columns}
+              data={filteredData}
+              keyExtractor={(row) => row.id}
+              onSort={(key) => sort(key as keyof Transaction)}
+              sortKey={sortField}
+              sortDirection={sortDirection}
+              zebraStripe
+              emptyMessage="No transactions found."
+              stickyHeader
+              maxHeight="100%"
+              aria-label="Transactions table"
             />
-          </Stack>
-        )}
+          </Card>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <Stack align="center">
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={(newPage) => updateFilters({ page: newPage })}
+                maxVisible={7}
+                showPrevNext
+                itemsPerPage={perPage}
+                totalItems={total}
+                showRange
+              />
+            </Stack>
+          )}
+        </div>
       </Stack>
     </PageLayout>
   );
