@@ -2,7 +2,7 @@
 FROM node:20-alpine AS builder
 
 # Set working directory
-WORKDIR /app
+WORKDIR /workspace
 
 # Copy package files for dependency installation
 COPY package.json yarn.lock ./
@@ -24,7 +24,7 @@ FROM nginx:alpine AS production
 RUN apk update && apk upgrade && apk add --no-cache curl
 
 # Copy built application
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /workspace/dist /usr/share/nginx/html
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
