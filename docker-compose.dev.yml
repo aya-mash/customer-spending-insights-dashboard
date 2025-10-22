@@ -22,7 +22,7 @@ services:
       - VITE_APP_NAME=Customer Spending Insights
       - VITE_ENABLE_MOCKS=true
     working_dir: /workspace
-    command: sh -c "yarn install && yarn dev --host 0.0.0.0"
+    command: sh -c "yarn install && npx msw init public && yarn dev --host 0.0.0.0"
     stdin_open: true
     tty: true
     labels:

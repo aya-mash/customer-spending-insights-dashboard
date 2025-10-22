@@ -14,6 +14,9 @@ RUN yarn install --frozen-lockfile --production=false && \
 # Copy source code
 COPY . .
 
+# Initialize MSW (Mock Service Worker)
+RUN npx msw init public
+
 # Build application for production
 RUN yarn build
 
