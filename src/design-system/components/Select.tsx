@@ -56,7 +56,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       fontFamily: 'inherit',
       cursor: 'pointer',
       outline: 'none',
-      transition: 'all 0.2s ease',
+      transition: 'border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease',
       boxShadow: 'var(--shadow-neumorphic-inset)',
       appearance: 'none' as const,
       backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
@@ -85,11 +85,13 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           onFocus={(e) => {
             e.currentTarget.style.borderColor = '#2F70EF';
             e.currentTarget.style.boxShadow = '0 0 0 3px rgba(47, 112, 239, 0.1)';
+            e.currentTarget.style.transform = 'translateY(-1px)';
             props.onFocus?.(e);
           }}
           onBlur={(e) => {
             e.currentTarget.style.borderColor = error ? '#EF4444' : surface.border;
-            e.currentTarget.style.boxShadow = 'none';
+            e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-inset)';
+            e.currentTarget.style.transform = 'translateY(0)';
             props.onBlur?.(e);
           }}
         >
