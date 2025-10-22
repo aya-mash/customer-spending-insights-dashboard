@@ -28,16 +28,45 @@ This project is configured for seamless deployment on AWS Amplify:
 
 1. Connect your repository to [AWS Amplify Console](https://console.aws.amazon.com/amplify/)
 2. Amplify will automatically detect the `amplify.yml` configuration
-3. Set up environment variables if needed
+3. Set up environment variables if needed (see Environment Configuration section)
 4. Deploy automatically on every push
 
-See [docs/deployment.md](docs/deployment.md) for detailed deployment instructions.
+**Important**: Ensure `VITE_API_BASE_URL` is set to `/api` (not `/customers/api`) in Amplify environment variables.
 
-### Alternative: Docker
+See [docs/deployment.md](docs/deployment.md) and [docs/amplify-setup.md](docs/amplify-setup.md) for detailed instructions.
+
+### Docker (Production & Development)
+
+#### Quick Start with Docker Compose
 ```bash
-docker build -t spending-dashboard .
-docker run -p 3000:80 spending-dashboard
+# Production build
+docker-compose up --build
+
+# Development with hot reload
+docker-compose -f docker-compose.dev.yml up
 ```
+
+Access the application at http://localhost:3000 (production) or http://localhost:5173 (development).
+
+#### Manual Docker Build
+```bash
+# Build production image (~50MB)
+docker build -t customer-insights:latest .
+
+# Run container
+docker run -p 3000:8080 customer-insights:latest
+
+# With custom environment variables
+docker run -p 3000:8080 \
+  -e VITE_API_BASE_URL=/api \
+  -e VITE_ENABLE_MOCKS=true \
+  customer-insights:latest
+```
+
+#### VS Code Dev Containers
+Open the project in VS Code and use the "Reopen in Container" command for a consistent development environment with all tools pre-installed.
+
+See [docs/docker-deployment.md](docs/docker-deployment.md) for comprehensive Docker documentation including security, health checks, and production deployment strategies.
 
 ## 📊 Features
 
