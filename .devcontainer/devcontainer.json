@@ -4,6 +4,26 @@
   "service": "app",
   "workspaceFolder": "/workspace",
   
+  // Features to add to the dev container
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {
+      "ppa": false,
+      "version": "os-provided"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "installDirectlyFromGitHubRelease": true,
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false,
+      "installOhMyZsh": false,
+      "upgradePackages": false,
+      "username": "node",
+      "userUid": "automatic",
+      "userGid": "automatic"
+    }
+  },
+  
   // Configure tool-specific properties
   "customizations": {
     "vscode": {
@@ -34,7 +54,8 @@
           "typescript",
           "typescriptreact"
         ],
-        "typescript.tsdk": "node_modules/typescript/lib"
+        "typescript.tsdk": "node_modules/typescript/lib",
+        "terminal.integrated.defaultProfile.linux": "bash"
       }
     }
   },

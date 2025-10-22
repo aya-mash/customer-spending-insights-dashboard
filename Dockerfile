@@ -7,7 +7,8 @@ FROM node:20-alpine AS development
 WORKDIR /workspace
 
 # Install bash and ca-certificates for devcontainer features and tooling
-RUN apk add --no-cache bash ca-certificates git
+# Git will be installed by devcontainer features
+RUN apk add --no-cache bash ca-certificates
 
 # Enable corepack and prepare yarn
 RUN corepack enable && \
