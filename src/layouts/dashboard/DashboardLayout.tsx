@@ -3,7 +3,7 @@
  * Design system layout with Navigation, BottomNav, and SettingsDrawer
  */
 
-import { useState, useEffect, useContext, type CSSProperties } from "react";
+import { useState, useContext, type CSSProperties } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import {
   Settings2,
@@ -54,14 +54,6 @@ export function DashboardLayout() {
 
   const pageTitle =
     "Spending " + (PAGE_TITLES[location.pathname] || "Insights");
-
-  // Close settings on mobile viewport change
-  useEffect(() => {
-    if (isMobile && settingsOpen) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- Synchronizing with breakpoint changes
-      setSettingsOpen(false);
-    }
-  }, [isMobile, settingsOpen]);
 
   const navItems: NavItem[] = [
     {
@@ -145,6 +137,8 @@ export function DashboardLayout() {
     cursor: "pointer",
     transition: "all 0.2s ease",
     boxShadow: "var(--shadow-neumorphic-sm)",
+    WebkitTapHighlightColor: "transparent",
+    touchAction: "manipulation",
   });
 
   const mainStyles = createDynamicStyles({
@@ -200,6 +194,7 @@ export function DashboardLayout() {
           aria-label="Open settings"
           style={settingsButtonStyles}
           onClick={() => setSettingsOpen(true)}
+          onTouchStart={() => setSettingsOpen(true)}
           onMouseEnter={(e) => {
             e.currentTarget.style.boxShadow = "var(--shadow-neumorphic-md)";
             e.currentTarget.style.transform = "translateY(-1px)";

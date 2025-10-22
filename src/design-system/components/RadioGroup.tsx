@@ -71,6 +71,8 @@ export const RadioGroup = React.memo<RadioGroupProps>(({
     transition: 'all 200ms ease',
     position: 'relative',
     outline: 'none',
+    WebkitTapHighlightColor: 'transparent',
+    touchAction: 'manipulation',
   });
 
   const inputStyle: CSSProperties = {

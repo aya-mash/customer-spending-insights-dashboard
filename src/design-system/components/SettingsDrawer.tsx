@@ -99,14 +99,16 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      width: '36px',
-      height: '36px',
+      width: '44px',
+      height: '44px',
       borderRadius: radius.lg,
       border: 'none',
       backgroundColor: 'transparent',
       color: textColors.secondary,
       cursor: 'pointer',
       transition: `all ${transition.fast} ${easing.standard}`,
+      WebkitTapHighlightColor: 'transparent',
+      touchAction: 'manipulation',
     });
 
     const contentStyles = createDynamicStyles({
@@ -139,7 +141,7 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
         {/* Overlay - Backdrop for drawer */}
         <div 
           style={overlayStyles} 
-          onClick={onClose} 
+          onClick={onClose}
           aria-hidden="true"
         />
 
@@ -218,6 +220,8 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
                     transition: `all ${transition.fast} ${easing.standard}`,
                     width: '100%',
                     textAlign: 'left',
+                    WebkitTapHighlightColor: 'transparent',
+                    touchAction: 'manipulation',
                   })}
                   onClick={() => {
                     navigate('/style-guide');
