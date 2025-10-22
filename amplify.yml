@@ -4,7 +4,7 @@ frontend:
     preBuild:
       commands:
         - yarn install --frozen-lockfile
-        - npx msw init public
+        - npx msw init public --save
     build:
       commands:
         # Build based on the branch (main = production, develop = staging)
