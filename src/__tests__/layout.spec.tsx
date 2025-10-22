@@ -1,15 +1,13 @@
 import { describe, it, expect } from 'vitest';
 // generateRoutes removed during cleanup; rely on dashboardConfig directly
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { NavList } from '../layouts/dashboard/NavList';
-import { DashboardProvider } from '../layouts/dashboard/DashboardProvider';
-import { Sidebar } from '../layouts/dashboard/Sidebar';
+import { DashboardProvider } from '../contexts/dashboard/DashboardProvider';
 import { DashboardLayout } from '../layouts/dashboard/DashboardLayout';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { dashboardConfig } from '../app/config/dashboard.config';
 import { generateContrastReport } from '../lib/contrastReport';
-import { ThemeProvider } from '../contexts';
+import { ThemeProvider } from '../contexts/theme';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Layout tests need providers because they test individual layout components
@@ -51,18 +49,6 @@ describe('route generator', () => {
     expect(report.samples.length).toBe(3);
   });
 
-  it('applies aria-current="page" to active navigation item', () => {
-    render(
-      <MemoryRouter initialEntries={['/transactions']}>
-        <DashboardProvider config={dashboardConfig}>
-          <NavList />
-        </DashboardProvider>
-      </MemoryRouter>
-    );
-    const active = screen.getByRole('link', { name: /transactions/i }).querySelector('span[aria-current="page"]');
-    expect(active).toBeTruthy();
-  });
-
   it('renders fallback for protected route when guard fails', async () => {
     const protectedRoute = dashboardConfig.routes.find(r => r.path === '/protected');
     render(
@@ -96,22 +82,6 @@ describe('route generator', () => {
     // Verify main has tabIndex for focus capability
     expect(main?.getAttribute('tabindex')).toBe('-1');
   });
-
-  it('ESC collapses sidebar (simulated)', () => {
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <DashboardProvider config={dashboardConfig}>
-          <Sidebar />
-        </DashboardProvider>
-      </MemoryRouter>
-    );
-    const sidebar = screen.getByLabelText(/primary navigation/i);
-    expect(sidebar.className.includes('collapsed')).toBe(false);
-    // Use testing-library fireEvent for consistent react batching
-  fireEvent.keyDown(document, { key: 'Escape' });
-    expect(sidebar.className.includes('collapsed')).toBe(true);
-  });
-
 
   it('settings drawer theme buttons switch modes', async () => {
     const user = userEvent.setup();

@@ -1,7 +1,7 @@
 import { createBrowserRouter, createMemoryRouter } from 'react-router-dom';
 import { Suspense, lazy, createElement, useState, useEffect, Fragment } from 'react';
 import { DashboardLayout } from '../layouts/dashboard/DashboardLayout';
-import { DashboardProvider } from '../layouts/dashboard/DashboardProvider';
+import { DashboardProvider } from '../contexts/dashboard/DashboardProvider';
 import { dashboardConfig } from './config/dashboard.config';
 import { ErrorPage } from '../design-system/components/ErrorPage';
 import { makeLoadingFallback, overviewLoadingFallback } from './loadingFallback';

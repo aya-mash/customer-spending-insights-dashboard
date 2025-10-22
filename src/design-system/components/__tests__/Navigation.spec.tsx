@@ -6,7 +6,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { TestProviders } from '../../../test/test-utils';
 import { Navigation } from '../Navigation';
 import { BottomNav } from '../BottomNav';
 import { SettingsDrawer } from '../SettingsDrawer';
@@ -14,9 +13,7 @@ import { Home, TrendingUp, List } from 'lucide-react';
 
 const MockRouter = ({ children }: { children: React.ReactNode }) => (
   <BrowserRouter>
-    <TestProviders>
-      {children as React.ReactElement}
-    </TestProviders>
+    {children as React.ReactElement}
   </BrowserRouter>
 );
 
