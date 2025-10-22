@@ -106,7 +106,7 @@ export function DashboardLayout() {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: `0 ${spacingNum[6]}px`,
+    padding: isMobile ? `0 ${spacingNum[4]}px` : `0 ${spacingNum[6]}px`, // Reduce padding on mobile
     zIndex: zIndex.sticky,
     transition: "left 250ms cubic-bezier(0.4, 0, 0.2, 1)",
     boxShadow: "var(--shadow-neumorphic-sm)",
@@ -149,7 +149,6 @@ export function DashboardLayout() {
 
   const mainStyles = createDynamicStyles({
     marginLeft: sidebarOffset,
-    marginTop: "64px",
     marginBottom: isMobile ? "72px" : 0,
     minHeight: "calc(100vh - 64px)",
     backgroundColor: surface.surfaceAlt,

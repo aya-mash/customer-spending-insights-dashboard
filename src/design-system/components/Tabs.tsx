@@ -62,12 +62,15 @@ export const Tabs = React.memo<TabsProps>(({
     backgroundColor: 'var(--color-surface)',
     borderRadius: radius.lg,
     boxShadow: 'var(--shadow-neumorphic-inset)',
-    width: 'fit-content',
+    width: '100%', // Full width on mobile, will shrink-wrap on desktop
+    maxWidth: 'fit-content',
+    overflowX: 'auto', // Allow horizontal scroll if needed on very small screens
   };
 
   const getTabStyle = (isActive: boolean): CSSProperties => ({
     flex: '1 1 auto',
-    padding: `${spacing[3]} ${spacing[6]}`,
+    padding: `${spacing[2]} ${spacing[4]}`, // Reduced padding for mobile
+    minWidth: 'max-content', // Prevent text wrapping
     border: 'none',
     borderRadius: radius.md,
     backgroundColor: isActive ? 'var(--color-surface)' : 'transparent',
@@ -78,8 +81,8 @@ export const Tabs = React.memo<TabsProps>(({
     fontSize: '14px',
     cursor: 'pointer',
     transition: 'all 200ms ease',
+    whiteSpace: 'nowrap', // Prevent text wrapping
     fontFamily: 'inherit',
-    whiteSpace: 'nowrap',
     outline: 'none',
   });
 
