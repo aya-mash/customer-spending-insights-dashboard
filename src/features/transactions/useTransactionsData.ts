@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { transactions } from '../../data/client';
 import type { Transaction, PeriodPreset } from '../../data/models';
 
@@ -14,17 +15,11 @@ export function useTransactionsData(customerId: string) {
   const location = useLocation();
   const navigate = useNavigate();
   
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<Transaction[]>([]);
-  const [total, setTotal] = useState(0);
   const [filters, setFilters] = useState<TransactionFilters>({});
   const [sortField, setSortField] = useState<keyof Transaction>('date');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [page, setPage] = useState(1);
   const [perPage] = useState(20);
-
-  const abortRef = useRef<AbortController | null>(null);
 
   // Parse URL filters
   useEffect(() => {
@@ -48,43 +43,20 @@ export function useTransactionsData(customerId: string) {
     setFilters(newFilters);
   }, [location.search]);
 
-  const loadData = useCallback(async () => {
-    abortRef.current?.abort();
-    const ac = new AbortController();
-    abortRef.current = ac;
-    
-    setLoading(true);
-    setError(null);
-    
-    // Convert sortField and sortDirection to API format
-    const sortBy = `${sortField}_${sortDirection}` as 'date_desc' | 'date_asc' | 'amount_desc' | 'amount_asc';
-    
-    try {
-      const result = await transactions(customerId, {
-        ...filters,
-        limit: perPage,
-        offset: (page - 1) * perPage,
-        sortBy,
-      }, ac.signal);
-      
-      if (!ac.signal.aborted) {
-        setData(result.transactions);
-        setTotal(result.pagination.total);
-        setLoading(false);
-      }
-    } catch (err) {
-      if (!ac.signal.aborted) {
-        setError(err instanceof Error ? err.message : 'Failed to load transactions');
-        setLoading(false);
-      }
-    }
-  }, [customerId, filters, page, perPage, sortField, sortDirection]);
+  // Convert sortField and sortDirection to API format
+  const sortBy = `${sortField}_${sortDirection}` as 'date_desc' | 'date_asc' | 'amount_desc' | 'amount_asc';
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- Loading data on mount and when loadData changes
-    loadData();
-    return () => abortRef.current?.abort();
-  }, [loadData]);
+  const transactionsQuery = useQuery({
+    queryKey: ['transactions', customerId, filters, page, perPage, sortBy],
+    queryFn: () => transactions(customerId, {
+      ...filters,
+      limit: perPage,
+      offset: (page - 1) * perPage,
+      sortBy,
+    }),
+    staleTime: 60_000,
+    retry: false,
+  });
 
   const updateFilters = useCallback((newFilters: Partial<TransactionFilters & { page?: number }>) => {
     const params = new URLSearchParams(location.search);
@@ -122,12 +94,13 @@ export function useTransactionsData(customerId: string) {
     navigate(`?${params.toString()}`, { replace: true });
   }, [sortField, sortDirection, location.search, navigate]);
 
+  const total = transactionsQuery.data?.pagination.total ?? 0;
   const totalPages = Math.ceil(total / perPage);
 
   return {
-    loading,
-    error,
-    data,
+    loading: transactionsQuery.isLoading,
+    error: transactionsQuery.isError ? 'Failed to load transactions' : null,
+    data: transactionsQuery.data?.transactions ?? [],
     filters,
     sortField,
     sortDirection,
@@ -135,7 +108,7 @@ export function useTransactionsData(customerId: string) {
     perPage,
     total,
     totalPages,
-    loadData,
+    loadData: () => transactionsQuery.refetch(),
     updateFilters,
     clearFilters,
     sort,

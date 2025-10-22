@@ -1,50 +1,75 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { categories, trends } from '../../data/client';
-import type { CategoryBreakdown, SpendingTrends } from '../../data/models';
+import { useQuery } from '@tanstack/react-query';
+import { categories, trends, transactions } from '../../data/client';
+import type { CategoryBreakdown, SpendingTrends, TransactionsPage } from '../../data/models';
 
-export function useInsightsData(customerId: string) {
-  // Data states
-  const [catLoading, setCatLoading] = useState(true);
-  const [catError, setCatError] = useState<string | null>(null);
-  const [catData, setCatData] = useState<CategoryBreakdown | null>(null);
+export interface InsightsDataState {
+  catData?: CategoryBreakdown;
+  trendData?: SpendingTrends;
+  txnData?: TransactionsPage;
+  catLoading: boolean;
+  catError: boolean;
+  trendLoading: boolean;
+  trendError: boolean;
+  txnLoading: boolean;
+  txnError: boolean;
+  isInitialLoading: boolean;
+  isError: boolean;
+  isFetching: boolean;
+  hasPartialData: boolean;
+  loadData(): void;
+}
 
-  const [trendLoading, setTrendLoading] = useState(true);
-  const [trendError, setTrendError] = useState<string | null>(null);
-  const [trendData, setTrendData] = useState<SpendingTrends | null>(null);
+export function useInsightsData(customerId: string): InsightsDataState {
+  const categoriesQuery = useQuery({
+    queryKey: ['categories', '30d', customerId],
+    queryFn: () => categories(customerId, { period: '30d' }),
+    staleTime: 60_000,
+    retry: false,
+  });
 
-  const abortRef = useRef<AbortController | null>(null);
+  const trendsQuery = useQuery({
+    queryKey: ['trends', customerId, 12],
+    queryFn: () => trends(customerId, { months: 12 }),
+    staleTime: 60_000,
+    retry: false,
+  });
 
-  const loadData = useCallback(async () => {
-    // Abort any in-flight request and create a fresh controller
-    abortRef.current?.abort();
-    const ac = new AbortController();
-    abortRef.current = ac;
-    setCatLoading(true); setCatError(null);
-    setTrendLoading(true); setTrendError(null);
-    const catPromise = categories(customerId, { period: '30d' }, ac.signal);
-    const trendPromise = trends(customerId, { months: 12 }, ac.signal);
-    const [catResult, trendResult] = await Promise.allSettled([catPromise, trendPromise]);
-    const aborted = ac.signal.aborted;
-    // If aborted, do not update errors (silent cancellation)
-    if (aborted) return;
-    if (catResult.status === 'fulfilled') {
-      setCatData(catResult.value); setCatLoading(false);
-    } else {
-      setCatError(catResult.reason instanceof Error ? catResult.reason.message : 'Failed loading categories'); setCatLoading(false);
-    }
-    if (trendResult.status === 'fulfilled') {
-      setTrendData(trendResult.value); setTrendLoading(false);
-    } else {
-      setTrendError(trendResult.reason instanceof Error ? trendResult.reason.message : 'Failed loading trends'); setTrendLoading(false);
-    }
-  }, [customerId]);
+  const transactionsQuery = useQuery({
+    queryKey: ['allTransactions', customerId],
+    queryFn: () => transactions(customerId, { limit: 500 }),
+    staleTime: 60_000,
+    retry: false,
+  });
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- Loading data on mount and when loadData changes
-  useEffect(() => { loadData(); return () => abortRef.current?.abort(); }, [loadData]);
+  const isInitialLoading = categoriesQuery.isLoading && trendsQuery.isLoading && transactionsQuery.isLoading;
+  const isError = (
+    (categoriesQuery.isError && !categoriesQuery.data) || 
+    (trendsQuery.isError && !trendsQuery.data) ||
+    (transactionsQuery.isError && !transactionsQuery.data)
+  );
+  const isFetching = categoriesQuery.isFetching || trendsQuery.isFetching || transactionsQuery.isFetching;
+  const hasPartialData = !!(categoriesQuery.data || trendsQuery.data || transactionsQuery.data);
+
+  const loadData = () => {
+    categoriesQuery.refetch();
+    trendsQuery.refetch();
+    transactionsQuery.refetch();
+  };
 
   return {
-    catLoading, catError, catData,
-    trendLoading, trendError, trendData,
-    loadData
+    catData: categoriesQuery.data,
+    trendData: trendsQuery.data,
+    txnData: transactionsQuery.data,
+    catLoading: categoriesQuery.isLoading,
+    catError: categoriesQuery.isError && !categoriesQuery.data,
+    trendLoading: trendsQuery.isLoading,
+    trendError: trendsQuery.isError && !trendsQuery.data,
+    txnLoading: transactionsQuery.isLoading,
+    txnError: transactionsQuery.isError && !transactionsQuery.data,
+    isInitialLoading,
+    isError,
+    isFetching,
+    hasPartialData,
+    loadData,
   };
 }
