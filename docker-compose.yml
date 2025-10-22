@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: production
+    container_name: customer-insights-prod
     ports:
       - "3000:8080"
     environment:
@@ -15,6 +16,3 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    labels:
-      - "com.example.description=Customer Spending Insights Dashboard"
-      - "com.example.version=1.0.0"

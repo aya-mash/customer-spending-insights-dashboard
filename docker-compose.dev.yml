@@ -2,8 +2,8 @@ services:
   app:
     build:
       context: .
-      target: builder
       dockerfile: Dockerfile
+      target: development
     container_name: customer-insights-dev
     ports:
       - "5173:5173"
@@ -20,9 +20,8 @@ services:
       - VITE_APP_NAME=Customer Spending Insights
       - VITE_ENABLE_MOCKS=true
     working_dir: /workspace
-    command: sh -c "yarn install && npx msw init public && yarn dev:docker"
+    command: sh -c "yarn install && npx msw init public --save && yarn dev:docker"
+    user: node
     stdin_open: true
     tty: true
-    labels:
-      - "com.example.description=Development environment for Customer Spending Insights Dashboard"
-      - "com.example.environment=development"
+

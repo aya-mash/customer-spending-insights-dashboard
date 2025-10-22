@@ -18,8 +18,7 @@
         "formulahendry.auto-rename-tag",
         "christian-kohler.path-intellisense",
         "streetsidesoftware.code-spell-checker",
-        "usernamehw.errorlens",
-        "ms-azuretools.vscode-docker"
+        "usernamehw.errorlens"
       ],
       
       // Settings
@@ -35,8 +34,7 @@
           "typescript",
           "typescriptreact"
         ],
-        "typescript.tsdk": "node_modules/typescript/lib",
-        "terminal.integrated.defaultProfile.linux": "bash"
+        "typescript.tsdk": "node_modules/typescript/lib"
       }
     }
   },
@@ -50,34 +48,19 @@
     },
     "6006": {
       "label": "Storybook",
-      "onAutoForward": "silent"
+      "onAutoForward": "ignore"
     }
   },
   
   // Post-create command to run after container is created
-  "postCreateCommand": "yarn install",
+  "postCreateCommand": "yarn install && npx msw init public --save",
   
   // Post-start command to run after container starts
   "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
   
-  // Features to add to the dev container
-  "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {},
-    "ghcr.io/devcontainers/features/git:1": {
-      "version": "os-provided"
-    },
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "20"
-    }
-  },
-  
-  // User to run commands as
+  // Use node user
   "remoteUser": "node",
   
-  // Mount the local .gitconfig and SSH keys for authentication
-  "mounts": [
-    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.gitconfig,target=/home/node/.gitconfig,type=bind,consistency=cached",
-    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/node/.ssh,type=bind,consistency=cached"
-  ]
+  // Shutdown action
+  "shutdownAction": "stopCompose"
 }
