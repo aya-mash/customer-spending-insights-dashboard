@@ -29,6 +29,8 @@ export function ContrastCheckerDev() {
     position: 'fixed',
     inset: 0,
     backgroundColor: surface.overlay,
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
     zIndex: 1399,
     animation: 'fadeIn 200ms ease-out',
   };

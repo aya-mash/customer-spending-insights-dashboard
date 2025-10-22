@@ -6,13 +6,8 @@
  */
 
 import { forwardRef, type CSSProperties } from "react";
-import { useLocation, Link } from "react-router-dom";
-import {
-  spacingNum,
-  radius,
-  transition,
-  easing,
-} from "../tokens";
+import { useLocation, NavLink } from "react-router-dom";
+import { spacingNum, radius, transition, easing } from "../tokens";
 import { useBreakpoint, useTheme } from "../index";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
@@ -63,7 +58,7 @@ export const Navigation = forwardRef<HTMLElement, NavigationProps>(
       transition: `width 300ms ${transitions.easeStandard}`,
       zIndex: 100,
       overflow: "hidden",
-      boxShadow: 'var(--shadow-neumorphic-md)',
+      boxShadow: "var(--shadow-neumorphic-md)",
     });
 
     const toggleButtonStyles = createDynamicStyles({
@@ -113,11 +108,7 @@ export const Navigation = forwardRef<HTMLElement, NavigationProps>(
     });
 
     return (
-      <nav
-        ref={ref}
-        style={sidebarStyles}
-        aria-label="Main navigation"
-      >
+      <nav ref={ref} style={sidebarStyles} aria-label="Main navigation">
         {/* Toggle button */}
         <button
           type="button"
@@ -160,10 +151,10 @@ export const Navigation = forwardRef<HTMLElement, NavigationProps>(
           {items.map((item) => {
             const isActive = location.pathname === item.href;
             return (
-              <Link
+              <NavLink
                 key={item.id}
                 to={item.href}
-                style={navItemStyles(isActive)}
+                style={({ isActive }) => navItemStyles(isActive)}
                 aria-current={isActive ? "page" : undefined}
                 onMouseEnter={(e) => {
                   if (!isActive) {
@@ -180,7 +171,7 @@ export const Navigation = forwardRef<HTMLElement, NavigationProps>(
                   {item.icon}
                 </span>
                 {isExpanded && <span>{item.label}</span>}
-              </Link>
+              </NavLink>
             );
           })}
         </div>

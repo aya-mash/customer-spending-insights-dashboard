@@ -78,16 +78,17 @@ export function ContrastCheckerPanel({ onClose }: Props) {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    backgroundColor: surface.surface,
+    backgroundColor: `${surface.surface}f2`,
+    backdropFilter: 'blur(20px) saturate(180%)',
+    WebkitBackdropFilter: 'blur(20px) saturate(180%)',
     borderRadius: radius.xl,
-    boxShadow: 'var(--shadow-neumorphic-sm)',
     padding: spacing[6],
     width: '90%',
     maxWidth: '480px',
-    maxHeight: '90vh',
+    maxHeight: '100vh',
     overflowY: 'auto',
     zIndex: 1400,
-    border: `1px solid ${surface.border}`,
+    border: 'none',
   };
 
   const headerStyle: CSSProperties = {
