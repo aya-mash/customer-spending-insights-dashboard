@@ -1,26 +1,27 @@
 # Multi-stage build for optimized production image
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 # Set working directory
 WORKDIR /app
 
 # Copy package files for dependency installation
-COPY package*.json ./
+COPY package.json yarn.lock ./
 
-# Install dependencies
-RUN npm ci --only=production && npm cache clean --force
+# Install dependencies with frozen lockfile
+RUN yarn install --frozen-lockfile --production=false && \
+    yarn cache clean
 
 # Copy source code
 COPY . .
 
-# Build application
-RUN npm run build
+# Build application for production
+RUN yarn build
 
 # Production stage
 FROM nginx:alpine AS production
 
 # Install security updates
-RUN apk update && apk upgrade
+RUN apk update && apk upgrade && apk add --no-cache curl
 
 # Copy built application
 COPY --from=builder /app/dist /usr/share/nginx/html
@@ -46,7 +47,7 @@ EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
+  CMD curl -f http://localhost:8080/ || exit 1
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]

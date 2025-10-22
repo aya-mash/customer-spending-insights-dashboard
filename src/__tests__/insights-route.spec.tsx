@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { DashboardProvider } from '../layouts/dashboard/DashboardProvider';
+import { DashboardProvider } from '../contexts/dashboard/DashboardProvider';
 import dashboardConfig from '../app/config/dashboard.config';
 import { InsightsRoute } from '../app/routes/InsightsRoute';
 import * as client from '../data/client';
