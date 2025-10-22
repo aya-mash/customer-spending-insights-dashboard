@@ -440,6 +440,7 @@ export { LoadingSpinner } from './components/LoadingSpinner';
 export { default as TrendsChart } from './components/TrendsChart';
 export { ContrastCheckerPanel } from './components/ContrastCheckerPanel';
 export { ContrastCheckerDev as ContrastCheckerFab } from './components/ContrastCheckerFab';
+export { Checkbox } from './components/Checkbox';
 
 // =============================================================================
 // Re-export all tokens for convenience
