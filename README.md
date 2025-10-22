@@ -216,12 +216,32 @@ The `amplify.yml` file automatically detects the deployment branch and uses the 
 - Other branches → `yarn build:dev` (development)
 
 ## Local Development
+
+### Quick Start
 Install deps & start dev server:
 ```powershell
 yarn
 yarn dev
 ```
 Visit http://localhost:5173
+
+### VS Code Workspace Setup
+This project includes a comprehensive VS Code workspace configuration for a consistent development experience.
+
+**Recommended:** Open the workspace file for the best experience:
+```powershell
+# Open in VS Code
+code customer-spending-insights-dashboard.code-workspace
+```
+
+The workspace includes:
+- Pre-configured settings (formatting, linting, TypeScript)
+- Recommended extensions
+- Debug configurations for Chrome and Node
+- Task runners for dev, build, test, and more
+- File nesting for better organization
+
+See [docs/workspace-setup.md](docs/workspace-setup.md) for detailed setup instructions.
 
 ## Performance & Loading
 - Route-level code splitting via `React.lazy` + Suspense fallbacks.

@@ -1,0 +1,45 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome - Dev Server",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/src",
+      "sourceMaps": true,
+      "preLaunchTask": "dev-server"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome - Storybook",
+      "url": "http://localhost:6006",
+      "webRoot": "${workspaceFolder}/src",
+      "sourceMaps": true,
+      "preLaunchTask": "storybook-server"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run Tests",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["test"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Current Test File",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": [
+        "vitest",
+        "run",
+        "${relativeFile}"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    }
+  ]
+}

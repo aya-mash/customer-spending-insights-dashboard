@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-next",
+    "vitest.explorer",
+    "ms-playwright.playwright",
+    "formulahendry.auto-rename-tag",
+    "christian-kohler.path-intellisense",
+    "streetsidesoftware.code-spell-checker",
+    "usernamehw.errorlens",
+    "ms-azuretools.vscode-docker",
+    "eamodio.gitlens",
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint",
+    "gruntfuggly.todo-tree",
+    "editorconfig.editorconfig"
+  ]
+}

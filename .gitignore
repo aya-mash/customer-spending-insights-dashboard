@@ -61,7 +61,12 @@ trace.zip
 ###############################
 # VS Code / IDE
 ###############################
-.vscode/
+# Allow workspace configuration files but ignore user-specific settings
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
 .idea/
 *.iml
 
