@@ -6,7 +6,9 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 60_000,
-      retry: 2,
+      retry: false, // No automatic retries - let user manually retry via UI
+      refetchOnWindowFocus: false, // Don't auto-refetch when user returns to tab
+      refetchOnReconnect: true, // Do refetch when network reconnects
     },
   },
 });

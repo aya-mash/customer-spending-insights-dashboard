@@ -64,7 +64,8 @@ export function Transactions() {
     page, 
     perPage,
     total,
-    totalPages 
+    totalPages,
+    loadData 
   } = useTransactionsData(customerId);
 
   const hasActiveFilters = !!(filters.category || filters.period);
@@ -138,7 +139,7 @@ export function Transactions() {
         <Card padding={8}>
           <Stack spacing={4} align="center">
             <Text variant="body" color="muted">{error}</Text>
-            <Button variant="secondary" size="medium">Retry</Button>
+            <Button variant="secondary" size="medium" onClick={loadData}>Retry</Button>
           </Stack>
         </Card>
       </PageLayout>
