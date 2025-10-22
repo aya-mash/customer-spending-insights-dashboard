@@ -6,7 +6,7 @@
 
 import { useState } from 'react';
 import { useTransactionsData } from './useTransactionsData';
-import { formatCurrency, Skeleton } from '../../design-system';
+import { formatCurrency, Skeleton, useBreakpoint } from '../../design-system';
 import { formatDate } from '../../utils/dates';
 import { getCategoryColor } from '../../lib/chartConfig';
 import { 
@@ -52,6 +52,8 @@ const categoryOptions: SelectOption[] = [
 
 export function Transactions() {
   const customerId = 'user123';
+  const breakpoint = useBreakpoint();
+  const isMobile = breakpoint === 'mobile';
   const [searchQuery, setSearchQuery] = useState('');
   const { 
     loading, 
@@ -181,21 +183,23 @@ export function Transactions() {
                 fullWidth
               />
 
-              <div style={{ gridColumn: 'span 2' }}>
-                <TextField
-                  id="search-filter"
-                  label="Search"
-                  placeholder="Search transactions..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  startIcon={<Search size={18} />}
-                  fullWidth
-                />
-              </div>
+              {!isMobile && (
+                <div style={{ gridColumn: 'span 2' }}>
+                  <TextField
+                    id="search-filter"
+                    label="Search"
+                    placeholder="Search transactions..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    startIcon={<Search size={18} />}
+                    fullWidth
+                  />
+                </div>
+              )}
             </Grid>
 
-            {/* Active Filters */}
-            {hasActiveFilters && (
+            {/* Active Filters - Desktop Only */}
+            {!isMobile && hasActiveFilters && (
               <div>
                 <div
                   style={{
@@ -236,46 +240,137 @@ export function Transactions() {
         </Card>
         </div>
 
-        {/* Transactions Table */}
-        <div style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          gap: '16px',
-          height: 'calc(100vh - 280px)',
-          minHeight: '400px'
-        }}>
-          <Card padding={1} style={{ flex: 1, overflow: 'hidden' }}>
-            <Table
-              columns={columns}
-              data={filteredData}
-              keyExtractor={(row) => row.id}
-              onSort={(key) => sort(key as keyof Transaction)}
-              sortKey={sortField}
-              sortDirection={sortDirection}
-              zebraStripe
-              emptyMessage="No transactions found."
-              stickyHeader
-              maxHeight="100%"
-              aria-label="Transactions table"
-            />
-          </Card>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <Stack align="center">
-              <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                onPageChange={(newPage) => updateFilters({ page: newPage })}
-                maxVisible={7}
-                showPrevNext
-                itemsPerPage={perPage}
-                totalItems={total}
-                showRange
+        {/* Mobile: Transaction Cards, Desktop: Table */}
+        {isMobile ? (
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column',
+            height: 'calc(100vh - 280px)',
+            minHeight: '400px',
+            overflow: 'hidden'
+          }}>
+            {/* Transaction Cards - Scrollable */}
+            <div style={{ 
+              flex: 1, 
+              overflowY: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+              paddingBottom: '80px'
+            }}>
+              {filteredData.length === 0 ? (
+                <Card padding={8}>
+                  <Text variant="body" color="muted" style={{ textAlign: 'center' }}>
+                    No transactions found.
+                  </Text>
+                </Card>
+              ) : (
+                filteredData.map((txn) => (
+                  <Card key={txn.id} padding={4}>
+                    <Stack spacing={3}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div>
+                          <Text variant="body" style={{ fontWeight: 600, marginBottom: '4px' }}>
+                            {txn.merchant}
+                          </Text>
+                          <Text variant="bodySm" color="muted">
+                            {formatDate(txn.date)}
+                          </Text>
+                        </div>
+                        <Text 
+                          variant="body" 
+                          style={{ 
+                            fontWeight: 600,
+                            color: txn.amount < 0 ? '#EF4444' : undefined,
+                            fontSize: '18px'
+                          }}
+                        >
+                          {formatCurrency(Math.abs(txn.amount))}
+                        </Text>
+                      </div>
+                      <Badge 
+                        variant="default" 
+                        style={{ 
+                          backgroundColor: `${getCategoryColor(txn.category)}20`, 
+                          color: getCategoryColor(txn.category), 
+                          borderColor: getCategoryColor(txn.category),
+                          alignSelf: 'flex-start'
+                        }}
+                      >
+                        {txn.category}
+                      </Badge>
+                    </Stack>
+                  </Card>
+                ))
+              )}
+            </div>
+            
+            {/* Pagination - Fixed at bottom */}
+            {totalPages > 1 && (
+              <div style={{
+                position: 'sticky',
+                bottom: 0,
+                backgroundColor: 'var(--color-surface)',
+                padding: '12px 0',
+                borderTop: '1px solid var(--color-border)',
+                zIndex: 10
+              }}>
+                <Stack align="center">
+                  <Pagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    onPageChange={(newPage) => updateFilters({ page: newPage })}
+                    maxVisible={5}
+                    showPrevNext
+                    itemsPerPage={perPage}
+                    totalItems={total}
+                    showRange
+                  />
+                </Stack>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '16px',
+            height: 'calc(100vh - 280px)',
+            minHeight: '400px'
+          }}>
+            <Card padding={1} style={{ flex: 1, overflow: 'hidden' }}>
+              <Table
+                columns={columns}
+                data={filteredData}
+                keyExtractor={(row) => row.id}
+                onSort={(key) => sort(key as keyof Transaction)}
+                sortKey={sortField}
+                sortDirection={sortDirection}
+                zebraStripe
+                emptyMessage="No transactions found."
+                stickyHeader
+                maxHeight="100%"
+                aria-label="Transactions table"
               />
-            </Stack>
-          )}
-        </div>
+            </Card>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <Stack align="center">
+                <Pagination
+                  currentPage={page}
+                  totalPages={totalPages}
+                  onPageChange={(newPage) => updateFilters({ page: newPage })}
+                  maxVisible={7}
+                  showPrevNext
+                  itemsPerPage={perPage}
+                  totalItems={total}
+                  showRange
+                />
+              </Stack>
+            )}
+          </div>
+        )}
       </Stack>
     </PageLayout>
   );
