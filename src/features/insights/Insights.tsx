@@ -53,9 +53,7 @@ export function Insights() {
 
   return (
     <PageLayout 
-      title="Insights"
-      
-      
+      subtitle="Explore your spending patterns across categories and time periods"
     >
       <Stack direction="vertical" spacing={6}>
         {/* Combined error banner */}
