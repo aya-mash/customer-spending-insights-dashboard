@@ -18,7 +18,7 @@ import {
   Activity
 } from 'lucide-react';
 import { useOverviewData } from './useOverviewData';
-import { formatCurrency, Skeleton } from '../../design-system';
+import { formatCurrency, formatDate, Skeleton } from '../../design-system';
 import { 
   PageLayout, 
   Grid, 
@@ -362,13 +362,13 @@ export function Overview() {
         {transactionData && transactionData.length > 0 ? (
           <Stack spacing={3}>
             {transactionData.slice(0, 5).map((txn) => (
-              <Card key={txn.id} padding={4} hover>
+              <Card key={txn.id} padding={4}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
                   <Stack spacing={1} style={{ flex: 1 }}>
                     <Text variant="body" weight="medium">{txn.merchant}</Text>
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                       <Badge>{txn.category}</Badge>
-                      <Text variant="bodySm" color="muted">{txn.date}</Text>
+                      <Text variant="bodySm" color="muted">{formatDate(txn.date)}</Text>
                     </div>
                   </Stack>
                   <Text 

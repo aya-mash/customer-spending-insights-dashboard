@@ -7,6 +7,7 @@
 import { useState } from 'react';
 import { useTransactionsData } from './useTransactionsData';
 import { formatCurrency, Skeleton } from '../../design-system';
+import { formatDate } from '../../utils/dates';
 import { 
   PageLayout, 
   Grid, 
@@ -86,7 +87,7 @@ export function Transactions() {
       key: 'date',
       label: 'Date',
       sortable: true,
-      render: (value: string) => new Date(value).toLocaleDateString(),
+      render: (value: string) => formatDate(value),
     },
     {
       key: 'merchant',
@@ -150,8 +151,9 @@ export function Transactions() {
     <PageLayout>
       <Stack spacing={4}>
         {/* Filter Controls */}
-        <Card padding={4}>
-          <Stack spacing={4}>
+        <div style={{ position: 'sticky', top: '64px', zIndex: 10 }}>
+          <Card padding={4}>
+            <Stack spacing={4}>
             <Grid columns={{ mobile: 1, tablet: 2, desktop: 4 }} gap={3}>
               <Select
                 id="category-filter"
@@ -224,6 +226,7 @@ export function Transactions() {
             )}
           </Stack>
         </Card>
+        </div>
 
         {/* Transactions Table */}
         <Card padding={1}>

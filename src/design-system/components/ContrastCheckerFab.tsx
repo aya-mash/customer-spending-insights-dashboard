@@ -3,53 +3,55 @@
  * Floating action button for dev-only contrast checker
  */
 
-import { useState, useEffect, type CSSProperties } from 'react';
-import { ContrastCheckerPanel } from './ContrastCheckerPanel';
-import { radius, spacing, transition, easing } from '../tokens';
-import { useTheme } from '../index';
-import { Palette } from 'lucide-react';
-import { config } from '../../config/env';
+import { useState, useEffect, type CSSProperties } from "react";
+import { ContrastCheckerPanel } from "./ContrastCheckerPanel";
+import { radius, spacing, transition, easing } from "../tokens";
+import { useTheme, useBreakpoint } from "../index";
+import { Palette } from "lucide-react";
+import { config } from "../../config/env";
 
 export function ContrastCheckerDev() {
   const { brand, surface } = useTheme();
-  const enabled = config.isDevelopment;
+  const breakpoint = useBreakpoint();
+  const isMobile = breakpoint === "mobile";
+  const enabled = config.isDevelopment && !isMobile;
   const [open, setOpen] = useState(false);
-  
+
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape' && open) setOpen(false);
+      if (e.key === "Escape" && open) setOpen(false);
     }
-    globalThis.addEventListener('keydown', onKey);
-    return () => globalThis.removeEventListener('keydown', onKey);
+    globalThis.addEventListener("keydown", onKey);
+    return () => globalThis.removeEventListener("keydown", onKey);
   }, [open]);
 
   if (!enabled) return null;
 
   const backdropStyle: CSSProperties = {
-    position: 'fixed',
+    position: "fixed",
     inset: 0,
     backgroundColor: surface.overlay,
-    backdropFilter: 'blur(8px)',
-    WebkitBackdropFilter: 'blur(8px)',
+    backdropFilter: "blur(8px)",
+    WebkitBackdropFilter: "blur(8px)",
     zIndex: 1399,
-    animation: 'fadeIn 200ms ease-out',
+    animation: "fadeIn 200ms ease-out",
   };
 
   const fabStyle: CSSProperties = {
-    position: 'fixed',
+    position: "fixed",
     bottom: spacing[6],
     right: spacing[6],
-    width: '56px',
-    height: '56px',
+    width: "56px",
+    height: "56px",
     borderRadius: radius.full,
     backgroundColor: brand.primary,
-    color: '#FFFFFF',
-    border: 'none',
-    boxShadow: 'var(--shadow-neumorphic-md)',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    color: "#FFFFFF",
+    border: "none",
+    boxShadow: "var(--shadow-neumorphic-md)",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     zIndex: 1500,
     transition: `all ${transition.normal} ${easing.standard}`,
   };
@@ -68,14 +70,14 @@ export function ContrastCheckerDev() {
         type="button"
         style={fabStyle}
         aria-label="Toggle contrast checker"
-        onClick={() => setOpen(o => !o)}
+        onClick={() => setOpen((o) => !o)}
         onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'scale(1.1)';
-          e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-lg)';
+          e.currentTarget.style.transform = "scale(1.1)";
+          e.currentTarget.style.boxShadow = "var(--shadow-neumorphic-lg)";
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'scale(1)';
-          e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-md)';
+          e.currentTarget.style.transform = "scale(1)";
+          e.currentTarget.style.boxShadow = "var(--shadow-neumorphic-md)";
         }}
       >
         <Palette size={24} />
