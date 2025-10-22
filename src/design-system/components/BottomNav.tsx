@@ -67,6 +67,8 @@ export const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
       cursor: 'pointer',
       minWidth: '64px',
       textAlign: 'center',
+      WebkitTapHighlightColor: 'transparent',
+      touchAction: 'manipulation',
     });
 
     const iconWrapperStyles = (isActive: boolean) => createDynamicStyles({

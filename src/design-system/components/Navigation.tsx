@@ -79,6 +79,8 @@ export const Navigation = forwardRef<HTMLElement, NavigationProps>(
       cursor: "pointer",
       transition: `all 0.2s ease`,
       marginBottom: `${spacingNum[4]}px`,
+      WebkitTapHighlightColor: "transparent",
+      touchAction: "manipulation",
     });
 
     const navItemStyles = (isActive: boolean) =>

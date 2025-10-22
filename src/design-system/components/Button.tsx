@@ -122,6 +122,8 @@ export const Button = React.memo(
         opacity: disabled ? 0.5 : 1,
         transition: prefersReducedMotion ? 'none' : `all 200ms ${easing.standard}`,
         width: fullWidth ? '100%' : 'auto',
+        WebkitTapHighlightColor: 'transparent',
+        touchAction: 'manipulation',
         ...sizeStyles[size],
         ...variantStyles[variant],
       }), [size, variant, disabled, loading, prefersReducedMotion, fullWidth, sizeStyles, variantStyles]);
