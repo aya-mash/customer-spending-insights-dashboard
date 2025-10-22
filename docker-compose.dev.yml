@@ -9,20 +9,24 @@ services:
       - "5173:5173"
       - "6006:6006"
     volumes:
-      # Mount source code for hot reload
+      # Mount source code for hot reload, but exclude node_modules
       - .:/workspace:cached
-      # Use anonymous volumes for node_modules to avoid conflicts
-      - /workspace/node_modules
-      - /workspace/.yarn
+      # Use a named volume for node_modules to ensure correct permissions and performance
+      - node_modules:/workspace/node_modules
     environment:
       - NODE_ENV=development
       - VITE_API_BASE_URL=/api
       - VITE_APP_NAME=Customer Spending Insights
       - VITE_ENABLE_MOCKS=true
     working_dir: /workspace
-    command: sh -c "yarn install && npx msw init public --save && yarn dev:docker"
-    # Use node user for security (non-root)
-    user: "1000:1000"
+    # The command is now simplified as dependency installation is handled in the Dockerfile
+    command: sh -c "yarn dev:docker"
+    # The user is defined in the Dockerfile, so this is not needed here
+    # user: "1000:1000"
     stdin_open: true
     tty: true
+
+volumes:
+  node_modules:
+
 

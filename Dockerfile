@@ -3,40 +3,34 @@
 # Development stage - used for dev containers
 FROM node:20-alpine AS development
 
+# Install git, openssh, and other essentials
+RUN apk add --no-cache git openssh-client
+
 # Set working directory
 WORKDIR /workspace
-
-# Install essential development tools for Alpine Linux
-# - bash: required for VS Code terminal and scripts
-# - ca-certificates: SSL/TLS support
-# - curl: downloading tools and healthchecks
-# - git: version control (required by VS Code)
-# - openssh-client: SSH support for git operations
-RUN apk add --no-cache \
-    bash \
-    ca-certificates \
-    curl \
-    git \
-    openssh-client
 
 # Enable corepack and prepare yarn
 RUN corepack enable && \
     corepack prepare yarn@1.22.22 --activate
 
-# Create node user home directory with proper permissions
-# Set workspace to be writable by node user (UID 1000)
-RUN mkdir -p /home/node/.ssh && \
-    chown -R node:node /home/node && \
-    chmod 777 /workspace
+# Copy package files and install dependencies as root first
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
-# Switch to node user
+# Copy the rest of the application code
+COPY . .
+
+# Initialize MSW and set permissions
+RUN npx msw init public --save && chown -R node:node /workspace
+
+# Switch to the non-root user
 USER node
 
 # Expose ports for development
 EXPOSE 5173 6006
 
-# Default command for development
-CMD ["sh", "-c", "yarn install && yarn dev:docker"]
+# Default command to start the dev server
+CMD ["yarn", "dev:docker"]
 
 # Builder stage - for building the application
 FROM node:20-alpine AS builder

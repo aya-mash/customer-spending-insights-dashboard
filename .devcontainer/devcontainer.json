@@ -57,7 +57,7 @@
   "overrideCommand": true,
   
   // Post-create command to run after container is created
-  "postCreateCommand": "yarn install && npx msw init public --save",
+  "postCreateCommand": "",
   
   // Post-start command to run after container starts
   "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
