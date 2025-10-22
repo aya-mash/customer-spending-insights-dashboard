@@ -33,6 +33,7 @@ export { ErrorBoundary } from './ErrorBoundary';
 export { Logo } from './Logo';
 export { Skeleton } from './Skeleton';
 export { LoadingSpinner } from './LoadingSpinner';
+export { Dialog, type DialogProps } from './Dialog';
 
 // Default export for convenience
 import { Box } from './Box';

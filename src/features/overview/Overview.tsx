@@ -36,6 +36,7 @@ import {
 } from '../../design-system/components/index';
 import { radius } from '../../design-system/tokens';
 import type { PeriodPreset } from '../../data/models';
+import { GoalDialog } from './GoalDialog';
 
 const PERIODS: Array<{ key: PeriodPreset; label: string }> = [
   { key: '7d', label: '7 Days' },
@@ -61,6 +62,8 @@ const PeriodSelector = ({ activePeriod, onPeriodChange }: PeriodSelectorProps) =
 
 export function Overview() {
   const [activePeriod, setActivePeriod] = useState<PeriodPreset>('30d');
+  const [showGoalDialog, setShowGoalDialog] = useState(false);
+  const [editingGoal, setEditingGoal] = useState<typeof goalsData[0] | null>(null);
   const customerId = 'user123';
   const navigate = useNavigate();
 
@@ -279,7 +282,9 @@ export function Overview() {
             <Stack spacing={4}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Heading level={3}>Spending Goals</Heading>
-                <Button variant="ghost" size="small">Manage</Button>
+                <Button variant="ghost" size="small" onClick={() => setShowGoalDialog(true)}>
+                  + Add Goal
+                </Button>
               </div>
               
               {goalsData && goalsData.length > 0 ? (
@@ -400,6 +405,23 @@ export function Overview() {
           </Card>
         )}
       </Stack>
+
+      {/* Goal Dialog */}
+      <GoalDialog
+        isOpen={showGoalDialog}
+        onClose={() => {
+          setShowGoalDialog(false);
+          setEditingGoal(null);
+        }}
+        onSave={(goal) => {
+          // TODO: Integrate with backend API
+          console.log('Save goal:', goal);
+          setShowGoalDialog(false);
+          setEditingGoal(null);
+        }}
+        existingGoal={editingGoal}
+        categories={goalsData.map(g => g.category)}
+      />
     </PageLayout>
   );
 }
