@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useTransactionsData } from './useTransactionsData';
 import { formatCurrency, Skeleton } from '../../design-system';
 import { formatDate } from '../../utils/dates';
+import { getCategoryColor } from '../../lib/chartConfig';
 import { 
   PageLayout, 
   Grid, 
@@ -98,7 +99,14 @@ export function Transactions() {
       key: 'category',
       label: 'Category',
       sortable: true,
-      render: (value: string) => <Badge variant="default">{value}</Badge>,
+      render: (value: string) => (
+        <Badge 
+          variant="default" 
+          style={{ backgroundColor: `${getCategoryColor(value)}20`, color: getCategoryColor(value), borderColor: getCategoryColor(value) }}
+        >
+          {value}
+        </Badge>
+      ),
     },
     {
       key: 'amount',

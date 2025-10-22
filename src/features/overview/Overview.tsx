@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
   TrendingUp, 
   CreditCard, 
-  DollarSign, 
+  BanknoteArrowDown, 
   ShoppingBag,
   Calendar,
   Target,
@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useOverviewData } from './useOverviewData';
 import { formatCurrency, formatDate, Skeleton } from '../../design-system';
+import { getCategoryColor } from '../../lib/chartConfig';
 import { 
   PageLayout, 
   Grid, 
@@ -133,7 +134,7 @@ export function Overview() {
         <MetricCard
           label="Total Spent"
           value={formatCurrency(totalSpent)}
-          icon={<DollarSign size={24} />}
+          icon={<BanknoteArrowDown size={24} />}
           trend={spentChange === 0 ? undefined : {
             value: spentChange,
             direction: spentChange > 0 ? 'up' : 'down'
@@ -305,9 +306,15 @@ export function Overview() {
                       <Stack key={goal.id} spacing={2}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <Text variant="body" weight="medium">{goal.category}</Text>
-                          <Badge variant={progressVariant}>
-                            {progress.toFixed(0)}%
-                          </Badge>
+                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                            <Badge variant="default">
+                              <Clock size={12} style={{ marginRight: '4px' }} />
+                              {goal.daysRemaining}d left
+                            </Badge>
+                            <Badge variant={progressVariant}>
+                              {progress.toFixed(0)}%
+                            </Badge>
+                          </div>
                         </div>
                         
                         <div style={{ 
@@ -367,7 +374,9 @@ export function Overview() {
                   <Stack spacing={1} style={{ flex: 1 }}>
                     <Text variant="body" weight="medium">{txn.merchant}</Text>
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                      <Badge>{txn.category}</Badge>
+                      <Badge style={{ backgroundColor: `${getCategoryColor(txn.category)}20`, color: getCategoryColor(txn.category), borderColor: getCategoryColor(txn.category) }}>
+                        {txn.category}
+                      </Badge>
                       <Text variant="bodySm" color="muted">{formatDate(txn.date)}</Text>
                     </div>
                   </Stack>
