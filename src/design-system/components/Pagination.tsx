@@ -5,7 +5,8 @@
  */
 
 import { forwardRef, type HTMLAttributes } from 'react';
-import { brand, surface, text as textColors, radius, spacingNum } from '../tokens';
+import { radius, spacingNum } from '../tokens';
+import { useTheme } from '../index';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export interface PaginationProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
@@ -37,6 +38,7 @@ export const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
     },
     ref
   ) => {
+    const { brand, surface, text: textColors } = useTheme();
     if (totalPages <= 1) return null;
 
     const containerStyle = {

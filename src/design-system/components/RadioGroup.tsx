@@ -5,7 +5,8 @@
  */
 
 import React, { type CSSProperties, type ReactNode } from 'react';
-import { spacing, radius, surface, text as textColors } from '../tokens';
+import { spacing, radius } from '../tokens';
+import { useTheme } from '../index';
 
 export interface RadioOption {
   value: string;
@@ -37,6 +38,8 @@ export const RadioGroup = React.memo<RadioGroupProps>(({
   'aria-label': ariaLabel,
   className,
 }) => {
+  const { surface, text: textColors } = useTheme();
+  
   // Container style matching Tabs - debossed/inset
   const containerStyle: CSSProperties = {
     display: 'flex',

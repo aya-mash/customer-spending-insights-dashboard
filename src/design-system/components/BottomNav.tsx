@@ -6,8 +6,8 @@
 
 import { forwardRef, type CSSProperties } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { brand, surface, text as textColors, spacingNum, radius } from '../tokens';
-import { useBreakpoint } from '../index';
+import { spacingNum, radius } from '../tokens';
+import { useBreakpoint, useTheme } from '../index';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -29,6 +29,7 @@ export const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
     const location = useLocation();
     const breakpoint = useBreakpoint();
     const isMobile = breakpoint === 'mobile';
+    const { brand, surface, text: textColors } = useTheme();
 
     if (!isMobile) return null;
 

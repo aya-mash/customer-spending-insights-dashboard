@@ -6,15 +6,13 @@
 
 import React, { forwardRef, useMemo, useCallback, type CSSProperties, type ReactNode, type HTMLAttributes } from 'react';
 import {
-  brand,
-  surface,
   spacing,
   radius,
   easing,
   type Spacing,
   type ResponsiveValue,
 } from '../tokens';
-import { useResponsiveValue, usePrefersReducedMotion } from '../index';
+import { useTheme, useResponsiveValue, usePrefersReducedMotion } from '../index';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -34,6 +32,7 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
 export const Card = React.memo(
   forwardRef<HTMLDivElement, CardProps>(
     ({ variant = 'default', hover = false, padding = 6, children, style, onClick, ...props }, ref) => {
+      const { brand, surface } = useTheme();
       const resolvedPadding = useResponsiveValue(padding);
       const prefersReducedMotion = usePrefersReducedMotion();
 
@@ -46,7 +45,7 @@ export const Card = React.memo(
       boxShadow: 'var(--shadow-neumorphic-sm)',
       transition: prefersReducedMotion ? 'none' : `all 300ms ${easing.standard}`,
       position: 'relative',
-    }), [resolvedPadding, prefersReducedMotion]);
+    }), [resolvedPadding, prefersReducedMotion, surface]);
 
     // Memoize variant styles with theme-aware tokens
     const variantStyles: Record<string, CSSProperties> = useMemo(() => ({
@@ -58,7 +57,7 @@ export const Card = React.memo(
       elevated: {
         boxShadow: 'var(--shadow-neumorphic-md)',
       },
-    }), []);
+    }), [brand]);
 
     const hoverStyles: CSSProperties = useMemo(() => hover
       ? { cursor: 'pointer' }
@@ -70,7 +69,7 @@ export const Card = React.memo(
         e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-lg)';
         e.currentTarget.style.borderColor = brand.primary;
       }
-    }, [hover, prefersReducedMotion]);
+    }, [hover, prefersReducedMotion, brand]);
 
     const handleMouseLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
       if (hover) {
@@ -78,7 +77,7 @@ export const Card = React.memo(
         e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-sm)';
         e.currentTarget.style.borderColor = surface.border;
       }
-    }, [hover]);
+    }, [hover, surface]);
 
     const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
       if (onClick && (e.key === 'Enter' || e.key === ' ')) {

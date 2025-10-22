@@ -5,10 +5,7 @@
 
 import { forwardRef, type CSSProperties, type ReactNode, type HTMLAttributes } from 'react';
 import {
-  brand,
   semantic,
-  text as textColors,
-  surface,
   spacing,
   fontSize,
   fontWeight,
@@ -17,6 +14,7 @@ import {
   transition,
   easing,
 } from '../tokens';
+import { useTheme } from '../index';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -36,6 +34,8 @@ export interface MetricCardProps extends HTMLAttributes<HTMLDivElement> {
 
 export const MetricCard = forwardRef<HTMLDivElement, MetricCardProps>(
   ({ label, value, icon, trend, variant = 'default', children, style, ...props }, ref) => {
+    const { brand, surface, text: textColors } = useTheme();
+    
     const variantColors: Record<string, string> = {
       default: brand.primary,
       primary: brand.primary,

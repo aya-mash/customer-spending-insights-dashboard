@@ -5,7 +5,8 @@
 
 import { useState, useMemo, type CSSProperties } from 'react';
 import { contrastRatio, passesAA, passesAAA } from '../../lib/contrast';
-import { surface, text as textColors, radius, spacing, spacingNum, brand, transition, easing } from '../tokens';
+import { radius, spacing, spacingNum, transition, easing } from '../tokens';
+import { useTheme } from '../index';
 import { X, RefreshCw, Check, AlertCircle } from 'lucide-react';
 
 interface Props { readonly onClose?: () => void }
@@ -33,6 +34,8 @@ function normalizeHex(input: string): string {
 }
 
 export function ContrastCheckerPanel({ onClose }: Props) {
+  const { surface, text: textColors, brand } = useTheme();
+  
   const [fgInput, setFgInput] = useState('#FFFFFF');
   const [bgInput, setBgInput] = useState('#2F70EF');
   const [fgToken, setFgToken] = useState<string>('');

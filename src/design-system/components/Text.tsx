@@ -4,7 +4,8 @@
  */
 
 import React, { forwardRef, useMemo, type CSSProperties, type ReactNode, type HTMLAttributes } from 'react';
-import { fontSize, fontWeight, lineHeight, text as textColors, type FontWeight } from '../tokens';
+import { fontSize, fontWeight, lineHeight, type FontWeight } from '../tokens';
+import { useTheme } from '../index';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -24,6 +25,8 @@ export interface TextProps extends HTMLAttributes<HTMLParagraphElement> {
 export const Text = React.memo(
   forwardRef<HTMLParagraphElement, TextProps>(
     ({ variant = 'body', color = 'primary', weight, children, style, ...props }, ref) => {
+      const { text: textColors } = useTheme();
+      
       const textStyles = useMemo(() => {
         const variantMap: Record<string, string> = {
           bodyLg: fontSize.bodyLg,
@@ -47,7 +50,7 @@ export const Text = React.memo(
           color: colorMap[color],
           margin: 0,
         });
-      }, [variant, color, weight]);
+      }, [variant, color, weight, textColors]);
 
       return (
         <p ref={ref} style={{ ...textStyles, ...style }} {...props}>

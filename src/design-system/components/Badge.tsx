@@ -5,9 +5,7 @@
 
 import React, { forwardRef, useMemo, type CSSProperties, type ReactNode, type HTMLAttributes } from 'react';
 import {
-  neutral,
   semantic,
-  text as textColors,
   spacingNum,
   fontSize,
   fontWeight,
@@ -15,6 +13,7 @@ import {
   categories,
   type CategoryName,
 } from '../tokens';
+import { useTheme } from '../index';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -32,6 +31,8 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 export const Badge = React.memo(
   forwardRef<HTMLSpanElement, BadgeProps>(
     ({ category, variant = 'default', children, style, ...props }, ref) => {
+      const { neutral, text: textColors } = useTheme();
+      
       const badgeStyles = useMemo(() => {
         let bgColor: string = neutral[200];
         let textColor: string = textColors.primary;
@@ -61,7 +62,7 @@ export const Badge = React.memo(
           color: textColor,
           whiteSpace: 'nowrap',
         });
-      }, [category, variant]);
+      }, [category, variant, neutral, textColors]);
 
       return (
         <span ref={ref} style={{ ...badgeStyles, ...style }} {...props}>

@@ -5,10 +5,7 @@
 
 import React, { forwardRef, useMemo, useCallback, type CSSProperties, type ReactNode, type ButtonHTMLAttributes } from 'react';
 import {
-  brand,
   semantic,
-  text as textColors,
-  surface,
   spacing,
   spacingNum,
   fontSize,
@@ -19,7 +16,7 @@ import {
   focus,
   fontFamily,
 } from '../tokens';
-import { usePrefersReducedMotion } from '../index';
+import { useTheme, usePrefersReducedMotion } from '../index';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -59,6 +56,7 @@ export const Button = React.memo(
       },
       ref
     ) => {
+      const { brand, text: textColors, surface } = useTheme();
       const prefersReducedMotion = usePrefersReducedMotion();
 
       // Memoize size styles - Soft Modern (larger touch targets)
@@ -109,7 +107,7 @@ export const Button = React.memo(
           border: `1px solid ${semantic.error}`,
           boxShadow: 'var(--shadow-neumorphic-sm)',
         },
-      }), []);
+      }), [brand, textColors, surface]);
 
       // Memoize base styles combining size and variant
       const baseStyles = useMemo(() => createDynamicStyles({
@@ -150,7 +148,7 @@ export const Button = React.memo(
             e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-md)';
             break;
         }
-      }, [variant, disabled, loading, prefersReducedMotion]);
+      }, [variant, disabled, loading, prefersReducedMotion, brand, surface]);
 
       const handleMouseLeave = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
         if (disabled || loading) return;
@@ -176,7 +174,7 @@ export const Button = React.memo(
             e.currentTarget.style.boxShadow = 'var(--shadow-neumorphic-sm)';
             break;
         }
-      }, [variant, disabled, loading]);
+      }, [variant, disabled, loading, brand, surface]);
 
       const handleMouseDown = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
         if (disabled || loading) return;

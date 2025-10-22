@@ -5,8 +5,8 @@
 
 import { forwardRef, useState, useEffect, type CSSProperties } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
-import { brand, categories as categoryColors, type CategoryName, neutral, text as textColors, spacingNum, radius } from '../tokens';
-import { formatCurrency, usePrefersReducedMotion, useBreakpoint } from '../index';
+import { categories as categoryColors, type CategoryName, spacingNum, radius } from '../tokens';
+import { useTheme, formatCurrency, usePrefersReducedMotion, useBreakpoint } from '../index';
 import type { CategoryItem } from '../../data/models';
 import { Text } from './Text';
 
@@ -18,9 +18,9 @@ const PIE_CONFIG = {
   cornerRadius: 6,
 };
 
-function getCategoryColor(name: string): string {
+function getCategoryColor(name: string, brandPrimary: string): string {
   const key = name.toLowerCase().replaceAll(/\s+/g, '') as CategoryName;
-  return categoryColors[key]?.main || brand.primary;
+  return categoryColors[key]?.main || brandPrimary;
 }
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
@@ -38,6 +38,8 @@ interface CustomTooltipProps {
 }
 
 const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
+  const { neutral, text: textColors } = useTheme();
+  
   if (!active || !payload?.[0]) return null;
 
   const data = payload[0].payload;
@@ -73,54 +75,58 @@ interface LegendChipProps {
   onSegmentClick?: (category: string) => void;
 }
 
-const LegendChip = ({ item, onSegmentClick }: LegendChipProps) => (
-  <button
-    type="button"
-    onClick={onSegmentClick ? () => onSegmentClick(item.name) : undefined}
-    style={createDynamicStyles({
-      display: 'flex',
-      alignItems: 'center',
-      gap: `${spacingNum[2]}px`,
-      padding: `${spacingNum[2]}px ${spacingNum[3]}px`,
-      borderRadius: radius.full,
-      border: `1px solid ${item.color}`,
-      backgroundColor: 'transparent',
-      cursor: onSegmentClick ? 'pointer' : 'default',
-      transition: 'all 0.2s ease',
-      fontSize: '13px',
-      fontWeight: 500,
-      color: textColors.primary,
-      whiteSpace: 'nowrap',
-    })}
-    onMouseEnter={(e) => {
-      if (onSegmentClick) {
-        e.currentTarget.style.backgroundColor = item.color;
-        e.currentTarget.style.color = textColors.inverse;
-      }
-    }}
-    onMouseLeave={(e) => {
-      if (onSegmentClick) {
-        e.currentTarget.style.backgroundColor = 'transparent';
-        e.currentTarget.style.color = textColors.primary;
-      }
-    }}
-    aria-label={`${item.name}: ${formatCurrency(item.amount)}, ${item.percentage?.toFixed(1)}% of total`}
-  >
-    <span
+const LegendChip = ({ item, onSegmentClick }: LegendChipProps) => {
+  const { text: textColors } = useTheme();
+  
+  return (
+    <button
+      type="button"
+      onClick={onSegmentClick ? () => onSegmentClick(item.name) : undefined}
       style={createDynamicStyles({
-        width: '10px',
-        height: '10px',
-        borderRadius: '50%',
-        backgroundColor: item.color,
+        display: 'flex',
+        alignItems: 'center',
+        gap: `${spacingNum[2]}px`,
+        padding: `${spacingNum[2]}px ${spacingNum[3]}px`,
+        borderRadius: radius.full,
+        border: `1px solid ${item.color}`,
+        backgroundColor: 'transparent',
+        cursor: onSegmentClick ? 'pointer' : 'default',
+        transition: 'all 0.2s ease',
+        fontSize: '13px',
+        fontWeight: 500,
+        color: textColors.primary,
+        whiteSpace: 'nowrap',
       })}
-      aria-hidden="true"
-    />
-    <span>{item.name}</span>
-    <span style={{ marginLeft: 'auto', fontWeight: 600 }}>
-      {formatCurrency(item.amount)}
-    </span>
-  </button>
-);
+      onMouseEnter={(e) => {
+        if (onSegmentClick) {
+          e.currentTarget.style.backgroundColor = item.color;
+          e.currentTarget.style.color = textColors.inverse;
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (onSegmentClick) {
+          e.currentTarget.style.backgroundColor = 'transparent';
+          e.currentTarget.style.color = textColors.primary;
+        }
+      }}
+      aria-label={`${item.name}: ${formatCurrency(item.amount)}, ${item.percentage?.toFixed(1)}% of total`}
+    >
+      <span
+        style={createDynamicStyles({
+          width: '10px',
+          height: '10px',
+          borderRadius: '50%',
+          backgroundColor: item.color,
+        })}
+        aria-hidden="true"
+      />
+      <span>{item.name}</span>
+      <span style={{ marginLeft: 'auto', fontWeight: 600 }}>
+        {formatCurrency(item.amount)}
+      </span>
+    </button>
+  );
+};
 
 export interface DonutChartProps {
   data: CategoryItem[];
@@ -130,7 +136,8 @@ export interface DonutChartProps {
 }
 
 export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
-  ({ data, total, onSegmentClick, height = 280 }, ref) => {
+  ({ data, total, onSegmentClick, height = 300 }, ref) => {
+    const { brand, text: textColors } = useTheme();
     const reducedMotion = usePrefersReducedMotion();
     const breakpoint = useBreakpoint();
     const isMobile = breakpoint === 'mobile';
@@ -147,7 +154,7 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
       name: item.name,
       amount: item.amount,
       percentage: item.percentage,
-      color: getCategoryColor(item.name),
+      color: getCategoryColor(item.name, brand.primary),
     }));
 
     const top = data[0];

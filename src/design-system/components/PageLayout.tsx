@@ -4,8 +4,8 @@
  */
 
 import React, { forwardRef, useMemo, type CSSProperties, type ReactNode, type HTMLAttributes } from 'react';
-import { spacing, spacingNum, fontSize, fontWeight, lineHeight, text as textColors } from '../tokens';
-import { useIsMobile } from '../index';
+import { spacing, spacingNum, fontSize, fontWeight, lineHeight } from '../tokens';
+import { useTheme, useIsMobile } from '../index';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -25,6 +25,7 @@ export interface PageLayoutProps extends HTMLAttributes<HTMLDivElement> {
 export const PageLayout = React.memo(
   forwardRef<HTMLDivElement, PageLayoutProps>(
     ({ title, subtitle, actions, children, style, ...props }, ref) => {
+      const { text: textColors } = useTheme();
       const isMobile = useIsMobile();
       const padding = isMobile ? spacingNum[4] : spacingNum[6];
 
@@ -52,13 +53,13 @@ export const PageLayout = React.memo(
         color: textColors.strong,
         lineHeight: lineHeight.tight,
         margin: 0,
-      }), [isMobile]);
+      }), [isMobile, textColors.strong]);
 
       const subtitleStyles = useMemo(() => createDynamicStyles({
         fontSize: fontSize.body,
         color: textColors.muted,
         marginTop: spacing[2],
-      }), []);
+      }), [textColors.muted]);
 
       return (
         <div ref={ref} style={{ ...containerStyles, ...style }} {...props}>

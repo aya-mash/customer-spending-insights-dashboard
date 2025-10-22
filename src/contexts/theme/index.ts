@@ -6,9 +6,6 @@
 // Provider
 export { ThemeProvider } from "./ThemeContext";
 
-// Hooks
-export { useThemeContext, useTheme, useEffectiveTheme } from "./theme-hooks";
-
 // Types
 export type {
   ThemeMode,

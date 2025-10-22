@@ -5,7 +5,8 @@
  */
 
 import React, { forwardRef, type ReactNode, type CSSProperties } from 'react';
-import { surface, text as textColors, radius } from '../tokens';
+import { radius } from '../tokens';
+import { useTheme } from '../index';
 import { Box } from './Box';
 import { Card } from './Card';
 import { Stack } from './Stack';
@@ -69,6 +70,8 @@ export const Table = React.memo(
     },
     ref
   ) => {
+    const { surface, text: textColors } = useTheme();
+    
     const containerStyle: CSSProperties = {
       overflow: 'hidden',
       border: `1px solid ${surface.border}`,

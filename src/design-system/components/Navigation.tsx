@@ -8,15 +8,12 @@
 import { forwardRef, type CSSProperties } from "react";
 import { useLocation, Link } from "react-router-dom";
 import {
-  brand,
-  surface,
-  text as textColors,
   spacingNum,
   radius,
   transition,
   easing,
 } from "../tokens";
-import { useBreakpoint } from "../index";
+import { useBreakpoint, useTheme } from "../index";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
@@ -47,6 +44,7 @@ export const Navigation = forwardRef<HTMLElement, NavigationProps>(
     const location = useLocation();
     const breakpoint = useBreakpoint();
     const isMobile = breakpoint === "mobile";
+    const { brand, surface, text: textColors } = useTheme();
 
     if (isMobile) return null;
 

@@ -21,18 +21,14 @@ import {
   type BottomNavItem,
 } from "../../design-system/components/BottomNav";
 import { SettingsDrawer } from "../../design-system/components/SettingsDrawer";
-import { useThemeContext } from "../../contexts/theme";
 import {
-  brand,
-  surface,
   spacingNum,
   zIndex,
-  text as textColors,
   fontSize,
   fontWeight,
   radius,
 } from "../../design-system/tokens";
-import { useBreakpoint } from "../../design-system";
+import { useBreakpoint, useTheme } from "../../design-system";
 import { DashboardContext } from "../../contexts/dashboard/DashboardProvider";
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
@@ -51,10 +47,10 @@ export function DashboardLayout() {
   const dash = useContext(DashboardContext);
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const { mode, setMode } = useThemeContext();
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === "mobile";
   const location = useLocation();
+  const { brand, surface, text: textColors, mode, setMode } = useTheme();
 
   const pageTitle = PAGE_TITLES[location.pathname] || "Insights";
 

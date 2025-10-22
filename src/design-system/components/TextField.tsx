@@ -4,7 +4,8 @@
  */
 
 import React, { forwardRef, type InputHTMLAttributes } from 'react';
-import { surface, text as textColors, radius, spacingNum, fontSize, fontWeight, brand } from '../tokens';
+import { radius, spacingNum, fontSize, fontWeight } from '../tokens';
+import { useTheme } from '../index';
 
 export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   /** Label text displayed above the input field */
@@ -36,6 +37,7 @@ export const TextField = React.memo(
     },
     ref
   ) => {
+    const { surface, text: textColors, brand } = useTheme();
     const containerStyle = {
       display: 'flex',
       flexDirection: 'column' as const,

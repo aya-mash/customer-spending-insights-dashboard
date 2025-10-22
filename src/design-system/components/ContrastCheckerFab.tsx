@@ -5,11 +5,13 @@
 
 import { useState, useEffect, type CSSProperties } from 'react';
 import { ContrastCheckerPanel } from './ContrastCheckerPanel';
-import { brand, surface, radius, spacing, transition, easing } from '../tokens';
+import { radius, spacing, transition, easing } from '../tokens';
+import { useTheme } from '../index';
 import { Palette } from 'lucide-react';
 import { config } from '../../config/env';
 
 export function ContrastCheckerDev() {
+  const { brand, surface } = useTheme();
   const enabled = config.isDevelopment;
   const [open, setOpen] = useState(false);
   

@@ -4,7 +4,8 @@
  */
 
 import React, { forwardRef, useMemo, type CSSProperties, type ReactNode, type HTMLAttributes } from 'react';
-import { fontSize, fontWeight, lineHeight, text as textColors } from '../tokens';
+import { fontSize, fontWeight, lineHeight } from '../tokens';
+import { useTheme } from '../index';
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -20,6 +21,8 @@ export interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
 export const Heading = React.memo(
   forwardRef<HTMLHeadingElement, HeadingProps>(
     ({ level, children, style, ...props }, ref) => {
+      const { text: textColors } = useTheme();
+      
       const headingStyles = useMemo(() => {
         const fontSizeMap = {
           1: fontSize.h1,
@@ -35,7 +38,7 @@ export const Heading = React.memo(
           color: textColors.strong,
           margin: 0,
         });
-      }, [level]);
+      }, [level, textColors]);
 
       const Component: 'h1' | 'h2' | 'h3' | 'h4' = `h${level}`;
 

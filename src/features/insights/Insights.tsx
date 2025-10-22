@@ -11,7 +11,8 @@ import {
   Button,
   Tabs
 } from '../../design-system/components/index';
-import { text as textColors, surface, radius, spacing } from '../../design-system/tokens';
+import { radius, spacing } from '../../design-system/tokens';
+import { useTheme } from '../../design-system';
 import { DonutChart } from '../../design-system/components/DonutChart';
 
 // Lazy load trends chart
@@ -27,6 +28,7 @@ const TAB_LABELS: Record<TabKey, string> = {
 };
 
 export function Insights() {
+  const { text: textColors, surface } = useTheme();
   const [activeTab, setActiveTab] = useState<TabKey>('category');
   const reducedMotion = useReducedMotion();
   const navigate = useNavigate();

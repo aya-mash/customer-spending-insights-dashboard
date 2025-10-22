@@ -4,7 +4,8 @@
  */
 
 import { forwardRef, type ButtonHTMLAttributes } from 'react';
-import { brand, radius, spacingNum } from '../tokens';
+import { radius, spacingNum } from '../tokens';
+import { useTheme } from '../index';
 import { X } from 'lucide-react';
 
 export interface FilterChipProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -22,6 +23,7 @@ export const FilterChip = forwardRef<HTMLButtonElement, FilterChipProps>(
     },
     ref
   ) => {
+    const { brand } = useTheme();
     const chipStyle = {
       display: 'inline-flex',
       alignItems: 'center',

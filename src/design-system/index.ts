@@ -6,6 +6,17 @@
 import { useState, useEffect } from 'react';
 import { breakpoints, mediaQueries, type Breakpoint, type ResponsiveValue } from './tokens';
 
+// Re-export unified theme hook from design system hooks folder
+export { 
+  useTheme, 
+  type UseThemeReturn,
+  type ThemeTokens, 
+  type BrandColors, 
+  type NeutralPalette, 
+  type SurfaceColors, 
+  type TextColors 
+} from './hooks/useTheme';
+
 // =============================================================================
 // BREAKPOINT HOOKS
 // =============================================================================
@@ -419,7 +430,6 @@ export function getChartLabel(value: number, isSmallScreen: boolean): string {
 // =============================================================================
 
 export * from './tokens';
-export { useTheme, useEffectiveTheme } from './useTheme';
 
 // Components
 export { ErrorPage } from './components/ErrorPage';
@@ -431,4 +441,6 @@ export { ContrastCheckerPanel } from './components/ContrastCheckerPanel';
 export { ContrastCheckerDev as ContrastCheckerFab } from './components/ContrastCheckerFab';
 
 // =============================================================================
-export { default as tokens } from './tokens';
+// Re-export all tokens for convenience
+export * from './tokens';
+

@@ -4,7 +4,8 @@
  */
 
 import { forwardRef, type SelectHTMLAttributes } from 'react';
-import { surface, text as textColors, radius, spacingNum, fontSize, fontWeight } from '../tokens';
+import { radius, spacingNum, fontSize, fontWeight } from '../tokens';
+import { useTheme } from '../index';
 
 export interface SelectOption {
   label: string;
@@ -30,6 +31,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     },
     ref
   ) => {
+    const { surface, text: textColors } = useTheme();
     const containerStyle = {
       display: 'flex',
       flexDirection: 'column' as const,

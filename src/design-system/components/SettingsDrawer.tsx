@@ -6,7 +6,8 @@
 import { forwardRef, useEffect, useRef, type CSSProperties } from 'react';
 import { Settings2, X, Sun, Monitor, Moon, Palette } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { brand, surface, text as textColors, spacingNum, radius, transition, easing, zIndex } from '../tokens';
+import { spacingNum, radius, transition, easing, zIndex } from '../tokens';
+import { useTheme } from '../index';
 import { Heading } from './Heading';
 import { Stack } from './Stack';
 import { Text } from './Text';
@@ -29,6 +30,7 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
   ({ open, onClose, mode, onModeChange }, ref) => {
     const panelRef = useRef<HTMLElement | null>(null);
     const navigate = useNavigate();
+    const { brand, surface, text: textColors } = useTheme();
 
     // Close on Escape
     useEffect(() => {

@@ -1,35 +1,54 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="apple-touch-icon" href="/favicon.svg" />
-  <meta name="theme-color" content="#2F70EF" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <meta name="theme-color" content="#2F70EF" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>customer-spending-insights-dashboard</title>
   </head>
   <body>
     <script>
       // Pre-hydration theme bootstrap - prevents FOUC
-      (function(){
+      (function () {
         try {
-          var key='theme-choice';
-          var stored=localStorage.getItem(key);
-          var mode = (stored==='light' || stored==='dark' || stored==='system') ? stored : 'system';
+          var key = "theme-choice";
+          var stored = localStorage.getItem(key);
+          var mode =
+            stored === "light" || stored === "dark" || stored === "system"
+              ? stored
+              : "light";
           var effective;
-          
-          if (mode === 'system') {
-            effective = globalThis.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+
+          if (mode === "system") {
+            effective = globalThis.matchMedia("(prefers-color-scheme: dark)")
+              .matches
+              ? "dark"
+              : "light";
           } else {
             effective = mode;
           }
-          
+
           var root = document.documentElement;
-          root.dataset.theme = effective;  // What's actually applied
-          root.dataset.mode = mode;         // User's choice
+
+          // Set data attributes for React hydration
+          root.dataset.theme = effective; // What's actually applied
+          root.dataset.mode = mode; // User's choice
+
+          // Apply CSS color-scheme for native browser features
           root.style.colorScheme = effective;
-        } catch(e) {
-          console.warn('Theme init failed', e);
+
+          // Add theme class immediately to prevent flash
+          root.className = "theme-" + effective;
+
+          // Ensure body has correct background immediately
+          if (typeof document !== "undefined" && document.body) {
+            document.body.style.backgroundColor =
+              effective === "dark" ? "#1A1D23" : "#EBF0F5";
+          }
+        } catch (e) {
+          console.warn("Theme init failed", e);
         }
       })();
     </script>
