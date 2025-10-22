@@ -1,0 +1,42 @@
+# Set default behavior to automatically handle line endings.
+# Git will try to guess whether a file is text and handle line endings appropriately.
+* text=auto
+
+#
+# The following are explicit overrides for file types we know are text.
+# These will be normalized to LF in the repository and converted to the OS-native line ending on checkout.
+#
+*.html    text
+*.css     text
+*.js      text
+*.jsx     text
+*.ts      text
+*.tsx     text
+*.json    text
+*.md      text
+*.yml     text
+*.yaml    text
+*.conf    text
+*.sh      text eol=lf
+
+#
+# The following are files that should always have CRLF line endings.
+#
+*.bat     text eol=crlf
+
+#
+# The following are files that are binary and should not be touched.
+#
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.svg     binary
+*.ico     binary
+*.woff    binary
+*.woff2   binary
+*.ttf     binary
+*.eot     binary
+*.pdf     binary
+*.zip     binary
+*.gz      binary
