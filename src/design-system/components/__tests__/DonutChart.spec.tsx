@@ -5,7 +5,6 @@
 
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
-import { TestProviders } from '../../../test/test-utils';
 import { DonutChart } from '../DonutChart';
 import type { CategoryItem } from '../../../data/models';
 
@@ -38,40 +37,24 @@ const mockData: CategoryItem[] = [
 
 describe('DonutChart', () => {
   it('renders chart container', () => {
-    const { container } = render(
-      <TestProviders>
-        <DonutChart data={mockData} total={650} />
-      </TestProviders>
-    );
+    const { container } = render(<DonutChart data={mockData} total={650} />);
     // Recharts may not fully render in JSDOM, verify component exists
     expect(container.firstChild).toBeInTheDocument();
   });
 
   it('handles empty data gracefully', () => {
-    const { container } = render(
-      <TestProviders>
-        <DonutChart data={[]} total={0} />
-      </TestProviders>
-    );
+    const { container } = render(<DonutChart data={[]} total={0} />);
     expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders with responsive container class', () => {
-    const { container } = render(
-      <TestProviders>
-        <DonutChart data={mockData} total={650} />
-      </TestProviders>
-    );
+    const { container } = render(<DonutChart data={mockData} total={650} />);
     // Component should have structure even if SVG doesn't render in JSDOM
     expect(container.firstChild).toBeInTheDocument();
   });
 
   it('accepts custom height prop', () => {
-    const { container } = render(
-      <TestProviders>
-        <DonutChart data={mockData} total={650} height={400} />
-      </TestProviders>
-    );
+    const { container } = render(<DonutChart data={mockData} total={650} height={400} />);
     expect(container.firstChild).toBeInTheDocument();
   });
 });

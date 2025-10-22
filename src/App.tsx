@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ThemeProvider } from './contexts';
+import { ThemeProvider } from './contexts/theme';
 import AppShell, { type AppShellProps } from './app/AppShell';
 
 const queryClient = new QueryClient({

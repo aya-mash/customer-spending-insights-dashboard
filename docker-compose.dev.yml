@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      target: builder
+      dockerfile: Dockerfile
+    container_name: customer-insights-dev
+    ports:
+      - "5173:5173"
+      - "6006:6006"
+    volumes:
+      # Mount source code for hot reload
+      - .:/workspace:cached
+      # Use anonymous volumes for node_modules to avoid conflicts
+      - /workspace/node_modules
+      - /workspace/.yarn
+    environment:
+      - NODE_ENV=development
+      - VITE_API_BASE_URL=/api
+      - VITE_APP_NAME=Customer Spending Insights
+      - VITE_ENABLE_MOCKS=true
+    working_dir: /workspace
+    command: sh -c "yarn install && yarn dev --host 0.0.0.0"
+    stdin_open: true
+    tty: true
+    labels:
+      - "com.example.description=Development environment for Customer Spending Insights Dashboard"
+      - "com.example.environment=development"

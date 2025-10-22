@@ -1,0 +1,61 @@
+# Dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+.pnp
+.pnp.js
+
+# Testing
+coverage
+.nyc_output
+
+# Production
+dist
+build
+
+# Misc
+.DS_Store
+.env
+.env.local
+.env.development
+.env.staging
+.env.production
+.env.test
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+.gitlab-ci.yml
+amplify.yml
+
+# Documentation
+*.md
+docs
+README*
+CHANGELOG*
+LICENSE
+CONTRIBUTING*
+SECURITY*
+
+# Storybook
+.storybook
+storybook-static
+
+# Playwright
+playwright-report
+test-results
+
+# Misc
+.eslintcache
+.prettierignore
