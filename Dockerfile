@@ -8,7 +8,10 @@ WORKDIR /workspace
 COPY package.json yarn.lock ./
 
 # Install dependencies with frozen lockfile
-RUN yarn install --frozen-lockfile --production=false && \
+RUN corepack enable && \
+    corepack prepare yarn@1.22.22 --activate && \
+    yarn --version && \
+    yarn install --frozen-lockfile --production=false && \
     yarn cache clean
 
 # Copy source code
@@ -32,25 +35,15 @@ COPY --from=builder /workspace/dist /usr/share/nginx/html
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Create non-root user
-RUN addgroup -g 1001 -S appuser && \
-    adduser -S -D -H -u 1001 -h /var/cache/nginx -s /sbin/nologin -G appuser appuser
-
-# Set permissions
-RUN chown -R appuser:appuser /usr/share/nginx/html && \
-    chown -R appuser:appuser /var/cache/nginx && \
-    chown -R appuser:appuser /var/log/nginx && \
-    chown -R appuser:appuser /etc/nginx/conf.d
-
-# Switch to non-root user
-USER appuser
+# Run NGINX with default user configuration. The master process runs as root
+# and worker processes drop privileges per the base image configuration.
 
 # Expose port
 EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8080/ || exit 1
+    CMD curl -fsS http://localhost:8080/ || exit 1
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]

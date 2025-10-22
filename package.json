@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --open --mode development",
+    "dev:docker": "vite --mode development --host 0.0.0.0 --strictPort",
     "dev:staging": "vite --open --mode staging",
     "build": "tsc -b && vite build --mode production",
     "build:staging": "tsc -b && vite build --mode staging",

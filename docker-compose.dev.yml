@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     build:
@@ -22,7 +20,7 @@ services:
       - VITE_APP_NAME=Customer Spending Insights
       - VITE_ENABLE_MOCKS=true
     working_dir: /workspace
-    command: sh -c "yarn install && npx msw init public && yarn dev --host 0.0.0.0"
+    command: sh -c "yarn install && npx msw init public && yarn dev:docker"
     stdin_open: true
     tty: true
     labels:
