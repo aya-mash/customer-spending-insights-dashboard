@@ -12,26 +12,22 @@ WORKDIR /workspace
 # - curl: downloading tools and healthchecks
 # - git: version control (required by VS Code)
 # - openssh-client: SSH support for git operations
-# - sudo: required for DevContainer permission fixes
 RUN apk add --no-cache \
     bash \
     ca-certificates \
     curl \
     git \
-    openssh-client \
-    sudo
+    openssh-client
 
 # Enable corepack and prepare yarn
 RUN corepack enable && \
     corepack prepare yarn@1.22.22 --activate
 
-# Configure sudo for node user (no password required)
-RUN echo "node ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/node && \
-    chmod 0440 /etc/sudoers.d/node
-
-# Create node user home directory and set permissions
+# Create node user home directory with proper permissions
+# Set workspace to be writable by node user (UID 1000)
 RUN mkdir -p /home/node/.ssh && \
-    chown -R node:node /home/node /workspace
+    chown -R node:node /home/node && \
+    chmod 777 /workspace
 
 # Switch to node user
 USER node
