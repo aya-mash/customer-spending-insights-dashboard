@@ -4,6 +4,9 @@ FROM node:20-alpine AS builder
 # Set working directory
 WORKDIR /workspace
 
+# Ensure bash and certs are available for devcontainer features and tooling
+RUN apk add --no-cache bash ca-certificates
+
 # Copy package files for dependency installation
 COPY package.json yarn.lock ./
 
