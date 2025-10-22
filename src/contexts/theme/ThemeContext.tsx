@@ -33,6 +33,10 @@ function resolveEffectiveTheme(mode: ThemeMode): EffectiveTheme {
 
 function applyTheme(effective: EffectiveTheme, mode: ThemeMode) {
   const root = document.documentElement;
+  const body = document.body;
+
+  // Add transitioning class to prevent flicker
+  body.classList.add('theme-transitioning');
 
   // ALWAYS set both attributes - never clear them
   root.dataset.theme = effective; // The effective theme (what's actually applied)
@@ -40,6 +44,13 @@ function applyTheme(effective: EffectiveTheme, mode: ThemeMode) {
 
   // Set color-scheme for native browser UI
   root.style.colorScheme = effective;
+
+  // Remove transitioning class after a frame to allow smooth transitions
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      body.classList.remove('theme-transitioning');
+    }, 0);
+  });
 
   // Dispatch custom event for components that need instant updates
   document.dispatchEvent(

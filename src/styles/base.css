@@ -543,3 +543,59 @@ hr {
   }
 }
 
+/* =============================================================================
+   ANIMATIONS - Smooth transitions and keyframe animations
+   ============================================================================= */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Smooth theme transitions */
+:root {
+  --transition-colors: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+
+/* Disable transitions during theme change to prevent flicker */
+body.theme-transitioning,
+body.theme-transitioning * {
+  transition: none !important;
+}
