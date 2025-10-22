@@ -10,8 +10,8 @@ import { makeLoadingFallback, overviewLoadingFallback } from './loadingFallback'
 function wrapGuard(route: typeof dashboardConfig.routes[number]) {
   const LazyComp = lazy(route.component);
   const { canActivate, fallback } = route;
-  // Provide an accessible, route-specific loading label so tests (and users with AT) can immediately identify loading state
-  const fallbackEl = route.path === '/' ? overviewLoadingFallback : makeLoadingFallback('Loading...');
+  // Use LoadingSpinner for route loading states
+  const fallbackEl = route.path === '/' ? overviewLoadingFallback : makeLoadingFallback('Loading');
   if (!canActivate) {
     return createElement(Suspense, { fallback: fallbackEl }, createElement(LazyComp));
   }
@@ -22,7 +22,7 @@ function wrapGuard(route: typeof dashboardConfig.routes[number]) {
     const GuardWrapper: React.FC = () => {
       const [allowed, setAllowed] = useState<boolean | null>(null);
       useEffect(() => { p.then(v => setAllowed(v)).catch(() => setAllowed(false)); }, []);
-      if (allowed === null) return makeLoadingFallback(`Checking access for ${route.path}`);
+      if (allowed === null) return makeLoadingFallback('Checking access');
       if (!allowed) return fallback ? createElement(Fragment, null, fallback) : null;
       return createElement(Suspense, { fallback: fallbackEl }, createElement(LazyComp));
     };

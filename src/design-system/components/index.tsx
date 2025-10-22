@@ -31,7 +31,8 @@ export { ContrastCheckerDev } from './ContrastCheckerFab';
 export { ErrorPage } from './ErrorPage';
 export { ErrorBoundary } from './ErrorBoundary';
 export { Logo } from './Logo';
-export { AsyncSection as Skeleton } from './Skeleton';
+export { Skeleton } from './Skeleton';
+export { LoadingSpinner } from './LoadingSpinner';
 
 // Default export for convenience
 import { Box } from './Box';

@@ -18,7 +18,7 @@ import {
   Activity
 } from 'lucide-react';
 import { useOverviewData } from './useOverviewData';
-import { formatCurrency } from '../../design-system';
+import { formatCurrency, Skeleton } from '../../design-system';
 import { 
   PageLayout, 
   Grid, 
@@ -401,7 +401,12 @@ function OverviewSkeleton() {
       <Grid columns={{ mobile: 1, tablet: 2, desktop: 4 }} gap={6}>
         {Array.from({ length: 8 }, (_, i) => `skeleton-${i}`).map((key) => (
           <Card key={key} padding={6}>
-            <div style={{ height: '160px', backgroundColor: 'var(--neutral-100)', borderRadius: 'var(--radius-md)' }} />
+            <Stack spacing={3}>
+              <Skeleton width="40px" height="40px" variant="circular" />
+              <Skeleton width="60%" height="16px" />
+              <Skeleton width="100%" height="32px" />
+              <Skeleton width="80%" height="14px" />
+            </Stack>
           </Card>
         ))}
       </Grid>

@@ -6,7 +6,7 @@
 
 import { useState } from 'react';
 import { useTransactionsData } from './useTransactionsData';
-import { formatCurrency } from '../../design-system';
+import { formatCurrency, Skeleton } from '../../design-system';
 import { 
   PageLayout, 
   Grid, 
@@ -121,8 +121,11 @@ export function Transactions() {
     return (
       <PageLayout>
         <Card padding={8}>
-          <Stack spacing={4} align="center">
-            <Text variant="body" color="muted">Loading transactions...</Text>
+          <Stack spacing={4}>
+            {/* Skeleton for filters */}
+            <Skeleton height="56px" borderRadius="md" />
+            {/* Skeleton for table */}
+            <Skeleton height="400px" borderRadius="md" />
           </Stack>
         </Card>
       </PageLayout>

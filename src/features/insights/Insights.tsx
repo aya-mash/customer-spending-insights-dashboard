@@ -1,6 +1,5 @@
-import { useState, useEffect, Suspense, lazy, type CSSProperties } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useReducedMotion } from '../../utils/accessibility';
 import { useInsightsData } from './useInsightsData';
 import { 
   PageLayout, 
@@ -12,7 +11,7 @@ import {
   Tabs
 } from '../../design-system/components/index';
 import { radius, spacing } from '../../design-system/tokens';
-import { useTheme } from '../../design-system';
+import { useTheme, Skeleton } from '../../design-system';
 import { DonutChart } from '../../design-system/components/DonutChart';
 
 // Lazy load trends chart
@@ -30,7 +29,6 @@ const TAB_LABELS: Record<TabKey, string> = {
 export function Insights() {
   const { text: textColors, surface } = useTheme();
   const [activeTab, setActiveTab] = useState<TabKey>('category');
-  const reducedMotion = useReducedMotion();
   const navigate = useNavigate();
   const location = useLocation();
   const customerId = 'user123';
@@ -116,7 +114,7 @@ export function Insights() {
                 </Text>
               </div>
 
-              {catLoading && <CategorySkeleton reducedMotion={reducedMotion} />}
+              {catLoading && <CategorySkeleton />}
 
               {!catLoading && catError && !trendError && (
                 <div role="alert" style={{
@@ -145,8 +143,8 @@ export function Insights() {
               )}
 
               {!catLoading && !catError && catData && catData.categories.length > 0 && (
-                <Suspense fallback={<CategorySkeleton reducedMotion={reducedMotion} />}>
-                  <DonutChart
+                <Suspense fallback={<CategorySkeleton />}>
+                  <DonutChart 
                     data={catData.categories}
                     total={catData.totalAmount}
                     onSegmentClick={(name: string) => 
@@ -192,7 +190,7 @@ export function Insights() {
                 </Text>
               </div>
 
-              {trendLoading && <TrendsSkeleton reducedMotion={reducedMotion} />}
+              {trendLoading && <TrendsSkeleton />}
 
               {!trendLoading && trendError && !catError && (
                 <div role="alert" style={{
@@ -221,7 +219,7 @@ export function Insights() {
               )}
 
               {!trendLoading && !trendError && trendData && trendData.trends.length > 0 && (
-                <Suspense fallback={<TrendsSkeleton reducedMotion={reducedMotion} />}>
+                <Suspense fallback={<TrendsSkeleton />}>
                   <TrendsChart data={trendData.trends} />
                 </Suspense>
               )}
@@ -248,15 +246,7 @@ export function Insights() {
 }
 
 // Loading skeletons
-function CategorySkeleton({ reducedMotion }: { readonly reducedMotion: boolean }) {
-  const shimmerStyle: CSSProperties = reducedMotion 
-    ? { animation: 'none' } 
-    : { 
-        animation: 'shimmer 1.5s infinite linear',
-        backgroundImage: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
-        backgroundSize: '200% 100%'
-      };
-
+function CategorySkeleton() {
   return (
     <div 
       aria-label="Loading category insights"
@@ -268,26 +258,20 @@ function CategorySkeleton({ reducedMotion }: { readonly reducedMotion: boolean }
       }}
     >
       {/* Donut skeleton */}
-      <div style={{
-        width: '200px',
-        height: '200px',
-        borderRadius: radius.full,
-        backgroundColor: '#f0f0f0',
-        margin: '0 auto',
-        ...shimmerStyle
-      }} />
+      <Skeleton 
+        width="200px" 
+        height="200px" 
+        variant="circular" 
+        style={{ margin: '0 auto' }} 
+      />
       
       {/* Legend skeleton */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[3] }}>
         {Array.from({ length: 5 }, (_, i) => (
-          <div 
+          <Skeleton 
             key={`category-skeleton-${i}`}
-            style={{
-              height: '32px',
-              backgroundColor: '#f0f0f0',
-              borderRadius: radius.sm,
-              ...shimmerStyle
-            }}
+            height="32px"
+            borderRadius="sm"
           />
         ))}
       </div>
@@ -295,15 +279,7 @@ function CategorySkeleton({ reducedMotion }: { readonly reducedMotion: boolean }
   );
 }
 
-function TrendsSkeleton({ reducedMotion }: { readonly reducedMotion: boolean }) {
-  const shimmerStyle: CSSProperties = reducedMotion 
-    ? { animation: 'none' } 
-    : { 
-        animation: 'shimmer 1.5s infinite linear',
-        backgroundImage: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
-        backgroundSize: '200% 100%'
-      };
-
+function TrendsSkeleton() {
   return (
     <div 
       aria-label="Loading trends insights"
@@ -315,12 +291,7 @@ function TrendsSkeleton({ reducedMotion }: { readonly reducedMotion: boolean }) 
       }}
     >
       {/* Chart line skeleton */}
-      <div style={{
-        height: '300px',
-        backgroundColor: '#f0f0f0',
-        borderRadius: radius.md,
-        ...shimmerStyle
-      }} />
+      <Skeleton height="300px" borderRadius="md" />
       
       {/* X-axis labels skeleton */}
       <div style={{ 
@@ -329,15 +300,11 @@ function TrendsSkeleton({ reducedMotion }: { readonly reducedMotion: boolean }) 
         gap: spacing[2] 
       }}>
         {Array.from({ length: 6 }, (_, i) => (
-          <div 
+          <Skeleton 
             key={`trends-skeleton-${i}`}
-            style={{
-              width: '60px',
-              height: '20px',
-              backgroundColor: '#f0f0f0',
-              borderRadius: radius.sm,
-              ...shimmerStyle
-            }}
+            width="60px"
+            height="20px"
+            borderRadius="sm"
           />
         ))}
       </div>
