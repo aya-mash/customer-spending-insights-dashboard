@@ -18,7 +18,7 @@ function renderIcon(Icon: typeof LayoutDashboard) {
 
 export const dashboardConfig: DashboardConfig = {
   branding: {
-    title: "Spending Insights",
+    title: "Customer Insights Dashboard",
     logo: renderLogo(),
     homeUrl: "/",
   },
@@ -64,14 +64,14 @@ export const dashboardConfig: DashboardConfig = {
   routes: [
     {
       path: "/",
-      label: "Overview",
+      label: "Spending Overview",
       component: () =>
         import("../routes/OverviewRoute").then((m) => ({ default: m.default })),
       prefetch: () => import("../routes/OverviewRoute"),
     },
     {
       path: "/transactions",
-      label: "Transactions",
+      label: "Spending Transactions",
       component: () =>
         import("../routes/TransactionsRoute").then((m) => ({
           default: m.default,
@@ -80,7 +80,7 @@ export const dashboardConfig: DashboardConfig = {
     },
     {
       path: "/insights",
-      label: "Insights",
+      label: "Spending Insights",
       component: () =>
         import("../routes/InsightsRoute").then((m) => ({ default: m.default })),
       prefetch: () => import("../routes/InsightsRoute"),

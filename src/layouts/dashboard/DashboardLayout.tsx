@@ -52,7 +52,8 @@ export function DashboardLayout() {
   const location = useLocation();
   const { brand, surface, text: textColors, mode, setMode } = useTheme();
 
-  const pageTitle = PAGE_TITLES[location.pathname] || "Insights";
+  const pageTitle =
+    "Spending " + (PAGE_TITLES[location.pathname] || "Insights");
 
   // Close settings on mobile viewport change
   useEffect(() => {

@@ -20,6 +20,6 @@ export function Logo() {
     return () => document.removeEventListener('themechange', onThemeChange);
   }, []);
   return (
-    <img src={src} alt="Spending Insights" className="app-logo" />
+    <img src={src} alt="Dashboard Logo" className="app-logo" />
   );
 }
