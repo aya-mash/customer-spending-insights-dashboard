@@ -41,8 +41,9 @@ Types: `feat`, `fix`, `chore`, `refactor`, `docs`, `test`, `perf`, `ci`, `build`
 
 ## Local Setup
 1. Install dependencies: `yarn install`.
-2. Start dev server: `yarn dev`.
-3. Run tests: `yarn test`.
+2. Initialize MSW (Mock Service Worker): `npx msw init public` - This generates `public/mockServiceWorker.js` which is required for mocking but not committed to version control.
+3. Start dev server: `yarn dev`.
+4. Run tests: `yarn test`.
 
 ## Code Owners
 All paths are owned by @aya-mash; please request review as needed.
