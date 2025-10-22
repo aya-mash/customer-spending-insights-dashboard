@@ -6,16 +6,26 @@ FROM node:20-alpine AS development
 # Set working directory
 WORKDIR /workspace
 
-# Install bash and ca-certificates for devcontainer features and tooling
-# Git will be installed by devcontainer features
-RUN apk add --no-cache bash ca-certificates
+# Install essential development tools for Alpine Linux
+# - bash: required for VS Code terminal and scripts
+# - ca-certificates: SSL/TLS support
+# - curl: downloading tools and healthchecks
+# - git: version control (required by VS Code)
+# - openssh-client: SSH support for git operations
+RUN apk add --no-cache \
+    bash \
+    ca-certificates \
+    curl \
+    git \
+    openssh-client
 
 # Enable corepack and prepare yarn
 RUN corepack enable && \
     corepack prepare yarn@1.22.22 --activate
 
 # Create node user home directory and set permissions
-RUN mkdir -p /home/node && chown -R node:node /home/node /workspace
+RUN mkdir -p /home/node/.ssh && \
+    chown -R node:node /home/node /workspace
 
 # Switch to node user
 USER node
