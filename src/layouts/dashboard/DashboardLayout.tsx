@@ -5,6 +5,7 @@
 
 import { useState, useContext, type CSSProperties } from "react";
 import { Outlet, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Settings2,
   Home,
@@ -51,6 +52,7 @@ export function DashboardLayout() {
   const isMobile = breakpoint === "mobile";
   const location = useLocation();
   const { brand, surface, text: textColors, mode, setMode } = useTheme();
+  const { t } = useTranslation();
 
   const pageTitle =
     "Spending " + (PAGE_TITLES[location.pathname] || "Insights");
@@ -58,19 +60,19 @@ export function DashboardLayout() {
   const navItems: NavItem[] = [
     {
       id: "overview",
-      label: "Overview",
+      label: t("nav.overview"),
       href: "/",
       icon: <Home size={20} />,
     },
     {
       id: "insights",
-      label: "Insights",
+      label: t("nav.insights"),
       href: "/insights",
       icon: <TrendingUp size={20} />,
     },
     {
       id: "transactions",
-      label: "Transactions",
+      label: t("nav.transactions"),
       href: "/transactions",
       icon: <CreditCard size={20} />,
     },

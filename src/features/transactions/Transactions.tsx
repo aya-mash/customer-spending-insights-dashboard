@@ -5,6 +5,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTransactionsData } from './useTransactionsData';
 import { formatCurrency, Skeleton, useBreakpoint } from '../../design-system';
 import { formatDate } from '../../utils/dates';
@@ -29,28 +30,29 @@ import { Search } from 'lucide-react';
 import type { PeriodPreset, Transaction } from '../../data/models';
 
 const periodOptions: SelectOption[] = [
-  { label: 'All time', value: '' },
-  { label: '7 Days', value: '7d' },
-  { label: '30 Days', value: '30d' },
-  { label: '90 Days', value: '90d' },
-  { label: 'Year', value: '1y' },
+  { label: 'transactions.allTime', value: '' },
+  { label: 'transactions.7days', value: '7d' },
+  { label: 'transactions.30days', value: '30d' },
+  { label: 'transactions.90days', value: '90d' },
+  { label: 'transactions.1year', value: '1y' },
 ];
 
 const categoryOptions: SelectOption[] = [
-  { label: 'All categories', value: '' },
-  { label: 'Food & Dining', value: 'Food & Dining' },
-  { label: 'Transportation', value: 'Transportation' },
-  { label: 'Shopping', value: 'Shopping' },
-  { label: 'Entertainment', value: 'Entertainment' },
-  { label: 'Bills & Utilities', value: 'Bills & Utilities' },
-  { label: 'Healthcare', value: 'Healthcare' },
-  { label: 'Travel', value: 'Travel' },
-  { label: 'Education', value: 'Education' },
-  { label: 'Personal Care', value: 'Personal Care' },
-  { label: 'Other', value: 'Other' },
+  { label: 'transactions.allCategories', value: '' },
+  { label: 'transactions.categoryFood', value: 'Food & Dining' },
+  { label: 'transactions.categoryTransportation', value: 'Transportation' },
+  { label: 'transactions.categoryShopping', value: 'Shopping' },
+  { label: 'transactions.categoryEntertainment', value: 'Entertainment' },
+  { label: 'transactions.categoryBills', value: 'Bills & Utilities' },
+  { label: 'transactions.categoryHealthcare', value: 'Healthcare' },
+  { label: 'transactions.categoryTravel', value: 'Travel' },
+  { label: 'transactions.categoryEducation', value: 'Education' },
+  { label: 'transactions.categoryPersonalCare', value: 'Personal Care' },
+  { label: 'transactions.categoryOther', value: 'Other' },
 ];
 
 export function Transactions() {
+  const { t } = useTranslation();
   const customerId = 'user123';
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === 'mobile';
@@ -74,6 +76,17 @@ export function Transactions() {
 
   const hasActiveFilters = !!(filters.category || filters.period);
 
+  // Translate options
+  const translatedPeriodOptions = periodOptions.map(opt => ({
+    ...opt,
+    label: t(opt.label)
+  }));
+
+  const translatedCategoryOptions = categoryOptions.map(opt => ({
+    ...opt,
+    label: t(opt.label)
+  }));
+
   // Filter data by search query (client-side search across all columns)
   const filteredData = searchQuery
     ? data.filter(txn =>
@@ -88,18 +101,18 @@ export function Transactions() {
   const columns: TableColumn<Transaction>[] = [
     {
       key: 'date',
-      label: 'Date',
+      label: t('transactions.date'),
       sortable: true,
       render: (value: string) => formatDate(value),
     },
     {
       key: 'merchant',
-      label: 'Merchant',
+      label: t('transactions.merchant'),
       sortable: true,
     },
     {
       key: 'category',
-      label: 'Category',
+      label: t('transactions.category'),
       sortable: true,
       render: (value: string) => (
         <Badge 
@@ -112,7 +125,7 @@ export function Transactions() {
     },
     {
       key: 'amount',
-      label: 'Amount',
+      label: t('transactions.amount'),
       sortable: true,
       align: 'right',
       render: (value: number) => (
@@ -150,7 +163,7 @@ export function Transactions() {
         <Card padding={8}>
           <Stack spacing={4} align="center">
             <Text variant="body" color="muted">{error}</Text>
-            <Button variant="secondary" size="medium" onClick={loadData}>Retry</Button>
+            <Button variant="secondary" size="medium" onClick={loadData}>{t('common.retry')}</Button>
           </Stack>
         </Card>
       </PageLayout>
@@ -167,8 +180,8 @@ export function Transactions() {
             <Grid columns={{ mobile: 1, tablet: 2, desktop: 4 }} gap={3}>
               <Select
                 id="category-filter"
-                label="Category"
-                options={categoryOptions}
+                label={t('transactions.category')}
+                options={translatedCategoryOptions}
                 value={filters.category || ''}
                 onChange={(e) => updateFilters({ category: e.target.value || undefined })}
                 fullWidth
@@ -176,8 +189,8 @@ export function Transactions() {
 
               <Select
                 id="period-filter"
-                label="Period"
-                options={periodOptions}
+                label={t('transactions.period')}
+                options={translatedPeriodOptions}
                 value={filters.period || ''}
                 onChange={(e) => updateFilters({ period: (e.target.value as PeriodPreset) || undefined })}
                 fullWidth
@@ -187,8 +200,8 @@ export function Transactions() {
                 <div style={{ gridColumn: 'span 2' }}>
                   <TextField
                     id="search-filter"
-                    label="Search"
-                    placeholder="Search transactions..."
+                    label={t('transactions.search')}
+                    placeholder={t('transactions.searchPlaceholder')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     startIcon={<Search size={18} />}
@@ -211,18 +224,18 @@ export function Transactions() {
                   aria-live="polite"
                   aria-atomic="true"
                 >
-                  Filters active: {[filters.category, filters.period].filter(Boolean).length}
+                  {t('transactions.filtersActive')}: {[filters.category, filters.period].filter(Boolean).length}
                 </div>
                 <Stack direction="horizontal" spacing={3} wrap>
                   {filters.category && (
                     <FilterChip
-                      label={`Category: ${filters.category}`}
+                      label={`${t('transactions.category')}: ${filters.category}`}
                       onRemove={() => updateFilters({ category: undefined })}
                     />
                   )}
                   {filters.period && (
                     <FilterChip
-                      label={`Period: ${periodOptions.find(o => o.value === filters.period)?.label}`}
+                      label={`${t('transactions.period')}: ${translatedPeriodOptions.find(o => o.value === filters.period)?.label}`}
                       onRemove={() => updateFilters({ period: undefined })}
                     />
                   )}
@@ -231,7 +244,7 @@ export function Transactions() {
                     size="small" 
                     onClick={clearFilters}
                   >
-                    Clear all
+                    {t('transactions.clearAll')}
                   </Button>
                 </Stack>
               </div>
@@ -261,7 +274,7 @@ export function Transactions() {
               {filteredData.length === 0 ? (
                 <Card padding={8}>
                   <Text variant="body" color="muted" style={{ textAlign: 'center' }}>
-                    No transactions found.
+                    {t('transactions.noTransactions')}
                   </Text>
                 </Card>
               ) : (
@@ -347,7 +360,7 @@ export function Transactions() {
                 sortKey={sortField}
                 sortDirection={sortDirection}
                 zebraStripe
-                emptyMessage="No transactions found."
+                emptyMessage={t('transactions.noTransactions')}
                 stickyHeader
                 maxHeight="100%"
                 aria-label="Transactions table"

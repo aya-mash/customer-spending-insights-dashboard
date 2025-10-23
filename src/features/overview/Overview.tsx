@@ -6,6 +6,7 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { 
   TrendingUp, 
   CreditCard, 
@@ -39,21 +40,22 @@ import type { PeriodPreset } from '../../data/models';
 import { GoalDialog } from './GoalDialog';
 
 const PERIODS: Array<{ key: PeriodPreset; label: string }> = [
-  { key: '7d', label: '7 Days' },
-  { key: '30d', label: '30 Days' },
-  { key: '90d', label: '90 Days' },
-  { key: '1y', label: '1 Year' },
+  { key: '7d', label: 'overview.period7d' },
+  { key: '30d', label: 'overview.period30d' },
+  { key: '90d', label: 'overview.period90d' },
+  { key: '1y', label: 'overview.period1y' },
 ];
 
 // Period selector component (extracted outside Overview)
 interface PeriodSelectorProps {
   activePeriod: PeriodPreset;
   onPeriodChange: (period: PeriodPreset) => void;
+  t: (key: string) => string;
 }
 
-const PeriodSelector = ({ activePeriod, onPeriodChange }: PeriodSelectorProps) => (
+const PeriodSelector = ({ activePeriod, onPeriodChange, t }: PeriodSelectorProps) => (
   <Tabs
-    items={PERIODS.map(p => ({ key: p.key, label: p.label }))}
+    items={PERIODS.map(p => ({ key: p.key, label: t(p.label) }))}
     activeTab={activePeriod}
     onChange={(key) => onPeriodChange(key as PeriodPreset)}
     aria-label="Time period selection"
@@ -61,6 +63,7 @@ const PeriodSelector = ({ activePeriod, onPeriodChange }: PeriodSelectorProps) =
 );
 
 export function Overview() {
+  const { t } = useTranslation();
   const [activePeriod, setActivePeriod] = useState<PeriodPreset>('30d');
   const [showGoalDialog, setShowGoalDialog] = useState(false);
   const [editingGoal, setEditingGoal] = useState<typeof goalsData[0] | null>(null);
@@ -116,15 +119,15 @@ export function Overview() {
   return (
     <PageLayout
       // title="Spending Overview"
-      subtitle={`View your financial summary for the past ${PERIODS.find(p => p.key === activePeriod)?.label.toLowerCase()}`}
-      actions={<PeriodSelector activePeriod={activePeriod} onPeriodChange={setActivePeriod} />}
+      subtitle={`View your financial summary for the past ${t(PERIODS.find(p => p.key === activePeriod)?.label || '').toLowerCase()}`}
+      actions={<PeriodSelector activePeriod={activePeriod} onPeriodChange={setActivePeriod} t={t} />}
     >
       {/* If some data loaded but at least one resource failed, surface an inline alert with a retry */}
       {isError && hasPartialData && (
         <Card padding={4}>
           <Stack spacing={3} align="center">
-            <Text variant="bodySm" color="muted">Some data failed to load. Showing partial results.</Text>
-            <Button onClick={retry} variant="secondary" size="small">Retry</Button>
+            <Text variant="bodySm" color="muted">{t('overview.partialError')}</Text>
+            <Button onClick={retry} variant="secondary" size="small">{t('common.retry')}</Button>
           </Stack>
         </Card>
       )}
@@ -135,7 +138,7 @@ export function Overview() {
       >
         {/* Card 1: Total Spent */}
         <MetricCard
-          label="Total Spent"
+          label={t('overview.totalSpent')}
           value={formatCurrency(totalSpent)}
           icon={<BanknoteArrowDown size={24} />}
           trend={spentChange === 0 ? undefined : {
@@ -148,7 +151,7 @@ export function Overview() {
 
         {/* Card 2: Transaction Count */}
         <MetricCard
-          label="Transactions"
+          label={t('overview.transactions')}
           value={transactionCount}
           icon={<CreditCard size={24} />}
           variant="default"
@@ -156,7 +159,7 @@ export function Overview() {
 
         {/* Card 3: Average Transaction */}
         <MetricCard
-          label="Average Transaction"
+          label={t('overview.avgTransaction')}
           value={formatCurrency(averageTransaction)}
           icon={<Activity size={24} />}
           variant="default"
@@ -178,7 +181,7 @@ export function Overview() {
               <ShoppingBag size={24} />
             </div>
             <Text variant="bodySm" color="muted" style={{ textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 500 }}>
-              Top Category
+              {t('overview.topCategory')}
             </Text>
             <Heading level={3}>{topCategory}</Heading>
             <Text variant="body" color="muted">{formatCurrency(topCategoryAmount)}</Text>
@@ -187,7 +190,7 @@ export function Overview() {
 
         {/* Card 5: Largest Transaction */}
         <MetricCard
-          label="Largest Transaction"
+          label={t('overview.largestTransaction')}
           value={formatCurrency(largestTransaction)}
           icon={<TrendingUp size={24} />}
           variant="warning"
@@ -220,7 +223,7 @@ export function Overview() {
 
         {/* Card 7: Budget Status */}
         <MetricCard
-          label="Budget Status"
+          label={t('overview.budgetStatus')}
           value={`${budgetStatus.toFixed(0)}%`}
           icon={<Target size={24} />}
           variant={(() => {
@@ -246,10 +249,10 @@ export function Overview() {
               <Calendar size={24} />
             </div>
             <Text variant="bodySm" color="muted" style={{ textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 500 }}>
-              Time Period
+              {t('overview.period')}
             </Text>
-            <Heading level={3}>{PERIODS.find(p => p.key === activePeriod)?.label}</Heading>
-            <Text variant="bodySm" color="muted">Selected range</Text>
+            <Heading level={3}>{t(PERIODS.find(p => p.key === activePeriod)?.label || '')}</Heading>
+            <Text variant="bodySm" color="muted">{t('overview.selectedRange')}</Text>
           </Stack>
         </Card>
       </Grid>
@@ -258,13 +261,13 @@ export function Overview() {
 
       {/* Charts Section */}
       <Stack spacing={6}>
-        <Heading level={2}>Spending Analysis</Heading>
+        <Heading level={2}>{t('overview.categoryBreakdown')}</Heading>
         
         <Grid columns={{ mobile: 1, desktop: 2 }} gap={6}>
           {/* Category Breakdown Chart */}
           <Card padding={6}>
             <Stack spacing={4}>
-              <Heading level={3}>Category Breakdown</Heading>
+              <Heading level={3}>{t('overview.categoryBreakdown')}</Heading>
               {categoryData && categoryData.length > 0 ? (
                 <DonutChart
                   data={categoryData}
@@ -272,7 +275,7 @@ export function Overview() {
                   onSegmentClick={(name: string) => navigate(`/transactions?category=${encodeURIComponent(name)}`)}
                 />
               ) : (
-                <Text variant="body" color="muted">No category data available</Text>
+                <Text variant="body" color="muted">{t('overview.noCategoryData')}</Text>
               )}
             </Stack>
           </Card>
@@ -281,9 +284,9 @@ export function Overview() {
           <Card padding={6}>
             <Stack spacing={4}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Heading level={3}>Spending Goals</Heading>
+                <Heading level={3}>{t('overview.spendingGoals')}</Heading>
                 <Button variant="ghost" size="small" onClick={() => setShowGoalDialog(true)}>
-                  + Add Goal
+                  {t('overview.addGoal')}
                 </Button>
               </div>
               
@@ -314,7 +317,7 @@ export function Overview() {
                           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                             <Badge variant="default">
                               <Clock size={12} style={{ marginRight: '4px' }} />
-                              {goal.daysRemaining}d left
+                              {goal.daysRemaining}{t('overview.daysLeft')}
                             </Badge>
                             <Badge variant={progressVariant}>
                               {progress.toFixed(0)}%
@@ -339,7 +342,7 @@ export function Overview() {
                         </div>
                         
                         <Text variant="bodySm" color="muted">
-                          {formatCurrency(goal.currentSpent)} of {formatCurrency(goal.monthlyBudget)}
+                          {formatCurrency(goal.currentSpent)} {t('overview.of')} {formatCurrency(goal.monthlyBudget)}
                         </Text>
                       </Stack>
                     );
@@ -347,8 +350,8 @@ export function Overview() {
                 </Stack>
               ) : (
                 <Stack spacing={3} align="center">
-                  <Text variant="body" color="muted">No spending goals set</Text>
-                  <Button variant="secondary" size="small">Set Goals</Button>
+                  <Text variant="body" color="muted">{t('overview.noGoals')}</Text>
+                  <Button variant="secondary" size="small" onClick={() => setShowGoalDialog(true)}>{t('overview.manage')}</Button>
                 </Stack>
               )}
             </Stack>
@@ -361,7 +364,7 @@ export function Overview() {
       {/* Recent Transactions */}
       <Stack spacing={4}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Heading level={2}>Recent Transactions</Heading>
+          <Heading level={2}>{t('overview.recentTransactions')}</Heading>
           <Button 
             variant="ghost" 
             size="small"
@@ -400,7 +403,7 @@ export function Overview() {
           <Card padding={8}>
             <Stack spacing={2} align="center">
               <Clock size={48} style={{ color: 'var(--neutral-400)', strokeWidth: 1.5 }} />
-              <Text variant="body" color="muted">No recent transactions</Text>
+              <Text variant="body" color="muted">{t('overview.noRecentTransactions')}</Text>
             </Stack>
           </Card>
         )}

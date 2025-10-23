@@ -1,5 +1,6 @@
 import { useState, useEffect, Suspense, lazy, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useInsightsData } from './useInsightsData';
 import { 
   PageLayout, 
@@ -24,19 +25,20 @@ const TrendsChart = lazy(() => import('../../design-system/components/TrendsChar
 const TAB_KEYS = ['compare', 'category', 'trends', 'monthly', 'merchants'] as const;
 type TabKey = typeof TAB_KEYS[number];
 
-const TAB_LABELS: Record<TabKey, string> = {
-  compare: 'Compare',
-  category: 'Category',
-  trends: 'Trends',
-  monthly: 'Monthly',
-  merchants: 'Merchants'
-};
-
 export function Insights() {
+  const { t } = useTranslation();
   const { text: textColors, surface } = useTheme();
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === 'mobile';
   const [activeTab, setActiveTab] = useState<TabKey>('compare');
+  
+  const TAB_LABELS: Record<TabKey, string> = {
+    compare: t('insights.compare'),
+    category: t('insights.category'),
+    trends: t('insights.trends'),
+    monthly: t('insights.monthly'),
+    merchants: t('insights.merchants')
+  };
   const navigate = useNavigate();
   const location = useLocation();
   const customerId = 'user123';
@@ -118,7 +120,7 @@ export function Insights() {
           }}>
             <Stack direction="vertical" spacing={3}>
               <Text variant="bodySm" style={{ color: 'var(--color-error-dark)', fontWeight: 600 }}>
-                Failed to load insights data. Please retry.
+                {t('insights.error')}
               </Text>
               <div>
                 <Button 
@@ -131,7 +133,7 @@ export function Insights() {
                     border: '1px solid var(--color-error)'
                   }}
                 >
-                  Retry All
+                  {t('common.retry')}
                 </Button>
               </div>
             </Stack>
@@ -187,7 +189,7 @@ export function Insights() {
                         alignSelf: 'flex-start'
                       }}
                     >
-                      Retry
+                      {t('common.retry')}
                     </Button>
                   </Stack>
                 </div>
@@ -215,7 +217,7 @@ export function Insights() {
                   }}
                 >
                   <div style={{ fontSize: '48px', marginBottom: spacing[4] }}>🍃</div>
-                  <Text variant="bodySm">No data for this period.</Text>
+                  <Text variant="bodySm">{t('insights.noData')}</Text>
                 </output>
               )}
             </Stack>
@@ -263,7 +265,7 @@ export function Insights() {
                         alignSelf: 'flex-start'
                       }}
                     >
-                      Retry
+                      {t('common.retry')}
                     </Button>
                   </Stack>
                 </div>
@@ -285,7 +287,7 @@ export function Insights() {
                   }}
                 >
                   <div style={{ fontSize: '48px', marginBottom: spacing[4] }}>📉</div>
-                  <Text variant="bodySm">No data for this period.</Text>
+                  <Text variant="bodySm">{t('insights.noData')}</Text>
                 </output>
               )}
             </Stack>
@@ -370,7 +372,7 @@ export function Insights() {
                   }}
                 >
                   <div style={{ fontSize: '48px', marginBottom: spacing[4] }}>📅</div>
-                  <Text variant="bodySm">No monthly data available.</Text>
+                  <Text variant="bodySm">{t('insights.noData')}</Text>
                 </output>
               )}
             </Stack>
@@ -477,7 +479,7 @@ export function Insights() {
                   }}
                 >
                   <div style={{ fontSize: '48px', marginBottom: spacing[4] }}>🏪</div>
-                  <Text variant="bodySm">No merchant data available.</Text>
+                  <Text variant="bodySm">{t('insights.noData')}</Text>
                 </output>
               )}
             </Stack>
@@ -525,13 +527,13 @@ export function Insights() {
                       }}
                     >
                       <Text variant="bodySm" style={{ color: textColors.secondary, marginBottom: spacing[2] }}>
-                        Current Month
+                        {t('insights.currentMonth')}
                       </Text>
                       <Text variant="bodyLg" style={{ fontWeight: 700, fontSize: isMobile ? '24px' : '32px', marginBottom: spacing[3] }}>
                         {formatRand(comparisonData.current.totalSpent)}
                       </Text>
                       <Text variant="bodySm" style={{ color: textColors.secondary }}>
-                        {comparisonData.current.transactionCount} transactions
+                        {comparisonData.current.transactionCount} {t('overview.transactions').toLowerCase()}
                       </Text>
                     </div>
 
@@ -545,13 +547,13 @@ export function Insights() {
                       }}
                     >
                       <Text variant="bodySm" style={{ color: textColors.secondary, marginBottom: spacing[2] }}>
-                        Previous Month
+                        {t('insights.previousMonth')}
                       </Text>
                       <Text variant="bodyLg" style={{ fontWeight: 700, fontSize: isMobile ? '24px' : '32px', marginBottom: spacing[3] }}>
                         {formatRand(comparisonData.previous.totalSpent)}
                       </Text>
                       <Text variant="bodySm" style={{ color: textColors.secondary }}>
-                        {comparisonData.previous.transactionCount} transactions
+                        {comparisonData.previous.transactionCount} {t('overview.transactions').toLowerCase()}
                       </Text>
                     </div>
                   </div>
@@ -587,7 +589,7 @@ export function Insights() {
                         {comparisonData.diff > 0 ? '+' : ''}{formatRand(Math.abs(comparisonData.diff))}
                       </Text>
                       <Text variant="bodySm" style={{ color: textColors.secondary, marginTop: spacing[1] }}>
-                        {Math.abs(comparisonData.percentChange).toFixed(1)}% {comparisonData.isIncrease ? 'increase' : comparisonData.diff < 0 ? 'decrease' : 'no change'}
+                        {Math.abs(comparisonData.percentChange).toFixed(1)}% {comparisonData.isIncrease ? t('insights.increase') : comparisonData.diff < 0 ? t('insights.decrease') : t('insights.noChange')}
                       </Text>
                     </div>
                   </div>

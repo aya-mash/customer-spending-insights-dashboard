@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X } from 'lucide-react';
 import {
   Dialog,
@@ -39,6 +40,7 @@ const categoryOptions: SelectOption[] = [
 ];
 
 export function GoalDialog({ isOpen, onClose, onSave, existingGoal, categories }: Readonly<GoalDialogProps>) {
+  const { t } = useTranslation();
   const [category, setCategory] = useState('');
   const [monthlyBudget, setMonthlyBudget] = useState('');
   const [errors, setErrors] = useState<{ category?: string; monthlyBudget?: string }>({});
@@ -62,18 +64,18 @@ export function GoalDialog({ isOpen, onClose, onSave, existingGoal, categories }
     const newErrors: { category?: string; monthlyBudget?: string } = {};
 
     if (!category) {
-      newErrors.category = 'Category is required';
+      newErrors.category = t('goals.categoryRequired');
     } else if (!existingGoal && categories.includes(category)) {
-      newErrors.category = 'Goal already exists for this category';
+      newErrors.category = t('goals.categoryExists');
     }
 
     const budgetNum = Number.parseFloat(monthlyBudget);
     if (!monthlyBudget) {
-      newErrors.monthlyBudget = 'Budget is required';
+      newErrors.monthlyBudget = t('goals.budgetRequired');
     } else if (Number.isNaN(budgetNum) || budgetNum <= 0) {
-      newErrors.monthlyBudget = 'Budget must be a positive number';
+      newErrors.monthlyBudget = t('goals.budgetPositive');
     } else if (budgetNum > 1000000) {
-      newErrors.monthlyBudget = 'Budget cannot exceed R1,000,000';
+      newErrors.monthlyBudget = t('goals.budgetMax');
     }
 
     setErrors(newErrors);
@@ -108,7 +110,7 @@ export function GoalDialog({ isOpen, onClose, onSave, existingGoal, categories }
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Heading level={3}>
-            {existingGoal ? 'Edit Goal' : 'Create Goal'}
+            {existingGoal ? t('goals.edit') : t('goals.create')}
           </Heading>
           <button
             onClick={handleCancel}
@@ -130,7 +132,7 @@ export function GoalDialog({ isOpen, onClose, onSave, existingGoal, categories }
         <Stack spacing={4}>
           <Select
             id="goal-category"
-            label="Category"
+            label={t('goals.category')}
             options={categoryOptions}
             value={category}
             onChange={(e) => setCategory(e.target.value)}
@@ -141,7 +143,7 @@ export function GoalDialog({ isOpen, onClose, onSave, existingGoal, categories }
 
           <TextField
             id="goal-budget"
-            label="Monthly Budget (R)"
+            label={t('goals.monthlyBudget')}
             type="number"
             value={monthlyBudget}
             onChange={(e) => setMonthlyBudget(e.target.value)}
@@ -159,7 +161,7 @@ export function GoalDialog({ isOpen, onClose, onSave, existingGoal, categories }
               borderRadius: '8px'
             }}>
               <Text variant="bodySm" color="muted">
-                Current spending: <strong>R{existingGoal.currentSpent.toFixed(2)}</strong>
+                {t('goals.currentSpending')}: <strong>R{existingGoal.currentSpent.toFixed(2)}</strong>
               </Text>
             </div>
           )}
@@ -168,10 +170,10 @@ export function GoalDialog({ isOpen, onClose, onSave, existingGoal, categories }
         {/* Actions */}
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
           <Button variant="ghost" size="medium" onClick={handleCancel}>
-            Cancel
+            {t('goals.cancel')}
           </Button>
           <Button variant="primary" size="medium" onClick={handleSave}>
-            {existingGoal ? 'Save Changes' : 'Create Goal'}
+            {existingGoal ? t('goals.save') : t('goals.create')}
           </Button>
         </div>
       </Stack>

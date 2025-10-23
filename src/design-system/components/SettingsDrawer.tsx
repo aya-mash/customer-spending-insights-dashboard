@@ -6,12 +6,14 @@
 import { forwardRef, useEffect, useRef, type CSSProperties } from 'react';
 import { Settings2, X, Sun, Monitor, Moon, Palette } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { spacingNum, radius, transition, easing, zIndex } from '../tokens';
 import { useTheme } from '../index';
 import { Heading } from './Heading';
 import { Stack } from './Stack';
 import { Text } from './Text';
 import { RadioGroup, type RadioOption } from './RadioGroup';
+import { languages, type LanguageCode } from '../../i18n/config';
 
 type ThemeMode = 'light' | 'dark' | 'system';
 
@@ -31,6 +33,7 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
     const panelRef = useRef<HTMLElement | null>(null);
     const navigate = useNavigate();
     const { brand, surface, text: textColors } = useTheme();
+    const { t, i18n } = useTranslation();
 
     // Close on Escape
     useEffect(() => {
@@ -123,20 +126,26 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
     const themeOptions: RadioOption[] = [
       { 
         value: 'light', 
-        label: 'Light', 
+        label: t('settings.light'), 
         icon: <Sun size={20} />,
       },
       { 
         value: 'system', 
-        label: 'System', 
+        label: t('settings.system'), 
         icon: <Monitor size={20} />,
       },
       { 
         value: 'dark', 
-        label: 'Dark', 
+        label: t('settings.dark'), 
         icon: <Moon size={20} />,
       },
     ];
+
+    // Define language options for RadioGroup
+    const languageOptions: RadioOption[] = Object.entries(languages).map(([code, name]) => ({
+      value: code,
+      label: name,
+    }));
 
     return (
       <>
@@ -164,12 +173,12 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
             <div style={titleGroupStyles}>
               <Settings2 size={20} color={brand.primary} aria-hidden="true" />
               <Heading level={2} style={{ fontSize: '18px', margin: 0 }}>
-                Settings
+                {t('settings.title')}
               </Heading>
             </div>
             <button
               type="button"
-              aria-label="Close settings panel"
+              aria-label={t('common.close')}
               style={closeButtonStyles}
               onClick={onClose}
               onMouseEnter={(e) => {
@@ -189,21 +198,35 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
               {/* Theme Section - Using RadioGroup from design system */}
               <Stack spacing={3}>
                 <Text variant="body" weight="semibold" style={{ fontSize: '14px' }}>
-                  Appearance
+                  {t('settings.theme')}
                 </Text>
                 <RadioGroup
                   name="theme-mode"
                   options={themeOptions}
                   value={mode}
                   onChange={(value) => onModeChange(value as 'light' | 'dark' | 'system')}
-                  aria-label="Color theme"
+                  aria-label={t('settings.theme')}
                 />
               </Stack>
 
-              {/* Design System Section */}
+              {/* Language Section */}
               <Stack spacing={3}>
                 <Text variant="body" weight="semibold" style={{ fontSize: '14px' }}>
-                  Design System
+                  {t('settings.language')}
+                </Text>
+                <RadioGroup
+                  name="language"
+                  options={languageOptions}
+                  value={i18n.language}
+                  onChange={(value) => i18n.changeLanguage(value as LanguageCode)}
+                  aria-label={t('settings.language')}
+                />
+              </Stack>
+
+              {/* Navigation Section */}
+              <Stack spacing={3}>
+                <Text variant="body" weight="semibold" style={{ fontSize: '14px' }}>
+                  {t('settings.navigation')}
                 </Text>
                 <button
                   type="button"
@@ -240,9 +263,9 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
                 >
                   <Palette size={20} color={brand.primary} aria-hidden="true" />
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 600 }}>Style Guide</div>
+                    <div style={{ fontWeight: 600 }}>{t('settings.styleGuide')}</div>
                     <div style={{ fontSize: '12px', color: textColors.muted, marginTop: '2px' }}>
-                      View design tokens and components
+                      {t('settings.accessibility')}
                     </div>
                   </div>
                 </button>

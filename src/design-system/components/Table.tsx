@@ -5,6 +5,7 @@
  */
 
 import React, { forwardRef, type ReactNode, type CSSProperties } from 'react';
+import { useTranslation } from 'react-i18next';
 import { radius } from '../tokens';
 import { useTheme } from '../index';
 import { Box } from './Box';
@@ -70,6 +71,7 @@ export const Table = React.memo(
     },
     ref
   ) => {
+    const { t } = useTranslation();
     const { surface, text: textColors } = useTheme();
     
     const containerStyle: CSSProperties = {
@@ -172,7 +174,7 @@ export const Table = React.memo(
       return (
         <Card ref={ref} padding={8} {...props}>
           <Stack spacing={4} align="center">
-            <Box style={{ color: textColors.secondary }}>Loading...</Box>
+            <Box style={{ color: textColors.secondary }}>{t('common.loading')}</Box>
           </Stack>
         </Card>
       );
