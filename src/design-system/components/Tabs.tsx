@@ -1,7 +1,15 @@
 /**
- * TABS COMPONENT
- * Neomorphic tab navigation with accessible keyboard support
- * Container is debossed (inset), inactive tabs debossed, active tab raised
+ * Neomorphic tab navigation with inset container and raised active tab.
+ * Use for period selectors and view switchers. Supports arrow key navigation.
+ * @remarks Accessible: role=tablist, arrow key nav, Home/End support, focus management
+ * @example
+ * ```tsx
+ * <Tabs
+ *   items={[{key: '7d', label: '7 Days'}, {key: '30d', label: '30 Days'}]}
+ *   activeTab="30d"
+ *   onChange={setPeriod}
+ * />
+ * ```
  */
 
 import React, { type CSSProperties } from 'react';

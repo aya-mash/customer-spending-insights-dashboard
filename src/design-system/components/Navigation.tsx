@@ -1,8 +1,15 @@
 /**
- * NAVIGATION COMPONENT
- * Design system navigation with beautiful pill-style design
- * Desktop: Sidebar with expandable pills
- * Mobile: BottomNav with pills
+ * Desktop sidebar navigation with expandable/collapsible states (72px collapsed, 240px expanded).
+ * Pill-style active indicators, smooth transitions. Auto-hides on mobile.
+ * @remarks Accessible: NavLink focus, expand/collapse button with aria-label
+ * @example
+ * ```tsx
+ * <Navigation
+ *   items={[{id: 'overview', label: 'Overview', href: '/', icon: <Home />}]}
+ *   isExpanded={expanded}
+ *   onToggle={toggleSidebar}
+ * />
+ * ```
  */
 
 import { forwardRef, type CSSProperties } from "react";

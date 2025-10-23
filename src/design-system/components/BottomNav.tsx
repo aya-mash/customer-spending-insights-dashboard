@@ -1,7 +1,14 @@
 /**
- * BOTTOM NAVIGATION COMPONENT
- * Design system bottom navigation with beautiful pill-style design
- * Mobile only - shown at viewport bottom with safe area support
+ * Mobile-only bottom navigation bar with safe area insets.
+ * Fixed to bottom, 72px height, pill-style active indicators. Auto-hides on desktop.
+ * @remarks Accessible: native NavLink focus, touch-friendly 44px+ targets
+ * @example
+ * ```tsx
+ * <BottomNav items={[
+ *   {id: 'home', label: 'Overview', href: '/', icon: <Home />},
+ *   {id: 'insights', label: 'Insights', href: '/insights', icon: <TrendingUp />}
+ * ]} />
+ * ```
  */
 
 import { forwardRef, type CSSProperties } from "react";

@@ -1,7 +1,14 @@
 /**
- * CARD COMPONENT
- * Flexible container with variants, elevation, and hover states
- * Optimized with React.memo for performance
+ * Neomorphic card container with soft depth and optional hover lift.
+ * Use for metric cards, transaction items, and content grouping. Supports click actions.
+ * @remarks Accessible: interactive cards have implicit button role and keyboard support
+ * @example
+ * ```tsx
+ * <Card variant="elevated" hover onClick={...}>
+ *   <Heading level={3}>Total Spent</Heading>
+ *   <Text>R 3,584.03</Text>
+ * </Card>
+ * ```
  */
 
 import React, { forwardRef, useMemo, useCallback, type CSSProperties, type ReactNode, type HTMLAttributes } from 'react';

@@ -1,7 +1,17 @@
 /**
- * TABLE COMPONENT
- * Data grid with sortable columns, zebra striping, responsive behavior
- * Replaces semantic HTML tables with design system component
+ * Responsive data table with sortable columns and zebra striping.
+ * Desktop: semantic table. Mobile: stacked cards. Supports row selection.
+ * @remarks Accessible: aria-sort on headers, row/cell roles, semantic HTML
+ * @example
+ * ```tsx
+ * <Table
+ *   columns={[{key: 'date', label: 'Date', sortable: true}, ...]}
+ *   data={transactions}
+ *   onSort={handleSort}
+ *   sortField="date"
+ *   sortDirection="desc"
+ * />
+ * ```
  */
 
 import React, { forwardRef, type ReactNode, type CSSProperties } from 'react';

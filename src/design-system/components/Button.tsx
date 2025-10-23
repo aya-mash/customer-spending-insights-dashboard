@@ -1,6 +1,12 @@
 /**
- * BUTTON COMPONENT
- * Primary UI button with variants, sizes, loading states, and icons
+ * Neomorphic button with soft shadows and focus-visible ring.
+ * Use for primary actions in forms, cards, and dialogs. Meets 44px touch targets.
+ * @remarks Accessible: focus-visible ring, disabled state, loading indicator with aria-busy
+ * @example
+ * ```tsx
+ * <Button variant="primary" onClick={handleSubmit}>Save</Button>
+ * <Button variant="ghost" icon={<Plus />}>Add Goal</Button>
+ * ```
  */
 
 import React, { forwardRef, useMemo, useCallback, type CSSProperties, type ReactNode, type ButtonHTMLAttributes } from 'react';

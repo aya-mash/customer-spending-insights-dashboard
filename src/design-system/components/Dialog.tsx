@@ -1,6 +1,14 @@
 /**
- * DIALOG COMPONENT
- * Modal dialog with backdrop for forms and confirmations
+ * Modal dialog with backdrop for forms, confirmations, and alerts.
+ * Traps focus, closes on Escape or backdrop click. Responsive max-width.
+ * @remarks Accessible: role=dialog, aria-modal, Escape handling, focus trap
+ * @example
+ * ```tsx
+ * <Dialog isOpen={open} onClose={handleClose} maxWidth="500px">
+ *   <Heading level={2}>Delete Goal?</Heading>
+ *   <Button onClick={confirmDelete}>Confirm</Button>
+ * </Dialog>
+ * ```
  */
 
 import { useEffect, type ReactNode, type CSSProperties } from 'react';
