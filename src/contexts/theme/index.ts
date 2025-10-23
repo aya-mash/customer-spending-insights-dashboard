@@ -11,4 +11,5 @@ export type {
   ThemeMode,
   EffectiveTheme,
   ThemeContextValue,
+  Breakpoint,
 } from "./theme-types";

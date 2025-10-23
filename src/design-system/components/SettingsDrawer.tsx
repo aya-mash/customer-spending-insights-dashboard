@@ -4,7 +4,7 @@
  */
 
 import { forwardRef, useEffect, useRef, type CSSProperties } from 'react';
-import { Settings2, X, Sun, Monitor, Moon, Palette } from 'lucide-react';
+import { Settings2, X, Sun, Monitor, Moon, Palette, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { spacingNum, radius, transition, easing, zIndex } from '../tokens';
@@ -26,10 +26,12 @@ export interface SettingsDrawerProps {
   onClose: () => void;
   mode: ThemeMode;
   onModeChange: (mode: ThemeMode) => void;
+  onSignOut?: () => void;
+  userEmail?: string;
 }
 
 export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
-  ({ open, onClose, mode, onModeChange }, ref) => {
+  ({ open, onClose, mode, onModeChange, onSignOut, userEmail }, ref) => {
     const panelRef = useRef<HTMLElement | null>(null);
     const navigate = useNavigate();
     const { brand, surface, text: textColors } = useTheme();
@@ -65,7 +67,7 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
       backgroundColor: surface.overlay,
       backdropFilter: 'blur(4px)',
       WebkitBackdropFilter: 'blur(4px)',
-      zIndex: zIndex.overlay,
+      zIndex: zIndex.modalBackdrop,
       animation: 'fadeIn 250ms ease-out',
     });
 
@@ -80,7 +82,7 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
       border: 'none',
       borderTopLeftRadius: radius.xl,
       borderBottomLeftRadius: radius.xl,
-      zIndex: zIndex.drawer,
+      zIndex: zIndex.modal,
       display: 'flex',
       flexDirection: 'column',
       animation: 'slideInRight 300ms cubic-bezier(0.4, 0, 0.2, 1)',
@@ -270,6 +272,55 @@ export const SettingsDrawer = forwardRef<HTMLElement, SettingsDrawerProps>(
                   </div>
                 </button>
               </Stack>
+
+              {/* Sign Out Section */}
+              {onSignOut && (
+                <Stack spacing={3}>
+                  {userEmail && (
+                    <Text variant="bodySm" style={{ color: textColors.secondary }}>
+                      Signed in as: {userEmail}
+                    </Text>
+                  )}
+                  <button
+                    type="button"
+                    style={createDynamicStyles({
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: `${spacingNum[3]}px`,
+                      padding: `${spacingNum[3]}px ${spacingNum[4]}px`,
+                      borderRadius: radius.lg,
+                      border: `1px solid rgba(239, 68, 68, 0.3)`,
+                      backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                      color: '#EF4444',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: `all ${transition.fast} ${easing.standard}`,
+                      width: '100%',
+                      textAlign: 'left',
+                      WebkitTapHighlightColor: 'transparent',
+                      touchAction: 'manipulation',
+                    })}
+                    onClick={() => {
+                      if (onSignOut) {
+                        onSignOut();
+                        onClose();
+                      }
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.15)';
+                      e.currentTarget.style.borderColor = '#EF4444';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                      e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+                    }}
+                  >
+                    <LogOut size={20} aria-hidden="true" />
+                    <span>Sign Out</span>
+                  </button>
+                </Stack>
+              )}
             </Stack>
           </div>
         </aside>

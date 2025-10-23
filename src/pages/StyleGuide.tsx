@@ -21,7 +21,7 @@ import {
 } from "../design-system/components/index";
 import { Palette, Info } from "lucide-react";
 import { ContrastCheckerPanel } from "../design-system/components/ContrastCheckerPanel";
-import { useBreakpoint } from "../design-system";
+import { useTheme } from "../design-system";
 
 export function StyleGuide() {
   const [showContrastChecker, setShowContrastChecker] = useState(false);
@@ -29,8 +29,7 @@ export function StyleGuide() {
     "overview" | "components" | "tokens"
   >("overview");
   const [demoTab, setDemoTab] = useState("overview");
-  const breakpoint = useBreakpoint();
-  const isMobile = breakpoint === "mobile";
+  const { isMobile } = useTheme();
 
   // Close dialog on Escape
   useEffect(() => {

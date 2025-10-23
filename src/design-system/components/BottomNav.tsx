@@ -6,8 +6,8 @@
 
 import { forwardRef, type CSSProperties } from "react";
 import { useLocation, NavLink } from "react-router-dom";
-import { spacingNum, radius } from "../tokens";
-import { useBreakpoint, useTheme } from "../index";
+import { spacingNum, radius, zIndex } from "../tokens";
+import { useTheme } from "../index";
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -27,9 +27,7 @@ export interface BottomNavProps {
 export const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
   ({ items }, ref) => {
     const location = useLocation();
-    const breakpoint = useBreakpoint();
-    const isMobile = breakpoint === "mobile";
-    const { brand, surface, text: textColors } = useTheme();
+    const { brand, surface, text: textColors, isMobile } = useTheme();
 
     if (!isMobile) return null;
 
@@ -46,7 +44,7 @@ export const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
       justifyContent: "space-around",
       padding: `${spacingNum[2]}px ${spacingNum[4]}px`,
       paddingBottom: "max(8px, env(safe-area-inset-bottom))",
-      zIndex: 1000,
+      zIndex: zIndex.bottomNav,
       boxShadow: "var(--shadow-neumorphic-md)",
     });
 

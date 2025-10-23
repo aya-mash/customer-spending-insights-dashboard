@@ -6,14 +6,12 @@
 import { useState, useEffect, type CSSProperties } from "react";
 import { ContrastCheckerPanel } from "./ContrastCheckerPanel";
 import { radius, spacing, transition, easing } from "../tokens";
-import { useTheme, useBreakpoint } from "../index";
+import { useTheme } from "../index";
 import { Palette } from "lucide-react";
 import { config } from "../../config/env";
 
 export function ContrastCheckerDev() {
-  const { brand, surface } = useTheme();
-  const breakpoint = useBreakpoint();
-  const isMobile = breakpoint === "mobile";
+  const { brand, surface, isMobile } = useTheme();
   const enabled = config.isDevelopment && !isMobile;
   const [open, setOpen] = useState(false);
 

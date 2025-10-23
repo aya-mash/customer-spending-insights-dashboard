@@ -88,6 +88,11 @@ export interface UseThemeReturn {
   neutral: NeutralPalette;
   surface: SurfaceColors;
   text: TextColors;
+  
+  // Responsive breakpoints
+  breakpoint: 'mobile' | 'mobileLg' | 'tablet' | 'desktop' | 'desktopLg' | 'wide';
+  isMobile: boolean;
+  isDesktop: boolean;
 }
 
 // =============================================================================
@@ -188,7 +193,7 @@ export function useTheme(): UseThemeReturn {
     throw new Error('useTheme must be used within ThemeProvider');
   }
   
-  const { mode, setMode, cycle, effective } = context;
+  const { mode, setMode, cycle, effective, breakpoint, isMobile, isDesktop } = context;
   
   // Force re-computation trigger - increments when theme changes
   const [recomputeTrigger, setRecomputeTrigger] = useState(0);
@@ -208,6 +213,7 @@ export function useTheme(): UseThemeReturn {
   // when theme switches. computeThemeTokens() reads CSS vars from DOM.
   const tokens = useMemo<ThemeTokens>(() => {
     return computeThemeTokens();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- recomputeTrigger is intentional for forcing recalculation
   }, [recomputeTrigger]);
   
   // Memoize return object to prevent unnecessary re-renders
@@ -226,5 +232,10 @@ export function useTheme(): UseThemeReturn {
     neutral: tokens.neutral,
     surface: tokens.surface,
     text: tokens.text,
-  }), [mode, setMode, cycle, effective, tokens]);
+    
+    // Responsive breakpoints
+    breakpoint,
+    isMobile,
+    isDesktop,
+  }), [mode, setMode, cycle, effective, tokens, breakpoint, isMobile, isDesktop]);
 }

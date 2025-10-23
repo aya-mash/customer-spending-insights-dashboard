@@ -5,6 +5,7 @@
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type EffectiveTheme = 'light' | 'dark';
+export type Breakpoint = 'mobile' | 'mobileLg' | 'tablet' | 'desktop' | 'desktopLg' | 'wide';
 
 export interface ThemeContextValue {
   /** User's theme choice: 'light' | 'dark' | 'system' */
@@ -15,4 +16,10 @@ export interface ThemeContextValue {
   setMode: (mode: ThemeMode) => void;
   /** Cycle through modes */
   cycle: () => void;
+  /** Current breakpoint */
+  breakpoint: Breakpoint;
+  /** Is viewport mobile size (< tablet) */
+  isMobile: boolean;
+  /** Is viewport desktop size (>= desktop) */
+  isDesktop: boolean;
 }

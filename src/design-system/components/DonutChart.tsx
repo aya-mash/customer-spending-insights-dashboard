@@ -6,7 +6,7 @@
 import { forwardRef, useState, useEffect, type CSSProperties } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { categories as categoryColors, type CategoryName, spacingNum, radius } from '../tokens';
-import { useTheme, formatCurrency, usePrefersReducedMotion, useBreakpoint } from '../index';
+import { useTheme, formatCurrency, usePrefersReducedMotion } from '../index';
 import type { CategoryItem } from '../../data/models';
 import { Text } from './Text';
 
@@ -137,10 +137,8 @@ export interface DonutChartProps {
 
 export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
   ({ data, total, onSegmentClick, height = 300 }, ref) => {
-    const { brand, text: textColors } = useTheme();
+    const { brand, text: textColors, isMobile } = useTheme();
     const reducedMotion = usePrefersReducedMotion();
-    const breakpoint = useBreakpoint();
-    const isMobile = breakpoint === 'mobile';
     
     // Track theme for instant chart updates
     const [themeKey, setThemeKey] = useState(0);

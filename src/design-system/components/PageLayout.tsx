@@ -17,7 +17,7 @@ import {
   fontWeight,
   lineHeight,
 } from "../tokens";
-import { useTheme, useIsMobile } from "../index";
+import { useTheme } from "../index";
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -37,18 +37,14 @@ export interface PageLayoutProps extends HTMLAttributes<HTMLDivElement> {
 export const PageLayout = React.memo(
   forwardRef<HTMLDivElement, PageLayoutProps>(
     ({ title, subtitle, actions, children, style, ...props }, ref) => {
-      const { text: textColors } = useTheme();
-      const isMobile = useIsMobile();
+      const { text: textColors, isMobile } = useTheme();
       const padding = isMobile ? spacingNum[4] : spacingNum[6];
 
       const containerStyles = useMemo(
         () =>
           createDynamicStyles({
-            maxWidth: "1440px",
-            margin: "0 auto",
             padding: `${padding}px`,
-            paddingTop: "10dvh",
-            minHeight: "100dvh",
+            minHeight: "100vh",
           }),
         [padding]
       );

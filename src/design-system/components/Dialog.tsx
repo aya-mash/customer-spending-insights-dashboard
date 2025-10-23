@@ -4,8 +4,8 @@
  */
 
 import { useEffect, type ReactNode, type CSSProperties } from 'react';
-import { radius, spacing } from '../tokens';
-import { useTheme, useBreakpoint } from '../index';
+import { radius, spacing, zIndex } from '../tokens';
+import { useTheme } from '../index';
 
 export interface DialogProps {
   isOpen: boolean;
@@ -22,9 +22,7 @@ export function Dialog({
   maxWidth = '600px',
   showBackdrop = true,
 }: Readonly<DialogProps>) {
-  const { surface } = useTheme();
-  const breakpoint = useBreakpoint();
-  const isMobile = breakpoint === 'mobile';
+  const { surface, isMobile } = useTheme();
 
   // Handle escape key
   useEffect(() => {
@@ -58,7 +56,7 @@ export function Dialog({
     display: 'flex',
     alignItems: isMobile ? 'flex-end' : 'center',
     justifyContent: 'center',
-    zIndex: 1100,
+    zIndex: zIndex.modalBackdrop,
     padding: isMobile ? 0 : spacing[4],
     animation: 'fadeIn 200ms ease-out',
   };

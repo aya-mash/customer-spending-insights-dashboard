@@ -2,6 +2,7 @@
  * THEME PROVIDER
  * Centralized theme management with Context API + localStorage persistence
  * Instant theme switching via root data attributes and color-scheme
+ * Now includes breakpoint detection for unified responsive state
  */
 
 import {
@@ -16,15 +17,37 @@ import type {
   ThemeMode,
   EffectiveTheme,
   ThemeContextValue,
+  Breakpoint,
 } from "./theme-types";
 
 const STORAGE_KEY = "theme-choice";
+
+// Breakpoint values (matching design-system tokens)
+const breakpoints = {
+  mobile: 0,
+  mobileLg: 480,
+  tablet: 768,
+  desktop: 1024,
+  desktopLg: 1440,
+  wide: 1920,
+} as const;
 
 function getSystemPreference(): EffectiveTheme {
   if (globalThis.window === undefined) return "light";
   return globalThis.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
     : "light";
+}
+
+function getCurrentBreakpoint(): Breakpoint {
+  if (globalThis.window === undefined) return 'desktop';
+  const width = globalThis.window.innerWidth;
+  if (width >= breakpoints.wide) return 'wide';
+  if (width >= breakpoints.desktopLg) return 'desktopLg';
+  if (width >= breakpoints.desktop) return 'desktop';
+  if (width >= breakpoints.tablet) return 'tablet';
+  if (width >= breakpoints.mobileLg) return 'mobileLg';
+  return 'mobile';
 }
 
 function resolveEffectiveTheme(mode: ThemeMode): EffectiveTheme {
@@ -74,6 +97,11 @@ export function ThemeProvider({ children }: { readonly children: ReactNode }) {
     resolveEffectiveTheme(mode)
   );
 
+  // Breakpoint state - single source of truth for viewport size
+  const [breakpoint, setBreakpoint] = useState<Breakpoint>(() => 
+    getCurrentBreakpoint()
+  );
+
   // Apply theme to DOM BEFORE paint (prevents flicker)
   useLayoutEffect(() => {
     const newEffective = resolveEffectiveTheme(mode);
@@ -104,6 +132,23 @@ export function ThemeProvider({ children }: { readonly children: ReactNode }) {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, [mode]);
 
+  // Listen for viewport resize - single listener for entire app
+  useLayoutEffect(() => {
+    const handleResize = () => {
+      const newBreakpoint = getCurrentBreakpoint();
+      // Use callback form to avoid stale closure
+      setBreakpoint((current) => {
+        if (newBreakpoint !== current) {
+          return newBreakpoint;
+        }
+        return current;
+      });
+    };
+
+    globalThis.window.addEventListener('resize', handleResize);
+    return () => globalThis.window.removeEventListener('resize', handleResize);
+  }, []); // Empty deps - listener never re-created
+
   const cycle = useCallback(() => {
     setMode((prev: ThemeMode) => {
       if (prev === "system") return "dark";
@@ -112,6 +157,10 @@ export function ThemeProvider({ children }: { readonly children: ReactNode }) {
     });
   }, []);
 
+  // Derive mobile and desktop flags from breakpoint
+  const isMobile = breakpoint === 'mobile' || breakpoint === 'mobileLg';
+  const isDesktop = breakpoint === 'desktop' || breakpoint === 'desktopLg' || breakpoint === 'wide';
+
   // Memoize context value to prevent unnecessary re-renders
   const value: ThemeContextValue = useMemo(
     () => ({
@@ -119,8 +168,11 @@ export function ThemeProvider({ children }: { readonly children: ReactNode }) {
       effective,
       setMode,
       cycle,
+      breakpoint,
+      isMobile,
+      isDesktop,
     }),
-    [mode, effective, setMode, cycle]
+    [mode, effective, setMode, cycle, breakpoint, isMobile, isDesktop]
   );
 
   return (

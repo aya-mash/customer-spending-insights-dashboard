@@ -7,7 +7,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTransactionsData } from './useTransactionsData';
-import { formatCurrency, Skeleton, useBreakpoint } from '../../design-system';
+import { formatCurrency, Skeleton, useTheme } from '../../design-system';
 import { formatDate } from '../../utils/dates';
 import { getCategoryColor } from '../../lib/chartConfig';
 import { 
@@ -54,8 +54,7 @@ const categoryOptions: SelectOption[] = [
 export function Transactions() {
   const { t } = useTranslation();
   const customerId = 'user123';
-  const breakpoint = useBreakpoint();
-  const isMobile = breakpoint === 'mobile';
+  const { isMobile } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const { 
     loading, 
@@ -258,7 +257,7 @@ export function Transactions() {
           <div style={{ 
             display: 'flex', 
             flexDirection: 'column',
-            height: 'calc(100vh - 280px)',
+            height: 'calc(100vh - 370px)',
             minHeight: '400px',
             overflow: 'hidden'
           }}>

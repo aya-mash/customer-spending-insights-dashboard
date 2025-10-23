@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { breakpoints, mediaQueries, type Breakpoint, type ResponsiveValue } from './tokens';
+import { type Breakpoint, type ResponsiveValue } from './tokens';
 
 // Re-export unified theme hook from design system hooks folder
 export { 
@@ -17,91 +17,8 @@ export {
   type TextColors 
 } from './hooks/useTheme';
 
-// =============================================================================
-// BREAKPOINT HOOKS
-// =============================================================================
-
-/**
- * Get current breakpoint based on window width
- * Returns: 'mobile' | 'mobileLg' | 'tablet' | 'desktop' | 'desktopLg' | 'wide'
- */
-export function useBreakpoint(): Breakpoint {
-  const [breakpoint, setBreakpoint] = useState<Breakpoint>(() => {
-    if (globalThis.window === undefined) return 'desktop';
-    const width = globalThis.window.innerWidth;
-    if (width >= breakpoints.wide) return 'wide';
-    if (width >= breakpoints.desktopLg) return 'desktopLg';
-    if (width >= breakpoints.desktop) return 'desktop';
-    if (width >= breakpoints.tablet) return 'tablet';
-    if (width >= breakpoints.mobileLg) return 'mobileLg';
-    return 'mobile';
-  });
-
-  useEffect(() => {
-    const handleResize = () => {
-      const width = globalThis.window.innerWidth;
-      let newBreakpoint: Breakpoint;
-      if (width >= breakpoints.wide) newBreakpoint = 'wide';
-      else if (width >= breakpoints.desktopLg) newBreakpoint = 'desktopLg';
-      else if (width >= breakpoints.desktop) newBreakpoint = 'desktop';
-      else if (width >= breakpoints.tablet) newBreakpoint = 'tablet';
-      else if (width >= breakpoints.mobileLg) newBreakpoint = 'mobileLg';
-      else newBreakpoint = 'mobile';
-      
-      if (newBreakpoint !== breakpoint) {
-        setBreakpoint(newBreakpoint);
-      }
-    };
-
-    globalThis.window.addEventListener('resize', handleResize);
-    return () => globalThis.window.removeEventListener('resize', handleResize);
-  }, [breakpoint]);
-
-  return breakpoint;
-}
-
-/**
- * Check if current viewport matches a media query
- * @param query - Media query string or breakpoint name
- */
-export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(() => {
-    if (globalThis.window === undefined) return false;
-    return globalThis.window.matchMedia(query).matches;
-  });
-
-  useEffect(() => {
-    const mediaQuery = globalThis.window.matchMedia(query);
-    const handleChange = (e: MediaQueryListEvent) => setMatches(e.matches);
-    
-    // Modern browsers
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, [query]);
-
-  return matches;
-}
-
-/**
- * Check if viewport is at or above a specific breakpoint
- */
-export function useMinWidth(breakpoint: Breakpoint): boolean {
-  return useMediaQuery(mediaQueries[breakpoint]);
-}
-
-/**
- * Check if viewport is mobile (< tablet)
- */
-export function useIsMobile(): boolean {
-  return !useMinWidth('tablet');
-}
-
-/**
- * Check if viewport is desktop (>= desktop)
- */
-export function useIsDesktop(): boolean {
-  return useMinWidth('desktop');
-}
+// Import useTheme for internal use
+import { useTheme } from './hooks/useTheme';
 
 // =============================================================================
 // RESPONSIVE VALUE RESOLUTION
@@ -110,9 +27,10 @@ export function useIsDesktop(): boolean {
 /**
  * Get responsive value based on current breakpoint
  * Mobile-first: returns mobile value by default, then tablet, then desktop
+ * Now uses unified theme context for consistent breakpoint detection
  */
 export function useResponsiveValue<T>(values: ResponsiveValue<T> | T): T {
-  const breakpoint = useBreakpoint();
+  const { breakpoint } = useTheme();
   
   if (typeof values !== 'object' || values === null || !('mobile' in values)) {
     return values;
@@ -195,7 +113,20 @@ export function between(min: number | string, max: number | string): string {
  * Check if user prefers reduced motion
  */
 export function usePrefersReducedMotion(): boolean {
-  return useMediaQuery('(prefers-reduced-motion: reduce)');
+  const [matches, setMatches] = useState(() => {
+    if (globalThis.window === undefined) return false;
+    return globalThis.window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  });
+
+  useEffect(() => {
+    const mediaQuery = globalThis.window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handleChange = (e: MediaQueryListEvent) => setMatches(e.matches);
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  return matches;
 }
 
 /**
@@ -404,7 +335,7 @@ export function useKeyboardUser(): boolean {
  * Get responsive chart height
  */
 export function useChartHeight(): number {
-  const breakpoint = useBreakpoint();
+  const { breakpoint } = useTheme();
   
   if (breakpoint === 'desktop' || breakpoint === 'desktopLg' || breakpoint === 'wide') {
     return 300;

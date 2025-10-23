@@ -13,7 +13,7 @@ import {
   Badge
 } from '../../design-system/components/index';
 import { radius, spacing } from '../../design-system/tokens';
-import { useTheme, Skeleton, useBreakpoint } from '../../design-system';
+import { useTheme, Skeleton } from '../../design-system';
 import { DonutChart } from '../../design-system/components/DonutChart';
 import { formatRand } from '../../utils/currency';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
@@ -27,9 +27,7 @@ type TabKey = typeof TAB_KEYS[number];
 
 export function Insights() {
   const { t } = useTranslation();
-  const { text: textColors, surface } = useTheme();
-  const breakpoint = useBreakpoint();
-  const isMobile = breakpoint === 'mobile';
+  const { text: textColors, surface, isMobile } = useTheme();
   const [activeTab, setActiveTab] = useState<TabKey>('compare');
   
   const TAB_LABELS: Record<TabKey, string> = {

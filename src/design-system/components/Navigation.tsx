@@ -8,7 +8,7 @@
 import { forwardRef, type CSSProperties } from "react";
 import { useLocation, NavLink } from "react-router-dom";
 import { spacingNum, radius, transition, easing } from "../tokens";
-import { useBreakpoint, useTheme } from "../index";
+import { useTheme } from "../index";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
@@ -37,9 +37,7 @@ export interface NavigationProps {
 export const Navigation = forwardRef<HTMLElement, NavigationProps>(
   ({ items, isExpanded = false, onToggle }, ref) => {
     const location = useLocation();
-    const breakpoint = useBreakpoint();
-    const isMobile = breakpoint === "mobile";
-    const { brand, surface, text: textColors } = useTheme();
+    const { brand, surface, text: textColors, isMobile } = useTheme();
 
     if (isMobile) return null;
 
@@ -56,7 +54,7 @@ export const Navigation = forwardRef<HTMLElement, NavigationProps>(
       flexDirection: "column",
       gap: `${spacingNum[4]}px`,
       transition: `width 300ms ${transitions.easeStandard}`,
-      zIndex: 100,
+      // zIndex: zIndex.navigation,
       overflow: "hidden",
       boxShadow: "var(--shadow-neumorphic-md)",
     });

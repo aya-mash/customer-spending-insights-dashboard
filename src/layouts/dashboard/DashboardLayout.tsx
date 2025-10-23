@@ -24,13 +24,17 @@ import {
 import { SettingsDrawer } from "../../design-system/components/SettingsDrawer";
 import {
   spacingNum,
-  zIndex,
+  // zIndex,
   fontSize,
   fontWeight,
   radius,
+  zIndex,
 } from "../../design-system/tokens";
-import { useBreakpoint, useTheme } from "../../design-system";
+import { useTheme } from "../../design-system";
 import { DashboardContext } from "../../contexts/dashboard/DashboardProvider";
+import { useAuthenticator } from "@aws-amplify/ui-react";
+import { fetchUserAttributes } from "aws-amplify/auth";
+import { useQuery } from "@tanstack/react-query";
 
 function createDynamicStyles(styles: CSSProperties): CSSProperties {
   return styles;
@@ -48,11 +52,30 @@ export function DashboardLayout() {
   const dash = useContext(DashboardContext);
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const breakpoint = useBreakpoint();
-  const isMobile = breakpoint === "mobile";
+  const {
+    brand,
+    surface,
+    text: textColors,
+    mode,
+    setMode,
+    isMobile,
+  } = useTheme();
   const location = useLocation();
-  const { brand, surface, text: textColors, mode, setMode } = useTheme();
-  const { t } = useTranslation();
+  const { t } = useTranslation(); // Get full name for settings drawer
+  const { user, signOut } = useAuthenticator((context) => [context.user]);
+  const { data: userAttributes } = useQuery({
+    queryKey: ["userAttributes", user?.username],
+    queryFn: async () => await fetchUserAttributes(),
+    enabled: !!user,
+  });
+
+  const userFullName =
+    userAttributes?.given_name && userAttributes?.family_name
+      ? `${userAttributes?.given_name} ${userAttributes?.family_name}`
+      : userAttributes?.email ||
+        user?.signInDetails?.loginId ||
+        user?.username ||
+        "User";
 
   const pageTitle =
     "Spending " + (PAGE_TITLES[location.pathname] || "Insights");
@@ -146,7 +169,8 @@ export function DashboardLayout() {
   const mainStyles = createDynamicStyles({
     marginLeft: sidebarOffset,
     marginBottom: isMobile ? "72px" : 0,
-    minHeight: "calc(100vh - 64px)",
+    paddingTop: "64px", // Account for fixed header
+    minHeight: "100vh",
     backgroundColor: surface.surfaceAlt,
     transition: "margin-left 250ms cubic-bezier(0.4, 0, 0.2, 1)",
   });
@@ -236,6 +260,8 @@ export function DashboardLayout() {
         onClose={() => setSettingsOpen(false)}
         mode={mode}
         onModeChange={setMode}
+        onSignOut={signOut}
+        userEmail={userFullName}
       />
     </>
   );
