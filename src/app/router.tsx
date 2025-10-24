@@ -1,10 +1,12 @@
 import { createBrowserRouter, createMemoryRouter } from 'react-router-dom';
 import { Suspense, lazy, createElement, useState, useEffect, Fragment } from 'react';
-import { DashboardLayout } from '../layouts/dashboard/DashboardLayout';
 import { DashboardProvider } from '../contexts/dashboard/DashboardProvider';
 import { dashboardConfig } from './config/dashboard.config';
 import { ErrorPage } from '../design-system/components/ErrorPage';
 import { makeLoadingFallback, overviewLoadingFallback } from './loadingFallback';
+
+// Lazy load DashboardLayout to ensure Amplify.configure() is called before AWS Amplify hooks are imported
+const DashboardLayout = lazy(() => import('../layouts/dashboard/DashboardLayout').then(m => ({ default: m.DashboardLayout })));
 
 // Build route objects from dashboardConfig.routes converting lazy component factory to element
 function wrapGuard(route: typeof dashboardConfig.routes[number]) {
@@ -54,7 +56,11 @@ export function getDefaultRouter() {
     const routerConfig = [
       {
         path: '/',
-        element: createElement(DashboardProvider, { config: dashboardConfig }, createElement(DashboardLayout)),
+        element: createElement(
+          DashboardProvider, 
+          { config: dashboardConfig }, 
+          createElement(Suspense, { fallback: makeLoadingFallback('Loading Dashboard') }, createElement(DashboardLayout))
+        ),
         errorElement: createElement(ErrorPage),
         children: childRoutes,
       },
@@ -69,7 +75,11 @@ export function buildTestRouter(initialEntries: string[] = ['/']) {
   return createMemoryRouter([
     {
       path: '/',
-      element: createElement(DashboardProvider, { config: dashboardConfig }, createElement(DashboardLayout)),
+      element: createElement(
+        DashboardProvider, 
+        { config: dashboardConfig }, 
+        createElement(Suspense, { fallback: makeLoadingFallback('Loading Dashboard') }, createElement(DashboardLayout))
+      ),
       errorElement: createElement(ErrorPage),
       children: childRoutes,
     },

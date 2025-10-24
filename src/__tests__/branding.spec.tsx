@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { buildTestRouter } from '../app/router';
 import App from '../App';
 
@@ -9,9 +9,9 @@ function renderApp(path='/' ) {
 }
 
 describe('Branding assets', () => {
-  it('renders logo image and swaps with theme via settings drawer', () => {
+  it('renders logo image and swaps with theme via settings drawer', async () => {
     const { getByAltText, getByRole, getByTestId } = renderApp('/');
-    const img = getByAltText(/Dashboard Logo/i) as HTMLImageElement;
+    const img = await waitFor(() => getByAltText(/Dashboard Logo/i)) as HTMLImageElement;
     expect(img.src).toMatch(/logo-light\.svg/);
     const settingsBtn = getByRole('button', { name: /open settings/i });
     fireEvent.click(settingsBtn);

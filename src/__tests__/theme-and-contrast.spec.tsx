@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, waitFor } from "@testing-library/react";
 import { buildTestRouter } from '../app/router';
 import App from "../App";
 
@@ -17,9 +17,9 @@ describe("Theme with SettingsDrawer", () => {
     const stored = localStorage.getItem("theme-choice");
     expect(stored).toBe("light");
   });
-  it("selecting Dark sets data-theme and localStorage, selecting System clears localStorage", () => {
+  it("selecting Dark sets data-theme and localStorage, selecting System clears localStorage", async () => {
     const { getByRole, getByTestId, container } = renderApp("/");
-    const settingsBtn = getByRole("button", { name: /open settings/i });
+    const settingsBtn = await waitFor(() => getByRole("button", { name: /open settings/i }));
     fireEvent.click(settingsBtn);
     // Click the radio input directly
     const darkBtn = getByTestId("mode-dark") as HTMLInputElement;
@@ -36,9 +36,9 @@ describe("Theme with SettingsDrawer", () => {
     const stored = localStorage.getItem("theme-choice");
     expect(stored === null || stored === "system").toBe(true);
   }, 10000);
-  it('selecting Light sets explicit data-theme="light" and persists', () => {
+  it('selecting Light sets explicit data-theme="light" and persists', async () => {
     const { getByRole, getByTestId, container } = renderApp("/");
-    const settingsBtn = getByRole("button", { name: /open settings/i });
+    const settingsBtn = await waitFor(() => getByRole("button", { name: /open settings/i }));
     fireEvent.click(settingsBtn);
     // Click the radio input directly
     const lightBtn = getByTestId("mode-light") as HTMLInputElement;

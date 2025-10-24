@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render as rtlRender, fireEvent } from '@testing-library/react';
+import { render as rtlRender, fireEvent, waitFor } from '@testing-library/react';
 import { buildTestRouter } from '../app/router';
 import App from '../App';
 
@@ -10,9 +10,9 @@ function renderApp(path = '/') {
 }
 
 describe('SettingsDrawer', () => {
-  it('opens and closes with focus return', () => {
+  it('opens and closes with focus return', async () => {
     const { getByRole, queryByRole } = renderApp();
-    const trigger = getByRole('button', { name: /open settings/i });
+    const trigger = await waitFor(() => getByRole('button', { name: /open settings/i }));
     fireEvent.click(trigger);
     const dialog = getByRole('dialog', { name: /settings/i });
     expect(dialog).toBeInTheDocument();
@@ -22,9 +22,9 @@ describe('SettingsDrawer', () => {
     expect(queryByRole('dialog', { name: /settings/i })).toBeNull();
     // Focus management tested - dialog closes correctly
   });
-  it('switches mode buttons', () => {
+  it('switches mode buttons', async () => {
     const { getByRole, getByTestId } = renderApp();
-    const trigger = getByRole('button', { name: /open settings/i });
+    const trigger = await waitFor(() => getByRole('button', { name: /open settings/i }));
     fireEvent.click(trigger);
     // Default is 'light', so light should be checked initially
     const lightBtn = getByTestId('mode-light') as HTMLInputElement;
