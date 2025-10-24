@@ -32,19 +32,14 @@ function wrapGuard(route: typeof dashboardConfig.routes[number]) {
   return createElement(Suspense, { fallback: fallbackEl }, createElement(LazyComp));
 }
 
-export const childRoutes = dashboardConfig.routes.map(r => ({ path: r.path, element: wrapGuard(r) }));
-
-const routerConfig = [
-  {
-    path: '/',
-    element: createElement(DashboardProvider, { config: dashboardConfig }, createElement(DashboardLayout)),
-    errorElement: createElement(ErrorPage),
-    children: childRoutes,
-  },
-];
-
 // Singleton instance created lazily on first access
 let _defaultRouter: ReturnType<typeof createBrowserRouter> | undefined;
+let _childRoutes: Array<{ path: string; element: React.ReactNode }> | undefined;
+
+function getChildRoutes() {
+  _childRoutes ??= dashboardConfig.routes.map(r => ({ path: r.path, element: wrapGuard(r) }));
+  return _childRoutes;
+}
 
 /**
  * Gets the default router instance, creating it lazily on first call.
@@ -54,11 +49,23 @@ let _defaultRouter: ReturnType<typeof createBrowserRouter> | undefined;
  * DO NOT call this at module level - only call from within component lifecycle.
  */
 export function getDefaultRouter() {
-  _defaultRouter ??= createBrowserRouter(routerConfig);
+  if (!_defaultRouter) {
+    const childRoutes = getChildRoutes();
+    const routerConfig = [
+      {
+        path: '/',
+        element: createElement(DashboardProvider, { config: dashboardConfig }, createElement(DashboardLayout)),
+        errorElement: createElement(ErrorPage),
+        children: childRoutes,
+      },
+    ];
+    _defaultRouter = createBrowserRouter(routerConfig);
+  }
   return _defaultRouter;
 }
 
 export function buildTestRouter(initialEntries: string[] = ['/']) {
+  const childRoutes = getChildRoutes();
   return createMemoryRouter([
     {
       path: '/',
