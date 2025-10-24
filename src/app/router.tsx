@@ -50,15 +50,13 @@ let _defaultRouter: ReturnType<typeof createBrowserRouter> | undefined;
  * Gets the default router instance, creating it lazily on first call.
  * This avoids circular dependency issues by deferring router creation
  * until the application actually mounts.
+ * 
+ * DO NOT call this at module level - only call from within component lifecycle.
  */
 export function getDefaultRouter() {
   _defaultRouter ??= createBrowserRouter(routerConfig);
   return _defaultRouter;
 }
-
-// Legacy exports for backward compatibility
-export const router = getDefaultRouter();
-export const defaultRouter = router;
 
 export function buildTestRouter(initialEntries: string[] = ['/']) {
   return createMemoryRouter([
@@ -70,5 +68,3 @@ export function buildTestRouter(initialEntries: string[] = ['/']) {
     },
   ], { initialEntries });
 }
-
-export default router;
