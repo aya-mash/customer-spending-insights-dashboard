@@ -1,46 +1,42 @@
 import { RouterProvider, type RouterProviderProps } from "react-router-dom";
-import { AppProvider } from "./AppProvider";
-import { useState, useEffect } from "react";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider } from '../contexts/theme';
+import { ThemedAuthenticator } from '../contexts/auth';
+import { ErrorBoundary } from '../design-system/components';
+import { handleErrorBoundary } from '../utils/sentry';
+import { getDefaultRouter } from "./router";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes - balance between freshness and caching
+      gcTime: 10 * 60 * 1000, // 10 minutes - keep unused data in cache
+      retry: 1, // Retry once on failure (network blips are common)
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+      refetchOnWindowFocus: true, // Dashboard should show fresh data when user returns
+      refetchOnReconnect: true, // Refresh on network reconnect
+      refetchOnMount: true, // Ensure fresh data on component mount
+    },
+  },
+});
 
 export interface AppShellProps {
   readonly router?: RouterProviderProps["router"];
 }
 
-// Dynamically import router to avoid circular dependency at module load time
-const getRouterAsync = () => import("./router").then(m => m.getDefaultRouter());
-
 function AppShell({ router }: Readonly<AppShellProps>) {
-  const [defaultRouter, setDefaultRouter] = useState<RouterProviderProps["router"] | null>(null);
-  
-  useEffect(() => {
-    if (!router) {
-      getRouterAsync().then(setDefaultRouter);
-    }
-  }, [router]);
-  
-  const activeRouter = router ?? defaultRouter;
-  
-  if (!activeRouter) {
-    return (
-      <AppProvider>
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          minHeight: '100vh',
-          fontSize: '1.25rem',
-          color: 'var(--color-text-secondary)'
-        }}>
-          Loading...
-        </div>
-      </AppProvider>
-    );
-  }
+  const activeRouter = router ?? getDefaultRouter();
   
   return (
-    <AppProvider>
-      <RouterProvider router={activeRouter} />
-    </AppProvider>
+    <ErrorBoundary onError={handleErrorBoundary}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <ThemedAuthenticator>
+            <RouterProvider router={activeRouter} />
+          </ThemedAuthenticator>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
