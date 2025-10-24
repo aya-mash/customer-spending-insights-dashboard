@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useTransactionsData } from './useTransactionsData';
 import { formatCurrency, Skeleton, useTheme } from '../../design-system';
 import { formatDate } from '../../utils/dates';
-import { getCategoryColor } from '../../lib/chartConfig';
+import { getCategoryColor } from '../../lib/categoryUtils';
 import { 
   PageLayout, 
   Grid, 
@@ -113,10 +113,14 @@ export function Transactions() {
       key: 'category',
       label: t('transactions.category'),
       sortable: true,
-      render: (value: string) => (
+      render: (value: string, row: Transaction) => (
         <Badge 
           variant="default" 
-          style={{ backgroundColor: `${getCategoryColor(value)}20`, color: getCategoryColor(value), borderColor: getCategoryColor(value) }}
+          style={{ 
+            backgroundColor: `${getCategoryColor(value, row.categoryColor)}20`, 
+            color: getCategoryColor(value, row.categoryColor), 
+            borderColor: getCategoryColor(value, row.categoryColor) 
+          }}
         >
           {value}
         </Badge>
@@ -303,9 +307,9 @@ export function Transactions() {
                       <Badge 
                         variant="default" 
                         style={{ 
-                          backgroundColor: `${getCategoryColor(txn.category)}20`, 
-                          color: getCategoryColor(txn.category), 
-                          borderColor: getCategoryColor(txn.category),
+                          backgroundColor: `${getCategoryColor(txn.category, txn.categoryColor)}20`, 
+                          color: getCategoryColor(txn.category, txn.categoryColor), 
+                          borderColor: getCategoryColor(txn.category, txn.categoryColor),
                           alignSelf: 'flex-start'
                         }}
                       >

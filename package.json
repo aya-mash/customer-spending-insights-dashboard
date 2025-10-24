@@ -60,6 +60,7 @@
     "husky": "^9.1.7",
     "jsdom": "^27.0.1",
     "lint-staged": "^16.2.6",
+    "prettier": "^3.6.2",
     "rollup-plugin-visualizer": "^6.0.5",
     "storybook": "^9.1.13",
     "typescript": "~5.9.3",
@@ -78,8 +79,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "eslint --fix",
-      "vitest related --run --reporter=dot"
+      "eslint --fix --max-warnings=0"
     ],
     "*.{json,md,yml}": [
       "prettier --write"

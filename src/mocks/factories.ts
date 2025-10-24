@@ -37,12 +37,22 @@ export function makeProfile(customerId: string): CustomerProfileResponse {
 }
 
 export function makeSpendingSummary(period: PeriodPreset): SpendingSummaryResponse {
+  // Use same seed and logic as categories for consistency
+  const categoryData = makeSpendingCategories(period);
+  const totalSpent = categoryData.totalAmount;
+  
   const seed = hashString(period);
   const rnd = seededRandom(seed);
-  const totalSpent = randomFloat(2000, 6000, rnd);
   const transactionCount = randomInt(30, 80, rnd);
   const averageTransaction = Number.parseFloat((totalSpent / transactionCount).toFixed(2));
-  const topCategory = pick(CATEGORY_DEFS, rnd).name;
+  
+  // Top category should match the actual top category from category breakdown
+  const topCategory = categoryData.categories.length > 0 
+    ? categoryData.categories.reduce((prev, current) => 
+        current.amount > prev.amount ? current : prev
+      ).name
+    : 'N/A';
+  
   return {
     period,
     totalSpent,
@@ -59,9 +69,19 @@ export function makeSpendingSummary(period: PeriodPreset): SpendingSummaryRespon
 export function makeSpendingCategories(period: PeriodPreset, start?: string, end?: string): SpendingCategoriesResponse {
   const seed = hashString(period + (start || '') + (end || ''));
   const rnd = seededRandom(seed);
+  
+  // Scale amounts based on period - longer periods = more spending
+  const periodMultiplier = {
+    '7d': 0.25,
+    '30d': 1,
+    '90d': 3,
+    '1y': 12,
+  }[period] || 1;
+  
   const categories: SpendingCategoryItem[] = CATEGORY_DEFS.map(def => {
-    const amount = randomFloat(200, 1500, rnd);
-    const transactionCount = randomInt(3, 20, rnd);
+    const baseAmount = randomFloat(200, 1500, rnd);
+    const amount = baseAmount * periodMultiplier;
+    const transactionCount = randomInt(3, 20, rnd) * Math.ceil(periodMultiplier);
     return {
       name: def.name,
       amount,
@@ -71,10 +91,15 @@ export function makeSpendingCategories(period: PeriodPreset, start?: string, end
       icon: def.icon,
     };
   });
+  
   const totalAmount = categories.reduce((sum, c) => sum + c.amount, 0);
   for (const c of categories) {
     c.percentage = Number.parseFloat(((c.amount / totalAmount) * 100).toFixed(1));
   }
+  
+  // Sort by amount descending so top category is first
+  categories.sort((a, b) => b.amount - a.amount);
+  
   return {
     dateRange: {
       startDate: start || '2024-08-16',

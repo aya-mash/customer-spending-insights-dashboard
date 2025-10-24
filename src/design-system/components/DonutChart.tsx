@@ -18,8 +18,17 @@ const PIE_CONFIG = {
   cornerRadius: 6,
 };
 
-function getCategoryColor(name: string, brandPrimary: string): string {
-  const key = name.toLowerCase().replaceAll(/\s+/g, '') as CategoryName;
+/**
+ * Get category color - prioritize API color, fallback to design system
+ */
+function getCategoryColor(item: CategoryItem, brandPrimary: string): string {
+  // Use API color if provided
+  if (item.color) {
+    return item.color;
+  }
+  
+  // Fallback to design system colors
+  const key = item.name.toLowerCase().replaceAll(/\s+/g, '') as CategoryName;
   return categoryColors[key]?.main || brandPrimary;
 }
 
@@ -85,14 +94,14 @@ const LegendChip = ({ item, onSegmentClick }: LegendChipProps) => {
       style={createDynamicStyles({
         display: 'flex',
         alignItems: 'center',
-        gap: `${spacingNum[2]}px`,
-        padding: `${spacingNum[2]}px ${spacingNum[3]}px`,
+        gap: `${spacingNum[1]}px`,
+        padding: `${spacingNum[1]}px ${spacingNum[2]}px`,
         borderRadius: radius.full,
         border: `1px solid ${item.color}`,
         backgroundColor: 'transparent',
         cursor: onSegmentClick ? 'pointer' : 'default',
         transition: 'all 0.2s ease',
-        fontSize: '13px',
+        fontSize: '12px',
         fontWeight: 500,
         color: textColors.primary,
         whiteSpace: 'nowrap',
@@ -113,8 +122,8 @@ const LegendChip = ({ item, onSegmentClick }: LegendChipProps) => {
     >
       <span
         style={createDynamicStyles({
-          width: '10px',
-          height: '10px',
+          width: '8px',
+          height: '8px',
           borderRadius: '50%',
           backgroundColor: item.color,
         })}
@@ -152,7 +161,7 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
       name: item.name,
       amount: item.amount,
       percentage: item.percentage,
-      color: getCategoryColor(item.name, brand.primary),
+      color: getCategoryColor(item, brand.primary),
     }));
 
     const top = data[0];
@@ -220,7 +229,12 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
                   />
                 ))}
               </Pie>
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip 
+                content={<CustomTooltip />} 
+                offset={30}
+                position={{ x: undefined, y: undefined }}
+                wrapperStyle={{ zIndex: 1000, pointerEvents: 'none' }}
+              />
             </PieChart>
           </ResponsiveContainer>
 

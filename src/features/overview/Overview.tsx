@@ -10,24 +10,19 @@ import { useTranslation } from "react-i18next";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { fetchUserAttributes } from "aws-amplify/auth";
 import {
-  TrendingUp,
   CreditCard,
   BanknoteArrowDown,
-  ShoppingBag,
-  Calendar,
-  Target,
   Clock,
-  PieChart,
   Activity,
+  Target,
 } from "lucide-react";
 import { useOverviewData } from "./useOverviewData";
 import { formatCurrency, formatDate, Skeleton } from "../../design-system";
-import { getCategoryColor } from "../../lib/chartConfig";
+import { getCategoryColor } from "../../lib/categoryUtils";
 import {
   PageLayout,
   Grid,
   Card,
-  MetricCard,
   Stack,
   Button,
   Heading,
@@ -104,34 +99,13 @@ export function Overview() {
   const totalSpent = summary?.totalSpent || 0;
   const transactionCount = summary?.transactionCount || 0;
   const averageTransaction = summary?.averageTransaction || 0;
-  const topCategory = summary?.topCategory || "N/A";
   const spentChange = summary?.comparedToPrevious?.spentChange || 0;
 
   const categoryData = categories?.categories || [];
   const goalsData = goals?.goals || [];
   const transactionData = transactions?.transactions || [];
 
-  // Find top category amount from category data
-  const topCategoryData = categoryData.find((c) => c.name === topCategory);
-  const topCategoryAmount = topCategoryData?.amount || 0;
-
-  // Calculate additional metrics
-  const largestTransaction =
-    transactionData.length > 0
-      ? Math.max(...transactionData.map((t) => Math.abs(t.amount)))
-      : 0;
-
-  const mostFrequentCategory =
-    categoryData.length > 0
-      ? categoryData.reduce(
-          (prev, current) =>
-            (current.transactionCount || 0) > (prev.transactionCount || 0)
-              ? current
-              : prev,
-          categoryData[0]
-        ).name
-      : "N/A";
-
+  // Calculate budget status across all goals
   const budgetStatus =
     goalsData.length > 0
       ? goalsData.reduce(
@@ -169,143 +143,15 @@ export function Overview() {
           </Stack>
         </Card>
       )}
-      {/* 8 Comprehensive Summary Cards */}
-      <Grid
-        columns={{ mobile: 1, tablet: 2, desktop: 4 }}
-        gap={{ mobile: 4, tablet: 5, desktop: 6 }}
-      >
-        {/* Card 1: Total Spent */}
-        <MetricCard
-          label={t("overview.totalSpent")}
-          value={formatCurrency(totalSpent)}
-          icon={<BanknoteArrowDown size={24} />}
-          trend={
-            spentChange === 0
-              ? undefined
-              : {
-                  value: spentChange,
-                  direction: spentChange > 0 ? "up" : "down",
-                }
-          }
-          variant="primary"
-          data-testid="summary-total"
-        />
-
-        {/* Card 2: Transaction Count */}
-        <MetricCard
-          label={t("overview.transactions")}
-          value={transactionCount}
-          icon={<CreditCard size={24} />}
-          variant="default"
-        />
-
-        {/* Card 3: Average Transaction */}
-        <MetricCard
-          label={t("overview.avgTransaction")}
-          value={formatCurrency(averageTransaction)}
-          icon={<Activity size={24} />}
-          variant="default"
-        />
-
-        {/* Card 4: Top Spending Category */}
-        <Card padding={{ mobile: 4, desktop: 6 }}>
-          <Stack spacing={3}>
+      {/* Summary Metrics - Single Row */}
+      <Grid columns={{ mobile: 1, tablet: 2, desktop: 4 }} gap={4}>
+        {/* Total Spent */}
+        <Card padding={5}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
             <div
               style={{
-                width: "48px",
-                height: "48px",
-                borderRadius: "50%",
-                backgroundColor: "rgba(139, 92, 246, 0.1)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "#8B5CF6",
-              }}
-            >
-              <ShoppingBag size={24} />
-            </div>
-            <Text
-              variant="bodySm"
-              color="muted"
-              style={{
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                fontWeight: 500,
-              }}
-            >
-              {t("overview.topCategory")}
-            </Text>
-            <Heading level={3}>{topCategory}</Heading>
-            <Text variant="body" color="muted">
-              {formatCurrency(topCategoryAmount)}
-            </Text>
-          </Stack>
-        </Card>
-
-        {/* Card 5: Largest Transaction */}
-        <MetricCard
-          label={t("overview.largestTransaction")}
-          value={formatCurrency(largestTransaction)}
-          icon={<TrendingUp size={24} />}
-          variant="warning"
-        />
-
-        {/* Card 6: Most Frequent Category */}
-        <Card padding={{ mobile: 4, desktop: 6 }}>
-          <Stack spacing={3}>
-            <div
-              style={{
-                width: "48px",
-                height: "48px",
-                borderRadius: "50%",
-                backgroundColor: "rgba(6, 182, 212, 0.1)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "#06B6D4",
-              }}
-            >
-              <PieChart size={24} />
-            </div>
-            <Text
-              variant="bodySm"
-              color="muted"
-              style={{
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                fontWeight: 500,
-              }}
-            >
-              Most Frequent
-            </Text>
-            <Heading level={3}>{mostFrequentCategory}</Heading>
-            <Text variant="bodySm" color="muted">
-              {categoryData.find((c) => c.name === mostFrequentCategory)
-                ?.transactionCount || 0}{" "}
-              transactions
-            </Text>
-          </Stack>
-        </Card>
-
-        {/* Card 7: Budget Status */}
-        <MetricCard
-          label={t("overview.budgetStatus")}
-          value={`${budgetStatus.toFixed(0)}%`}
-          icon={<Target size={24} />}
-          variant={(() => {
-            if (budgetStatus > 100) return "error";
-            if (budgetStatus > 80) return "warning";
-            return "success";
-          })()}
-        />
-
-        {/* Card 8: Period */}
-        <Card padding={{ mobile: 4, desktop: 6 }}>
-          <Stack spacing={3}>
-            <div
-              style={{
-                width: "48px",
-                height: "48px",
+                width: "40px",
+                height: "40px",
                 borderRadius: "50%",
                 backgroundColor: "rgba(47, 112, 239, 0.1)",
                 display: "flex",
@@ -314,261 +160,416 @@ export function Overview() {
                 color: "#2F70EF",
               }}
             >
-              <Calendar size={24} />
+              <BanknoteArrowDown size={20} />
             </div>
-            <Text
-              variant="bodySm"
-              color="muted"
+            {spentChange !== 0 && (
+              <Badge variant={spentChange > 0 ? "error" : "success"}>
+                {spentChange > 0 ? "+" : ""}
+                {spentChange.toFixed(1)}%
+              </Badge>
+            )}
+          </div>
+          <Text
+            variant="bodySm"
+            color="muted"
+            style={{
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              fontSize: "11px",
+              fontWeight: 600,
+              marginBottom: "8px",
+            }}
+          >
+            {t("overview.totalSpent")}
+          </Text>
+          <Heading level={2} style={{ fontSize: "28px", margin: 0 }}>
+            {formatCurrency(totalSpent)}
+          </Heading>
+        </Card>
+
+        {/* Transactions */}
+        <Card padding={5}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
+            <div
               style={{
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                fontWeight: 500,
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                backgroundColor: "rgba(16, 185, 129, 0.1)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#10B981",
               }}
             >
-              {t("overview.period")}
-            </Text>
-            <Heading level={3}>
-              {t(PERIODS.find((p) => p.key === activePeriod)?.label || "")}
-            </Heading>
-            <Text variant="bodySm" color="muted">
-              {t("overview.selectedRange")}
-            </Text>
-          </Stack>
+              <CreditCard size={20} />
+            </div>
+            {summary?.comparedToPrevious?.transactionChange !== undefined &&
+              summary.comparedToPrevious.transactionChange !== 0 && (
+                <Badge
+                  variant={
+                    summary.comparedToPrevious.transactionChange > 0
+                      ? "success"
+                      : "warning"
+                  }
+                >
+                  {summary.comparedToPrevious.transactionChange > 0 ? "+" : ""}
+                  {summary.comparedToPrevious.transactionChange.toFixed(1)}%
+                </Badge>
+              )}
+          </div>
+          <Text
+            variant="bodySm"
+            color="muted"
+            style={{
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              fontSize: "11px",
+              fontWeight: 600,
+              marginBottom: "8px",
+            }}
+          >
+            {t("overview.transactions")}
+          </Text>
+          <Heading level={2} style={{ fontSize: "28px", margin: 0 }}>
+            {transactionCount.toLocaleString()}
+          </Heading>
+        </Card>
+
+        {/* Average Transaction */}
+        <Card padding={5}>
+          <div style={{ marginBottom: "12px" }}>
+            <div
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                backgroundColor: "rgba(139, 92, 246, 0.1)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#8B5CF6",
+              }}
+            >
+              <Activity size={20} />
+            </div>
+          </div>
+          <Text
+            variant="bodySm"
+            color="muted"
+            style={{
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              fontSize: "11px",
+              fontWeight: 600,
+              marginBottom: "8px",
+            }}
+          >
+            {t("overview.avgTransaction")}
+          </Text>
+          <Heading level={2} style={{ fontSize: "28px", margin: 0 }}>
+            {formatCurrency(averageTransaction)}
+          </Heading>
+        </Card>
+
+        {/* Budget Status - Overall budget health */}
+        <Card padding={5}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
+            <div
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                backgroundColor: (() => {
+                  if (budgetStatus > 100) return "rgba(239, 68, 68, 0.1)";
+                  if (budgetStatus > 80) return "rgba(245, 158, 11, 0.1)";
+                  return "rgba(16, 185, 129, 0.1)";
+                })(),
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: (() => {
+                  if (budgetStatus > 100) return "#EF4444";
+                  if (budgetStatus > 80) return "#F59E0B";
+                  return "#10B981";
+                })(),
+              }}
+            >
+              <Target size={20} />
+            </div>
+            {budgetStatus > 0 && (
+              <Badge
+                variant={(() => {
+                  if (budgetStatus > 100) return "error";
+                  if (budgetStatus > 80) return "warning";
+                  return "success";
+                })()}
+              >
+                {(() => {
+                  if (budgetStatus > 100) return "Over";
+                  if (budgetStatus > 80) return "Watch";
+                  return "Good";
+                })()}
+              </Badge>
+            )}
+          </div>
+          <Text
+            variant="bodySm"
+            color="muted"
+            style={{
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              fontSize: "11px",
+              fontWeight: 600,
+              marginBottom: "8px",
+            }}
+          >
+            {t("overview.budgetStatus")}
+          </Text>
+          <Heading level={2} style={{ fontSize: "28px", margin: 0 }}>
+            {budgetStatus > 0 ? `${budgetStatus.toFixed(0)}%` : "No Goals"}
+          </Heading>
         </Card>
       </Grid>
 
       <Divider spacing={8} />
 
-      {/* Charts Section */}
-      <Stack spacing={6}>
-        <Heading level={2}>{t("overview.categoryBreakdown")}</Heading>
+      {/* Charts and Transactions Section */}
+      <Grid columns={{ mobile: 1, desktop: 3 }} gap={4}>
+        {/* Category Breakdown Chart */}
+        <Card padding={5}>
+          <Stack spacing={4}>
+            <Heading level={3}>{t("overview.categoryBreakdown")}</Heading>
+            {categoryData && categoryData.length > 0 ? (
+              <DonutChart
+                data={categoryData}
+                total={totalSpent}
+                onSegmentClick={(name: string) =>
+                  navigate(
+                    `/transactions?category=${encodeURIComponent(name)}`
+                  )
+                }
+                height={240}
+              />
+            ) : (
+              <Text variant="body" color="muted">
+                {t("overview.noCategoryData")}
+              </Text>
+            )}
+          </Stack>
+        </Card>
 
-        <Grid columns={{ mobile: 1, desktop: 2 }} gap={6}>
-          {/* Category Breakdown Chart */}
-          <Card padding={6}>
-            <Stack spacing={4}>
-              <Heading level={3}>{t("overview.categoryBreakdown")}</Heading>
-              {categoryData && categoryData.length > 0 ? (
-                <DonutChart
-                  data={categoryData}
-                  total={totalSpent}
-                  onSegmentClick={(name: string) =>
-                    navigate(
-                      `/transactions?category=${encodeURIComponent(name)}`
-                    )
-                  }
-                />
-              ) : (
-                <Text variant="body" color="muted">
-                  {t("overview.noCategoryData")}
-                </Text>
-              )}
-            </Stack>
-          </Card>
-
-          {/* Spending Goals */}
-          <Card padding={6}>
-            <Stack spacing={4}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
+        {/* Spending Goals */}
+        <Card padding={5}>
+          <Stack spacing={4}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Heading level={3}>{t("overview.spendingGoals")}</Heading>
+              <Button
+                variant="ghost"
+                size="small"
+                onClick={() => setShowGoalDialog(true)}
               >
-                <Heading level={3}>{t("overview.spendingGoals")}</Heading>
-                <Button
-                  variant="ghost"
-                  size="small"
-                  onClick={() => setShowGoalDialog(true)}
-                >
-                  {t("overview.addGoal")}
-                </Button>
-              </div>
+                {t("overview.addGoal")}
+              </Button>
+            </div>
 
-              {goalsData && goalsData.length > 0 ? (
-                <Stack spacing={4}>
-                  {goalsData.map((goal) => {
-                    const progress =
-                      (goal.currentSpent / goal.monthlyBudget) * 100;
-                    const isOverBudget = progress > 100;
+            {goalsData && goalsData.length > 0 ? (
+              <Stack spacing={4}>
+                {goalsData.map((goal) => {
+                  const progress =
+                    (goal.currentSpent / goal.monthlyBudget) * 100;
+                  const isOverBudget = progress > 100;
 
-                    let progressVariant: "error" | "warning" | "success";
-                    let progressColor: string;
+                  let progressVariant: "error" | "warning" | "success";
+                  let progressColor: string;
 
-                    if (isOverBudget) {
-                      progressVariant = "error";
-                      progressColor = "#EF4444";
-                    } else if (progress > 80) {
-                      progressVariant = "warning";
-                      progressColor = "#F59E0B";
-                    } else {
-                      progressVariant = "success";
-                      progressColor = "#10B981";
-                    }
+                  if (isOverBudget) {
+                    progressVariant = "error";
+                    progressColor = "#EF4444";
+                  } else if (progress > 80) {
+                    progressVariant = "warning";
+                    progressColor = "#F59E0B";
+                  } else {
+                    progressVariant = "success";
+                    progressColor = "#10B981";
+                  }
 
-                    return (
-                      <Stack key={goal.id} spacing={2}>
+                  return (
+                    <Stack key={goal.id} spacing={2}>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text variant="body" weight="medium">
+                          {goal.category}
+                        </Text>
                         <div
                           style={{
                             display: "flex",
-                            justifyContent: "space-between",
+                            gap: "8px",
                             alignItems: "center",
                           }}
                         >
-                          <Text variant="body" weight="medium">
-                            {goal.category}
-                          </Text>
-                          <div
-                            style={{
-                              display: "flex",
-                              gap: "8px",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Badge variant="default">
-                              <Clock size={12} style={{ marginRight: "4px" }} />
-                              {goal.daysRemaining}
-                              {t("overview.daysLeft")}
-                            </Badge>
-                            <Badge variant={progressVariant}>
-                              {progress.toFixed(0)}%
-                            </Badge>
-                          </div>
+                          <Badge variant="default">
+                            <Clock size={12} style={{ marginRight: "4px" }} />
+                            {goal.daysRemaining}
+                            {t("overview.daysLeft")}
+                          </Badge>
+                          <Badge variant={progressVariant}>
+                            {progress.toFixed(0)}%
+                          </Badge>
                         </div>
+                      </div>
 
-                        <div
-                          style={{
-                            width: "100%",
-                            height: "8px",
-                            backgroundColor: "#E5E7EB",
-                            borderRadius: radius.md,
-                            overflow: "hidden",
-                          }}
-                        >
-                          <div
-                            style={{
-                              width: `${Math.min(progress, 100)}%`,
-                              height: "100%",
-                              backgroundColor: progressColor,
-                              borderRadius: radius.md,
-                              transition: "width 0.3s ease",
-                            }}
-                          />
-                        </div>
-
-                        <Text variant="bodySm" color="muted">
-                          {formatCurrency(goal.currentSpent)} {t("overview.of")}{" "}
-                          {formatCurrency(goal.monthlyBudget)}
-                        </Text>
-                      </Stack>
-                    );
-                  })}
-                </Stack>
-              ) : (
-                <Stack spacing={3} align="center">
-                  <Text variant="body" color="muted">
-                    {t("overview.noGoals")}
-                  </Text>
-                  <Button
-                    variant="secondary"
-                    size="small"
-                    onClick={() => setShowGoalDialog(true)}
-                  >
-                    {t("overview.manage")}
-                  </Button>
-                </Stack>
-              )}
-            </Stack>
-          </Card>
-        </Grid>
-      </Stack>
-
-      <Divider spacing={8} />
-
-      {/* Recent Transactions */}
-      <Stack spacing={4}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Heading level={2}>{t("overview.recentTransactions")}</Heading>
-          <Button
-            variant="ghost"
-            size="small"
-            onClick={() => navigate("/transactions")}
-          >
-            View All →
-          </Button>
-        </div>
-
-        {transactionData && transactionData.length > 0 ? (
-          <Stack spacing={3}>
-            {transactionData.slice(0, 5).map((txn) => (
-              <Card key={txn.id} padding={4}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: "16px",
-                  }}
-                >
-                  <Stack spacing={1} style={{ flex: 1 }}>
-                    <Text variant="body" weight="medium">
-                      {txn.merchant}
-                    </Text>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "8px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Badge
+                      <div
                         style={{
-                          backgroundColor: `${getCategoryColor(
-                            txn.category
-                          )}20`,
-                          color: getCategoryColor(txn.category),
-                          borderColor: getCategoryColor(txn.category),
+                          width: "100%",
+                          height: "8px",
+                          backgroundColor: "#E5E7EB",
+                          borderRadius: radius.md,
+                          overflow: "hidden",
                         }}
                       >
-                        {txn.category}
-                      </Badge>
+                        <div
+                          style={{
+                            width: `${Math.min(progress, 100)}%`,
+                            height: "100%",
+                            backgroundColor: progressColor,
+                            borderRadius: radius.md,
+                            transition: "width 0.3s ease",
+                          }}
+                        />
+                      </div>
+
                       <Text variant="bodySm" color="muted">
-                        {formatDate(txn.date)}
+                        {formatCurrency(goal.currentSpent)} {t("overview.of")}{" "}
+                        {formatCurrency(goal.monthlyBudget)}
                       </Text>
-                    </div>
-                  </Stack>
-                  <Text
-                    variant="bodyLg"
-                    weight="semibold"
-                    color={txn.amount < 0 ? "strong" : "muted"}
-                  >
-                    {formatCurrency(Math.abs(txn.amount))}
-                  </Text>
-                </div>
-              </Card>
-            ))}
+                    </Stack>
+                  );
+                })}
+              </Stack>
+            ) : (
+              <Stack spacing={3} align="center">
+                <Text variant="body" color="muted">
+                  {t("overview.noGoals")}
+                </Text>
+                <Button
+                  variant="secondary"
+                  size="small"
+                  onClick={() => setShowGoalDialog(true)}
+                >
+                  {t("overview.manage")}
+                </Button>
+              </Stack>
+            )}
           </Stack>
-        ) : (
-          <Card padding={8}>
-            <Stack spacing={2} align="center">
-              <Clock
-                size={48}
-                style={{ color: "var(--neutral-400)", strokeWidth: 1.5 }}
-              />
-              <Text variant="body" color="muted">
-                {t("overview.noRecentTransactions")}
-              </Text>
-            </Stack>
-          </Card>
-        )}
-      </Stack>
+        </Card>
+
+        {/* Recent Transactions */}
+        <Card padding={5}>
+          <Stack spacing={4}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Heading level={3}>{t("overview.recentTransactions")}</Heading>
+              <Button
+                variant="ghost"
+                size="small"
+                onClick={() => navigate("/transactions")}
+              >
+                View All →
+              </Button>
+            </div>
+
+            <div style={{ maxHeight: "300px", overflowY: "auto" }}>
+              {transactionData && transactionData.length > 0 ? (
+                <Stack spacing={2}>
+                  {transactionData.slice(0, 4).map((txn) => (
+                    <div
+                      key={txn.id}
+                      style={{
+                        padding: "12px",
+                        borderRadius: radius.md,
+                        backgroundColor: "var(--surface-raised)",
+                        border: "1px solid var(--border-subtle)",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginBottom: "8px",
+                        }}
+                      >
+                        <Text variant="body" weight="medium">
+                          {txn.merchant}
+                        </Text>
+                        <Badge
+                          style={{
+                            backgroundColor: `${getCategoryColor(
+                              txn.category,
+                              txn.categoryColor
+                            )}20`,
+                            color: getCategoryColor(txn.category, txn.categoryColor),
+                            borderColor: getCategoryColor(txn.category, txn.categoryColor),
+                            fontSize: "11px",
+                            padding: "2px 8px",
+                          }}
+                        >
+                          {txn.category}
+                        </Badge>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text variant="bodySm" color="muted">
+                          {formatDate(txn.date)}
+                        </Text>
+                        <Text
+                          variant="body"
+                          weight="semibold"
+                          color={txn.amount < 0 ? "strong" : "muted"}
+                        >
+                          {formatCurrency(Math.abs(txn.amount))}
+                        </Text>
+                      </div>
+                    </div>
+                  ))}
+                </Stack>
+              ) : (
+                <Stack spacing={2} align="center" style={{ paddingTop: "32px" }}>
+                  <Clock
+                    size={48}
+                    style={{ color: "var(--neutral-400)", strokeWidth: 1.5 }}
+                  />
+                  <Text variant="body" color="muted">
+                    {t("overview.noRecentTransactions")}
+                  </Text>
+                </Stack>
+              )}
+            </div>
+          </Stack>
+        </Card>
+      </Grid>
 
       {/* Goal Dialog */}
       <GoalDialog
