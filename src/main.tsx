@@ -1,9 +1,20 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Amplify } from 'aws-amplify';
 import './styles/tokens.css';
 import './styles/base.css';
 import './i18n/config';
 import App from './App';
+
+// Configure Amplify FIRST before rendering app
+Amplify.configure({
+  Auth: {
+    Cognito: {
+      userPoolId: import.meta.env.VITE_AWS_USER_POOL_ID || '',
+      userPoolClientId: import.meta.env.VITE_AWS_USER_POOL_CLIENT_ID || '',
+    },
+  },
+});
 import { config } from './config/env';
 import { logger } from './utils/logger';
 import { initWebVitals } from './utils/webVitals';
