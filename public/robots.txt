@@ -1,0 +1,20 @@
+# robots.txt
+# Customer Spending Insights Dashboard
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow API endpoints
+Disallow: /api/
+
+# Common admin/private paths (adjust as needed)
+Disallow: /admin/
+Disallow: /.well-known/
+Disallow: /private/
+
+# Sitemap location (update with your actual domain)
+# Sitemap: https://your-domain.com/sitemap.xml
+
+# Crawl delay (optional, helps with server load)
+Crawl-delay: 1

@@ -1,0 +1,21 @@
+Contact: mailto:security@example.com
+Expires: 2026-12-31T23:59:59.000Z
+Preferred-Languages: en
+Canonical: https://your-domain.com/.well-known/security.txt
+
+# Security Vulnerability Reporting
+# 
+# If you discover a security vulnerability in this application,
+# please report it to the contact above.
+#
+# Please DO NOT:
+# - Open public issues or pull requests
+# - Exploit the vulnerability beyond proof-of-concept
+# - Access or modify data that does not belong to you
+#
+# We appreciate responsible disclosure and will:
+# - Acknowledge your report within 5 business days
+# - Keep you informed of our remediation progress
+# - Credit you in our security advisories (if desired)
+#
+# Thank you for helping keep our application secure!

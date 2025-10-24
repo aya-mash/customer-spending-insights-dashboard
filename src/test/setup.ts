@@ -1,7 +1,40 @@
 import '@testing-library/jest-dom';
 import { vi, beforeEach } from 'vitest';
+import type { ReactNode } from 'react';
+import '../i18n/config'; // Initialize i18n for tests
 
-// Clear localStorage before each test to prevent theme persistence between tests
+// Mock AWS Amplify Authenticator to bypass authentication in tests
+vi.mock('@aws-amplify/ui-react', async () => {
+  const actual = await vi.importActual('@aws-amplify/ui-react');
+  return {
+    ...actual,
+    Authenticator: ({ children }: { children: ReactNode | ((props: { signOut?: () => void; user?: unknown }) => ReactNode) }) => {
+      // Simulate authenticated state by calling children as function with mock user
+      if (typeof children === 'function') {
+        return children({ 
+          signOut: vi.fn(), 
+          user: { 
+            username: 'testuser',
+            userId: 'test-user-id',
+            signInDetails: {}
+          }
+        });
+      }
+      return children;
+    },
+    ThemeProvider: ({ children }: { children: ReactNode }) => children,
+    useAuthenticator: () => ({
+      user: { 
+        username: 'testuser',
+        userId: 'test-user-id',
+        signInDetails: { loginId: 'testuser@example.com' }
+      },
+      signOut: vi.fn(),
+      authStatus: 'authenticated',
+      route: 'authenticated',
+    }),
+  };
+});
 beforeEach(() => {
 	localStorage.clear();
 	sessionStorage.clear();

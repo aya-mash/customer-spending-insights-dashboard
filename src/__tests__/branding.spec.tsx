@@ -11,7 +11,7 @@ function renderApp(path='/' ) {
 describe('Branding assets', () => {
   it('renders logo image and swaps with theme via settings drawer', () => {
     const { getByAltText, getByRole, getByTestId } = renderApp('/');
-    const img = getByAltText(/spending insights/i) as HTMLImageElement;
+    const img = getByAltText(/Dashboard Logo/i) as HTMLImageElement;
     expect(img.src).toMatch(/logo-light\.svg/);
     const settingsBtn = getByRole('button', { name: /open settings/i });
     fireEvent.click(settingsBtn);

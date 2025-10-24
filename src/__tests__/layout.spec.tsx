@@ -3,24 +3,10 @@ import { describe, it, expect } from 'vitest';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { DashboardProvider } from '../contexts/dashboard/DashboardProvider';
 import { DashboardLayout } from '../layouts/dashboard/DashboardLayout';
-import { render, screen } from '@testing-library/react';
+import { screen, renderWithoutRouter } from '../test/utils';
 import userEvent from '@testing-library/user-event';
 import { dashboardConfig } from '../app/config/dashboard.config';
 import { generateContrastReport } from '../lib/contrastReport';
-import { ThemeProvider } from '../contexts/theme';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-// Layout tests need providers because they test individual layout components
-function renderWithProviders(ui: React.ReactElement) {
-  const queryClient = new QueryClient();
-  return render(
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        {ui}
-      </ThemeProvider>
-    </QueryClientProvider>
-  );
-}
 
 describe('route generator', () => {
   it('creates lazy route objects matching path list', () => {
@@ -51,7 +37,7 @@ describe('route generator', () => {
 
   it('renders fallback for protected route when guard fails', async () => {
     const protectedRoute = dashboardConfig.routes.find(r => r.path === '/protected');
-    render(
+    renderWithoutRouter(
       <MemoryRouter initialEntries={['/protected']}>
         <DashboardProvider config={dashboardConfig}>
           <Routes>
@@ -65,7 +51,7 @@ describe('route generator', () => {
 
   it('skip link focuses main content', () => {
     // Use DashboardLayout to include skip link
-    renderWithProviders(
+    renderWithoutRouter(
       <MemoryRouter initialEntries={['/']}>
         <DashboardProvider config={dashboardConfig}>
           <Routes>
@@ -85,7 +71,7 @@ describe('route generator', () => {
 
   it('settings drawer theme buttons switch modes', async () => {
     const user = userEvent.setup();
-    renderWithProviders(
+    renderWithoutRouter(
       <MemoryRouter initialEntries={['/']}>
         <DashboardProvider config={dashboardConfig}>
           <Routes>
@@ -96,14 +82,14 @@ describe('route generator', () => {
     );
     const settingsBtn = screen.getByRole('button', { name: /open settings/i });
     await user.click(settingsBtn);
-    // Fixed: Now using semantic radio inputs, check 'checked' property
-    const systemBtn: HTMLInputElement = screen.getByTestId('mode-system');
-    expect(systemBtn.checked).toBe(true);
+    // Default is 'light', so light should be checked initially
+    const lightBtn: HTMLInputElement = screen.getByTestId('mode-light');
+    expect(lightBtn.checked).toBe(true);
     const darkBtn: HTMLInputElement = screen.getByTestId('mode-dark');
     await user.click(darkBtn);
     expect(darkBtn.checked).toBe(true);
-    const lightBtn: HTMLInputElement = screen.getByTestId('mode-light');
-    await user.click(lightBtn);
-    expect(lightBtn.checked).toBe(true);
+    const systemBtn: HTMLInputElement = screen.getByTestId('mode-system');
+    await user.click(systemBtn);
+    expect(systemBtn.checked).toBe(true);
   });
 });

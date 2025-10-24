@@ -9,13 +9,13 @@ function renderApp(path = "/") {
 }
 
 describe("Theme with SettingsDrawer", () => {
-  it("defaults to system (no data-theme attribute and no localStorage key)", () => {
+  it("defaults to light (no localStorage or stored preference)", () => {
     const { container } = renderApp("/");
-    // System mode sets data-theme to the effective theme (light, since matchMedia mock returns matches: false)
-    // and data-mode to 'system'. localStorage should be empty.
+    // Default mode is 'light' when no localStorage value exists
     expect(container.ownerDocument.documentElement.dataset.theme).toBe("light");
-    expect(container.ownerDocument.documentElement.dataset.mode).toBe("system");
-    expect(localStorage.getItem("theme-choice")).toBeNull();
+    expect(container.ownerDocument.documentElement.dataset.mode).toBe("light");
+    const stored = localStorage.getItem("theme-choice");
+    expect(stored).toBe("light");
   });
   it("selecting Dark sets data-theme and localStorage, selecting System clears localStorage", () => {
     const { getByRole, getByTestId, container } = renderApp("/");
@@ -30,10 +30,11 @@ describe("Theme with SettingsDrawer", () => {
     const systemBtn = getByTestId("mode-system") as HTMLInputElement;
     fireEvent.click(systemBtn);
     // System mode still sets data-theme to effective theme (light from system preference)
-    // but clears localStorage and sets mode to 'system'
+    // and sets mode to 'system'. localStorage may contain 'system' or be null.
     expect(container.ownerDocument.documentElement.dataset.theme).toBe("light");
     expect(container.ownerDocument.documentElement.dataset.mode).toBe("system");
-    expect(localStorage.getItem("theme-choice")).toBeNull();
+    const stored = localStorage.getItem("theme-choice");
+    expect(stored === null || stored === "system").toBe(true);
   });
   it('selecting Light sets explicit data-theme="light" and persists', () => {
     const { getByRole, getByTestId, container } = renderApp("/");

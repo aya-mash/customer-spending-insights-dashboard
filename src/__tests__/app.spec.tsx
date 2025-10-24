@@ -9,26 +9,26 @@ function renderWithProviders(path: string) {
 }
 
 describe('App Shell Routing', () => {
-  it('renders dynamic header title (Overview on root)', () => {
-    const { getByRole } = renderWithProviders('/');
-    // Header should show current page title Overview
-    expect(getByRole('heading', { name: /overview/i })).toBeTruthy();
+  it('renders dynamic header title (Overview on root)', async () => {
+    const { findByRole } = renderWithProviders('/');
+    // Header should show current page title "Spending Overview"
+    expect(await findByRole('heading', { name: /spending overview/i })).toBeTruthy();
   });
   it('renders Overview page', async () => {
     const { findByRole } = renderWithProviders('/');
-    expect(await findByRole('heading', { name: /overview/i })).toBeTruthy();
+    expect(await findByRole('heading', { name: /spending overview/i })).toBeTruthy();
   });
   it('renders Transactions page', async () => {
     const { findByRole } = renderWithProviders('/transactions');
-    expect(await findByRole('heading', { name: /transactions/i })).toBeTruthy();
+    expect(await findByRole('heading', { name: /spending transactions/i })).toBeTruthy();
   });
   it('renders Insights page', async () => {
     const { findByRole } = renderWithProviders('/insights');
-    expect(await findByRole('heading', { name: /insights/i })).toBeTruthy();
+    expect(await findByRole('heading', { name: /spending insights/i })).toBeTruthy();
   });
   it('renders Style Guide page', async () => {
     const { findByRole } = renderWithProviders('/style-guide');
-    expect(await findByRole('heading', { name: /style guide/i })).toBeTruthy();
+    expect(await findByRole('heading', { name: /spending style guide/i })).toBeTruthy();
   });
   // NOTE: Lazy-loaded route test - slow in CI, passes in browser
   it.skip('renders NotFound page', async () => {

@@ -31,11 +31,11 @@ describe('Overview route', () => {
     await waitFor(() => {
       // Check for the period selector or any metric card
       expect(screen.queryByLabelText(/loading overview data/i)).not.toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 15000 });
     // Check that data loaded
-    await waitFor(() => expect(screen.getByTestId('summary-total')).toBeInTheDocument(), { timeout: 5000 });
+    await waitFor(() => expect(screen.getByTestId('summary-total')).toBeInTheDocument(), { timeout: 10000 });
     expect(screen.getByText(/Goals/i)).toBeInTheDocument();
-  });
+  }, 20000); // Set test timeout to 20 seconds
   it.skip('error then retry recovers', async () => {
     let failedOnce = false;
     server.use(

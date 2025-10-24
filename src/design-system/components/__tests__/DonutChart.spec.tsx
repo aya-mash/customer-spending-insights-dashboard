@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/react';
+import { render } from '../../../test/utils';
 import { DonutChart } from '../DonutChart';
 import type { CategoryItem } from '../../../data/models';
 

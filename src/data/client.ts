@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosResponse } from 'axios';
 import { config } from '../config/env';
+import { logger } from '../utils/logger';
 import type {
   Profile,
   SpendingSummary,
@@ -28,12 +29,12 @@ const instance: AxiosInstance = axios.create({
 if (!config.isProduction) {
   instance.interceptors.response.use(
     (res: AxiosResponse) => {
-      console.debug('[api]', res.config.method?.toUpperCase(), res.config.url, res.status);
+      logger.debug('[api]', res.config.method?.toUpperCase(), res.config.url, res.status);
       return res;
     },
     (err: unknown) => {
       if (err instanceof Error) {
-        console.warn('[api error]', err.message);
+        logger.warn('[api error]', err.message);
       }
       return Promise.reject(err instanceof Error ? err : new Error('Request failed'));
     },

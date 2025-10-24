@@ -32,13 +32,54 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist',
       sourcemap: mode !== 'production',
+      // Increase chunk size warning limit since we're code-splitting
+      chunkSizeWarningLimit: 600,
       rollupOptions: {
         output: {
-          manualChunks: {
-            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-            'query-vendor': ['@tanstack/react-query'],
-            'charts-vendor': ['recharts'],
+          manualChunks: (id) => {
+            // Vendor chunks
+            if (id.includes('node_modules')) {
+              // React ecosystem
+              if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+                return 'react-vendor';
+              }
+              // Charting library
+              if (id.includes('recharts')) {
+                return 'charts-vendor';
+              }
+              // React Query
+              if (id.includes('@tanstack/react-query')) {
+                return 'query-vendor';
+              }
+              // AWS Amplify
+              if (id.includes('@aws-amplify') || id.includes('aws-amplify')) {
+                return 'aws-vendor';
+              }
+              // MSW (Mock Service Worker) - separate chunk (only loaded in dev)
+              if (id.includes('msw')) {
+                return 'msw-vendor';
+              }
+              // i18next
+              if (id.includes('i18next')) {
+                return 'i18n-vendor';
+              }
+              // Date utilities
+              if (id.includes('date-fns')) {
+                return 'date-vendor';
+              }
+              // Lucide icons
+              if (id.includes('lucide-react')) {
+                return 'icons-vendor';
+              }
+              // Other node_modules
+              return 'vendor';
+            }
           },
+        },
+        // Tree-shake unused exports
+        treeshake: {
+          moduleSideEffects: 'no-external',
+          preset: 'recommended',
         },
       },
     },
