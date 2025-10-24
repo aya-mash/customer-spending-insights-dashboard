@@ -35,6 +35,8 @@ export default defineConfig(({ mode }) => {
       // Increase chunk size warning limit since we're code-splitting
       chunkSizeWarningLimit: 600,
       rollupOptions: {
+        // Code splitting can be disabled for debugging with VITE_DISABLE_CODE_SPLITTING=true
+        // However, the proper fix is to ensure Amplify.configure() runs before App loads (see main.tsx)
         output: env.VITE_DISABLE_CODE_SPLITTING === 'true' ? {} : {
           manualChunks: (id) => {
             // Vendor chunks
