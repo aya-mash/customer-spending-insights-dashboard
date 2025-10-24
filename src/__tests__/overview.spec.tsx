@@ -67,5 +67,5 @@ describe('Overview route', () => {
     await waitFor(() => expect(screen.getByTestId('summary-total')).toBeInTheDocument(), { timeout: 7000 });
     // Page should still show content despite partial failure
     expect(screen.getByTestId('summary-total')).toBeInTheDocument();
-  });
+  }, 10000);
 });

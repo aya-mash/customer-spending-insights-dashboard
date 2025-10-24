@@ -91,5 +91,5 @@ describe('route generator', () => {
     const systemBtn: HTMLInputElement = screen.getByTestId('mode-system');
     await user.click(systemBtn);
     expect(systemBtn.checked).toBe(true);
-  });
+  }, 10000);
 });

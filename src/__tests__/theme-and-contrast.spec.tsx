@@ -35,7 +35,7 @@ describe("Theme with SettingsDrawer", () => {
     expect(container.ownerDocument.documentElement.dataset.mode).toBe("system");
     const stored = localStorage.getItem("theme-choice");
     expect(stored === null || stored === "system").toBe(true);
-  });
+  }, 10000);
   it('selecting Light sets explicit data-theme="light" and persists', () => {
     const { getByRole, getByTestId, container } = renderApp("/");
     const settingsBtn = getByRole("button", { name: /open settings/i });

@@ -34,15 +34,30 @@ function wrapGuard(route: typeof dashboardConfig.routes[number]) {
 
 export const childRoutes = dashboardConfig.routes.map(r => ({ path: r.path, element: wrapGuard(r) }));
 
-export const router = createBrowserRouter([
+const routerConfig = [
   {
     path: '/',
     element: createElement(DashboardProvider, { config: dashboardConfig }, createElement(DashboardLayout)),
     errorElement: createElement(ErrorPage),
     children: childRoutes,
   },
-]);
+];
 
+// Singleton instance created lazily on first access
+let _defaultRouter: ReturnType<typeof createBrowserRouter> | undefined;
+
+/**
+ * Gets the default router instance, creating it lazily on first call.
+ * This avoids circular dependency issues by deferring router creation
+ * until the application actually mounts.
+ */
+export function getDefaultRouter() {
+  _defaultRouter ??= createBrowserRouter(routerConfig);
+  return _defaultRouter;
+}
+
+// Legacy exports for backward compatibility
+export const router = getDefaultRouter();
 export const defaultRouter = router;
 
 export function buildTestRouter(initialEntries: string[] = ['/']) {

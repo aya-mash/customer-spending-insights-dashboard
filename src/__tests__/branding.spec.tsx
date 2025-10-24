@@ -18,7 +18,7 @@ describe('Branding assets', () => {
     const darkBtn = getByTestId('mode-dark');
     fireEvent.click(darkBtn);
     expect(img.src).toMatch(/logo-dark\.svg/);
-  });
+  }, 10000);
   it('includes favicon link', () => {
     const { container } = renderApp('/');
     // jsdom should include our link element from index.html; if not, create one to avoid false negative

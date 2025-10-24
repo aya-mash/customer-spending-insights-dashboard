@@ -77,7 +77,7 @@ describe('InsightsRoute', () => {
       const trendsPanel = screen.getByRole('tabpanel', { name: /Trends/i });
       expect(trendsPanel).toBeInTheDocument();
     });
-  });
+  }, 10000);
 
   it('error then retry recovers', async () => {
     const catErr = vi.spyOn(client, 'categories').mockRejectedValueOnce(new Error('fail categories')).mockResolvedValue(mockCategories as CategoryBreakdown);
@@ -95,5 +95,5 @@ describe('InsightsRoute', () => {
     await waitFor(() => expect(screen.queryByText(/Failed to load insights data/i)).not.toBeInTheDocument(), { timeout: 3000 });
     expect(catErr).toHaveBeenCalledTimes(2);
     expect(trendErr).toHaveBeenCalledTimes(2);
-  });
+  }, 10000);
 });

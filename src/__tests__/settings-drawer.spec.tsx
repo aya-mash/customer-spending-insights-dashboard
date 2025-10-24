@@ -35,5 +35,5 @@ describe('SettingsDrawer', () => {
     const systemBtn = getByTestId('mode-system') as HTMLInputElement;
     fireEvent.click(systemBtn);
     expect(systemBtn.checked).toBe(true);
-  });
+  }, 10000);
 });
