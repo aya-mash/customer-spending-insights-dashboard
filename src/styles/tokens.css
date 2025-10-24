@@ -21,10 +21,10 @@
   /* ===========================================================================
      BRAND COLORS - Primary Identity
      =========================================================================== */
-  --brand-primary: #2F70EF;           /* Royal Blue - primary actions, key UI elements */
+  --brand-primary: #045087;           /* Royal Blue - primary actions, key UI elements */
   --brand-secondary: #1E313E;         /* Te Papa Green - accent, secondary actions */
   --brand-primary-hover: #1E5CD8;     /* Darker blue for hover states */
-  --brand-primary-active: #0F47B5;    /* Even darker for active/pressed states */
+  --brand-primary-active: #033d66;    /* Even darker for active/pressed states */
   --brand-secondary-hover: #152530;   /* Darker green for hover */
   
   /* ===========================================================================
@@ -321,7 +321,7 @@
 
 [data-theme="dark"] {
   /* Brand colors remain consistent for recognition */
-  --brand-primary: #5B8EF9;           /* Slightly lighter blue for dark bg */
+  --brand-primary: #0669af;           /* Slightly lighter blue for dark bg */
   --brand-secondary: #2D4556;         /* Adjusted green for dark */
   --brand-primary-hover: #7DA8FA;
   --brand-primary-active: #9EBEFB;
@@ -395,7 +395,7 @@
   --color-text-strong: #F5F7FA;       /* Emphasized text */
   --color-text-muted: #8B93A6;        /* Secondary text */
   --color-text-disabled: #5A6376;     /* Disabled text */
-  --color-text-inverse: #0F1419;      /* Text on light backgrounds */
+  --color-text-inverse: #E1E5EC;      /* Text on light backgrounds */
   --color-text-placeholder: #5A6376;
 
   /* Neomorphic shadows for dark mode - Inverted (more dark, less light) */

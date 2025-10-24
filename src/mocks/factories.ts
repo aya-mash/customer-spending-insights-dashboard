@@ -15,12 +15,12 @@ import type {
 } from '../data/models';
 
 const CATEGORY_DEFS = [
-  { name: 'Groceries', color: '#FF6B6B', icon: 'shopping-cart' },
-  { name: 'Entertainment', color: '#4ECDC4', icon: 'film' },
-  { name: 'Transportation', color: '#45B7D1', icon: 'car' },
-  { name: 'Dining', color: '#F7DC6F', icon: 'utensils' },
-  { name: 'Shopping', color: '#BB8FCE', icon: 'shopping-bag' },
-  { name: 'Utilities', color: '#85C1E9', icon: 'zap' },
+  { name: 'Groceries', color: '#10B981', icon: 'shopping-cart' },       // Emerald - essentials
+  { name: 'Entertainment', color: '#8B5CF6', icon: 'film' },           // Purple - leisure
+  { name: 'Transportation', color: '#F59E0B', icon: 'car' },           // Amber - travel, fuel
+  { name: 'Dining', color: '#EF4444', icon: 'utensils' },              // Red - food & drink
+  { name: 'Shopping', color: '#EC4899', icon: 'shopping-bag' },        // Pink - retail
+  { name: 'Utilities', color: '#06B6D4', icon: 'zap' },                // Cyan - bills, services
 ];
 
 export function makeProfile(customerId: string): CustomerProfileResponse {
