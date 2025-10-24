@@ -35,7 +35,7 @@ export default defineConfig(({ mode }) => {
       // Increase chunk size warning limit since we're code-splitting
       chunkSizeWarningLimit: 600,
       rollupOptions: {
-        output: {
+        output: env.VITE_DISABLE_CODE_SPLITTING === 'true' ? {} : {
           manualChunks: (id) => {
             // Vendor chunks
             if (id.includes('node_modules')) {
