@@ -32,6 +32,8 @@ export interface TabsProps {
   'aria-label'?: string;
   /** Optional className for custom styling */
   className?: string;
+  /** Align tabs to the right on desktop */
+  align?: 'left' | 'right';
 }
 
 export const Tabs = React.memo<TabsProps>(({
@@ -40,6 +42,7 @@ export const Tabs = React.memo<TabsProps>(({
   onChange,
   'aria-label': ariaLabel = 'Tabs',
   className,
+  align = 'left',
 }) => {
   const handleKeyDown = (e: React.KeyboardEvent, currentIndex: number) => {
     let newIndex = currentIndex;
@@ -70,9 +73,11 @@ export const Tabs = React.memo<TabsProps>(({
     backgroundColor: 'var(--color-surface)',
     borderRadius: radius.lg,
     boxShadow: 'var(--shadow-neumorphic-inset)',
-    width: '100%', // Full width on mobile, will shrink-wrap on desktop
+    width: '100%', // Full width on mobile
     maxWidth: 'fit-content',
     overflowX: 'auto', // Allow horizontal scroll if needed on very small screens
+    marginLeft: align === 'right' ? 'auto' : '0',
+    flexWrap: 'wrap', // Allow wrapping on very small screens
   };
 
   const getTabStyle = (isActive: boolean): CSSProperties => ({

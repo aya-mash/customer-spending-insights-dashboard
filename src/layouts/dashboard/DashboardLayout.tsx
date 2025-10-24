@@ -3,7 +3,7 @@
  * Design system layout with Navigation, BottomNav, and SettingsDrawer
  */
 
-import { useState, useContext, type CSSProperties } from "react";
+import { useState, useContext, useEffect, type CSSProperties } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -68,6 +68,11 @@ export function DashboardLayout() {
     queryFn: async () => await fetchUserAttributes(),
     enabled: !!user,
   });
+
+  // Reset scroll position on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   const userFullName =
     userAttributes?.given_name && userAttributes?.family_name

@@ -336,9 +336,104 @@ export function Overview() {
 
       {/* Charts and Transactions Section */}
       <Grid columns={{ mobile: 1, desktop: 3 }} gap={4}>
-        {/* Category Breakdown Chart */}
+        {/* Recent Transactions */}
         <Card padding={5}>
           <Stack spacing={4}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Heading level={3}>{t("overview.recentTransactions")}</Heading>
+              <Button
+                variant="ghost"
+                size="small"
+                onClick={() => navigate("/transactions")}
+              >
+                View All →
+              </Button>
+            </div>
+
+            <div style={{ height: "210px", overflowY: "auto" }}>
+              {transactionData && transactionData.length > 0 ? (
+                <Stack spacing={2}>
+                  {transactionData.slice(0, 10).map((txn) => (
+                    <div
+                      key={txn.id}
+                      style={{
+                        padding: "12px",
+                        borderRadius: radius.md,
+                        backgroundColor: "var(--surface-raised)",
+                        border: "1px solid var(--border-subtle)",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginBottom: "8px",
+                        }}
+                      >
+                        <Text variant="body" weight="medium">
+                          {txn.merchant}
+                        </Text>
+                        <Badge
+                          style={{
+                            backgroundColor: `${getCategoryColor(
+                              txn.category,
+                              txn.categoryColor
+                            )}20`,
+                            color: getCategoryColor(txn.category, txn.categoryColor),
+                            borderColor: getCategoryColor(txn.category, txn.categoryColor),
+                            fontSize: "11px",
+                            padding: "2px 8px",
+                          }}
+                        >
+                          {txn.category}
+                        </Badge>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text variant="bodySm" color="muted">
+                          {formatDate(txn.date)}
+                        </Text>
+                        <Text
+                          variant="body"
+                          weight="semibold"
+                          color={txn.amount < 0 ? "strong" : "muted"}
+                        >
+                          {formatCurrency(Math.abs(txn.amount))}
+                        </Text>
+                      </div>
+                    </div>
+                  ))}
+                </Stack>
+              ) : (
+                <Stack spacing={2} align="center" style={{ paddingTop: "32px" }}>
+                  <Clock
+                    size={48}
+                    style={{ color: "var(--neutral-400)", strokeWidth: 1.5 }}
+                  />
+                  <Text variant="body" color="muted">
+                    {t("overview.noRecentTransactions")}
+                  </Text>
+                </Stack>
+              )}
+            </div>
+          </Stack>
+        </Card>
+
+        {/* Category Breakdown Chart */}
+        <Card padding={5}>
+          <Stack spacing={3}>
             <Heading level={3}>{t("overview.categoryBreakdown")}</Heading>
             {categoryData && categoryData.length > 0 ? (
               <DonutChart
@@ -472,101 +567,6 @@ export function Overview() {
                 </Button>
               </Stack>
             )}
-          </Stack>
-        </Card>
-
-        {/* Recent Transactions */}
-        <Card padding={5}>
-          <Stack spacing={4}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Heading level={3}>{t("overview.recentTransactions")}</Heading>
-              <Button
-                variant="ghost"
-                size="small"
-                onClick={() => navigate("/transactions")}
-              >
-                View All →
-              </Button>
-            </div>
-
-            <div style={{ maxHeight: "300px", overflowY: "auto" }}>
-              {transactionData && transactionData.length > 0 ? (
-                <Stack spacing={2}>
-                  {transactionData.slice(0, 4).map((txn) => (
-                    <div
-                      key={txn.id}
-                      style={{
-                        padding: "12px",
-                        borderRadius: radius.md,
-                        backgroundColor: "var(--surface-raised)",
-                        border: "1px solid var(--border-subtle)",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          marginBottom: "8px",
-                        }}
-                      >
-                        <Text variant="body" weight="medium">
-                          {txn.merchant}
-                        </Text>
-                        <Badge
-                          style={{
-                            backgroundColor: `${getCategoryColor(
-                              txn.category,
-                              txn.categoryColor
-                            )}20`,
-                            color: getCategoryColor(txn.category, txn.categoryColor),
-                            borderColor: getCategoryColor(txn.category, txn.categoryColor),
-                            fontSize: "11px",
-                            padding: "2px 8px",
-                          }}
-                        >
-                          {txn.category}
-                        </Badge>
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Text variant="bodySm" color="muted">
-                          {formatDate(txn.date)}
-                        </Text>
-                        <Text
-                          variant="body"
-                          weight="semibold"
-                          color={txn.amount < 0 ? "strong" : "muted"}
-                        >
-                          {formatCurrency(Math.abs(txn.amount))}
-                        </Text>
-                      </div>
-                    </div>
-                  ))}
-                </Stack>
-              ) : (
-                <Stack spacing={2} align="center" style={{ paddingTop: "32px" }}>
-                  <Clock
-                    size={48}
-                    style={{ color: "var(--neutral-400)", strokeWidth: 1.5 }}
-                  />
-                  <Text variant="body" color="muted">
-                    {t("overview.noRecentTransactions")}
-                  </Text>
-                </Stack>
-              )}
-            </div>
           </Stack>
         </Card>
       </Grid>

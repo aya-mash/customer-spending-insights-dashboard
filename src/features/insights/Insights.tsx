@@ -105,10 +105,28 @@ export function Insights() {
   const showCombinedError = catError && trendError;
 
   return (
-    <PageLayout 
-      subtitle="Explore your spending patterns across categories and time periods"
-    >
+    <PageLayout>
       <Stack direction="vertical" spacing={6}>
+        {/* Header with subtitle and tabs */}
+        <div style={{
+          display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: isMobile ? 'flex-start' : 'center',
+          justifyContent: 'space-between',
+          gap: isMobile ? spacing[3] : spacing[4],
+        }}>
+          <Text variant="bodySm" style={{ color: textColors.secondary }}>
+            Explore your spending patterns across categories and time periods
+          </Text>
+          <Tabs
+            items={TAB_KEYS.map(key => ({ key, label: TAB_LABELS[key] }))}
+            activeTab={activeTab}
+            onChange={(key) => setActiveTab(key as TabKey)}
+            aria-label="Insights panels"
+            align={isMobile ? 'left' : 'right'}
+          />
+        </div>
+
         {/* Combined error banner */}
         {showCombinedError && (
           <Card padding={4} style={{ 
@@ -137,14 +155,6 @@ export function Insights() {
             </Stack>
           </Card>
         )}
-
-        {/* Tabs Navigation */}
-        <Tabs
-          items={TAB_KEYS.map(key => ({ key, label: TAB_LABELS[key] }))}
-          activeTab={activeTab}
-          onChange={(key) => setActiveTab(key as TabKey)}
-          aria-label="Insights panels"
-        />
 
         {/* Category Panel */}
         <div
@@ -201,6 +211,9 @@ export function Insights() {
                     onSegmentClick={(name: string) => 
                       navigate(`/transactions?category=${encodeURIComponent(name)}`)
                     }
+                    height={isMobile ? 280 : 450}
+                    showCount={true}
+                    size="large"
                   />
                 </Suspense>
               )}

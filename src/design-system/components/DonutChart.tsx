@@ -3,12 +3,13 @@
  * Design system category breakdown chart with side-by-side legend
  */
 
-import { forwardRef, useState, useEffect, type CSSProperties } from 'react';
+import { forwardRef, useState, useEffect, createElement, type CSSProperties } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { categories as categoryColors, type CategoryName, spacingNum, radius } from '../tokens';
 import { useTheme, formatCurrency, usePrefersReducedMotion } from '../index';
 import type { CategoryItem } from '../../data/models';
 import { Text } from './Text';
+import { getCategoryIcon } from '../../lib/categoryUtils';
 
 // Chart configuration
 const PIE_CONFIG = {
@@ -77,15 +78,27 @@ interface ChartDataItem {
   amount: number;
   percentage: number;
   color: string;
+  transactionCount?: number;
+  icon?: string;
 }
 
 interface LegendChipProps {
   item: ChartDataItem;
   onSegmentClick?: (category: string) => void;
+  showCount?: boolean;
+  isLarge?: boolean;
 }
 
-const LegendChip = ({ item, onSegmentClick }: LegendChipProps) => {
-  const { text: textColors } = useTheme();
+const LegendChip = ({ item, onSegmentClick, showCount = false, isLarge = false }: LegendChipProps) => {
+  const { text: textColors, isMobile } = useTheme();
+  const [isHovered, setIsHovered] = useState(false);
+  
+  const chipPadding = isLarge ? `${spacingNum[2]}px ${spacingNum[3]}px` : `${spacingNum[1]}px ${spacingNum[2]}px`;
+  const chipFontSize = isLarge ? '14px' : '12px';
+  const iconSize = isLarge ? 18 : 20; // Increased from 16 to 20 for better visibility
+  
+  // Get the icon component - always try to get an icon (from API or fallback)
+  const Icon = getCategoryIcon(item.name, item.icon);
   
   return (
     <button
@@ -94,42 +107,49 @@ const LegendChip = ({ item, onSegmentClick }: LegendChipProps) => {
       style={createDynamicStyles({
         display: 'flex',
         alignItems: 'center',
-        gap: `${spacingNum[1]}px`,
-        padding: `${spacingNum[1]}px ${spacingNum[2]}px`,
+        gap: `${spacingNum[2]}px`,
+        padding: chipPadding,
         borderRadius: radius.full,
         border: `1px solid ${item.color}`,
         backgroundColor: 'transparent',
         cursor: onSegmentClick ? 'pointer' : 'default',
         transition: 'all 0.2s ease',
-        fontSize: '12px',
+        fontSize: chipFontSize,
         fontWeight: 500,
         color: textColors.primary,
         whiteSpace: 'nowrap',
+        width: isLarge ? '100%' : 'auto',
       })}
       onMouseEnter={(e) => {
         if (onSegmentClick) {
+          setIsHovered(true);
           e.currentTarget.style.backgroundColor = item.color;
           e.currentTarget.style.color = textColors.inverse;
         }
       }}
       onMouseLeave={(e) => {
         if (onSegmentClick) {
+          setIsHovered(false);
           e.currentTarget.style.backgroundColor = 'transparent';
           e.currentTarget.style.color = textColors.primary;
         }
       }}
       aria-label={`${item.name}: ${formatCurrency(item.amount)}, ${item.percentage?.toFixed(1)}% of total`}
     >
-      <span
-        style={createDynamicStyles({
-          width: '8px',
-          height: '8px',
-          borderRadius: '50%',
-          backgroundColor: item.color,
+      <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+        {createElement(Icon, { 
+          size: iconSize, 
+          color: isHovered && onSegmentClick ? textColors.inverse : item.color, 
+          strokeWidth: 2.5,
+          style: { flexShrink: 0 }
         })}
-        aria-hidden="true"
-      />
+      </span>
       <span>{item.name}</span>
+      {showCount && item.transactionCount !== undefined && isMobile && (
+        <span style={{ opacity: 0.7, fontSize: '11px' }}>
+          ({item.transactionCount})
+        </span>
+      )}
       <span style={{ marginLeft: 'auto', fontWeight: 600 }}>
         {formatCurrency(item.amount)}
       </span>
@@ -142,10 +162,12 @@ export interface DonutChartProps {
   total: number;
   onSegmentClick?: (category: string) => void;
   height?: number;
+  showCount?: boolean;
+  size?: 'default' | 'large';
 }
 
 export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
-  ({ data, total, onSegmentClick, height = 300 }, ref) => {
+  ({ data, total, onSegmentClick, height = 300, showCount = false, size = 'default' }, ref) => {
     const { brand, text: textColors, isMobile } = useTheme();
     const reducedMotion = usePrefersReducedMotion();
     
@@ -162,22 +184,30 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
       amount: item.amount,
       percentage: item.percentage,
       color: getCategoryColor(item, brand.primary),
+      transactionCount: item.transactionCount,
+      icon: item.icon,
     }));
 
     const top = data[0];
     const summaryId = 'category-donut-summary';
 
+    const isLarge = size === 'large' && !isMobile;
+    const chartWidth = isMobile ? '100%' : (isLarge ? '450px' : '280px'); // Reduced default from 380px to 280px
+    const innerRadius = isLarge ? 100 : PIE_CONFIG.innerRadius;
+    const outerRadius = isLarge ? 150 : PIE_CONFIG.outerRadius;
+    const containerGap = isLarge ? spacingNum[6] : spacingNum[4]; // 24px for large, 16px for default
+
     const containerStyles = createDynamicStyles({
       display: 'flex',
       flexDirection: isMobile ? 'column' : 'row',
       alignItems: isMobile ? 'center' : 'flex-start',
-      gap: `${spacingNum[6]}px`,
+      gap: `${containerGap}px`,
       width: '100%',
     });
 
     const chartWrapperStyles = createDynamicStyles({
       position: 'relative',
-      width: isMobile ? '100%' : '280px',
+      width: chartWidth,
       flexShrink: 0,
     });
 
@@ -193,7 +223,7 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
     const legendStyles = createDynamicStyles({
       display: 'flex',
       flexDirection: 'column',
-      gap: `${spacingNum[2]}px`,
+      gap: isLarge ? `${spacingNum[3]}px` : `${spacingNum[2]}px`,
       flex: 1,
       minWidth: 0,
       listStyle: 'none',
@@ -211,8 +241,8 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
                 data={chartData}
                 dataKey="amount"
                 nameKey="name"
-                innerRadius={PIE_CONFIG.innerRadius}
-                outerRadius={PIE_CONFIG.outerRadius}
+                innerRadius={innerRadius}
+                outerRadius={outerRadius}
                 isAnimationActive={!reducedMotion}
                 animationDuration={reducedMotion ? 0 : 800}
                 animationEasing="ease-out"
@@ -240,14 +270,14 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
 
           {/* Center label */}
           <div style={centerLabelStyles} aria-hidden="true">
-            <Text variant="bodySm" color="muted" style={{ textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>
+            <Text variant="bodySm" color="muted" style={{ textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px', fontSize: isLarge ? '13px' : undefined }}>
               {top?.name ? 'Top' : 'Total'}
             </Text>
-            <div style={{ fontSize: '20px', fontWeight: 700, color: textColors.strong, marginBottom: '2px' }}>
+            <div style={{ fontSize: isLarge ? '28px' : '20px', fontWeight: 700, color: textColors.strong, marginBottom: '2px' }}>
               {formatCurrency(top?.amount ?? total)}
             </div>
             {top?.name && (
-              <Text variant="bodySm" color="muted">{top.name}</Text>
+              <Text variant="bodySm" color="muted" style={{ fontSize: isLarge ? '14px' : undefined }}>{top.name}</Text>
             )}
           </div>
         </div>
@@ -259,6 +289,8 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
               <LegendChip 
                 item={chartData.find(c => c.name === item.name)!} 
                 onSegmentClick={onSegmentClick}
+                showCount={showCount}
+                isLarge={isLarge}
               />
             </li>
           ))}
