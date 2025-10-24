@@ -9,13 +9,13 @@ function renderApp(path = "/") {
 }
 
 describe("Theme with SettingsDrawer", () => {
-  it("defaults to light (no localStorage or stored preference)", () => {
+  it("defaults to system (respects user's OS preference)", () => {
     const { container } = renderApp("/");
-    // Default mode is 'light' when no localStorage value exists
+    // Default mode is 'system' when no localStorage value exists
     expect(container.ownerDocument.documentElement.dataset.theme).toBe("light");
-    expect(container.ownerDocument.documentElement.dataset.mode).toBe("light");
+    expect(container.ownerDocument.documentElement.dataset.mode).toBe("system");
     const stored = localStorage.getItem("theme-choice");
-    expect(stored).toBe("light");
+    expect(stored).toBe("system");
   });
   it("selecting Dark sets data-theme and localStorage, selecting System clears localStorage", async () => {
     const { getByRole, getByTestId, container } = renderApp("/");

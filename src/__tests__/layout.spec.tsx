@@ -82,14 +82,14 @@ describe('route generator', () => {
     );
     const settingsBtn = screen.getByRole('button', { name: /open settings/i });
     await user.click(settingsBtn);
-    // Default is 'light', so light should be checked initially
-    const lightBtn: HTMLInputElement = screen.getByTestId('mode-light');
-    expect(lightBtn.checked).toBe(true);
+    // Default is 'system', so system should be checked initially
+    const systemBtn: HTMLInputElement = screen.getByTestId('mode-system');
+    expect(systemBtn.checked).toBe(true);
     const darkBtn: HTMLInputElement = screen.getByTestId('mode-dark');
     await user.click(darkBtn);
     expect(darkBtn.checked).toBe(true);
-    const systemBtn: HTMLInputElement = screen.getByTestId('mode-system');
-    await user.click(systemBtn);
-    expect(systemBtn.checked).toBe(true);
+    const lightBtn: HTMLInputElement = screen.getByTestId('mode-light');
+    await user.click(lightBtn);
+    expect(lightBtn.checked).toBe(true);
   }, 10000);
 });

@@ -84,13 +84,13 @@ function applyTheme(effective: EffectiveTheme, mode: ThemeMode) {
 }
 
 export function ThemeProvider({ children }: { readonly children: ReactNode }) {
-  // Initialize from localStorage or default to LIGHT (production-ready default)
+  // Initialize from localStorage or default to SYSTEM (respect user preference)
   const [mode, setMode] = useState<ThemeMode>(() => {
-    if (globalThis.window === undefined) return "light";
+    if (globalThis.window === undefined) return "system";
     const stored = localStorage.getItem(STORAGE_KEY) as ThemeMode | null;
     return stored === "light" || stored === "dark" || stored === "system"
       ? stored
-      : "light";
+      : "system";
   });
 
   const [effective, setEffective] = useState<EffectiveTheme>(() =>

@@ -26,14 +26,14 @@ describe('SettingsDrawer', () => {
     const { getByRole, getByTestId } = renderApp();
     const trigger = await waitFor(() => getByRole('button', { name: /open settings/i }));
     fireEvent.click(trigger);
-    // Default is 'light', so light should be checked initially
-    const lightBtn = getByTestId('mode-light') as HTMLInputElement;
-    expect(lightBtn.checked).toBe(true);
+    // Default is 'system', so system should be checked initially
+    const systemBtn = getByTestId('mode-system') as HTMLInputElement;
+    expect(systemBtn.checked).toBe(true);
     const darkBtn = getByTestId('mode-dark') as HTMLInputElement;
     fireEvent.click(darkBtn);
     expect(darkBtn.checked).toBe(true);
-    const systemBtn = getByTestId('mode-system') as HTMLInputElement;
-    fireEvent.click(systemBtn);
-    expect(systemBtn.checked).toBe(true);
+    const lightBtn = getByTestId('mode-light') as HTMLInputElement;
+    fireEvent.click(lightBtn);
+    expect(lightBtn.checked).toBe(true);
   }, 10000);
 });
