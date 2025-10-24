@@ -35,9 +35,9 @@ export default defineConfig(({ mode }) => {
       // Increase chunk size warning limit since we're code-splitting
       chunkSizeWarningLimit: 600,
       rollupOptions: {
-        // Code splitting can be disabled for debugging with VITE_DISABLE_CODE_SPLITTING=true
-        // However, the proper fix is to ensure Amplify.configure() runs before App loads (see main.tsx)
-        output: env.VITE_DISABLE_CODE_SPLITTING === 'true' ? {} : {
+        // TEMPORARY: Code splitting disabled for deadline - causes AWS Amplify initialization race condition
+        // TODO: Re-enable after submission and fix module loading order
+        output: env.VITE_DISABLE_CODE_SPLITTING === 'false' ? {
           manualChunks: (id) => {
             // Vendor chunks
             if (id.includes('node_modules')) {
@@ -81,7 +81,7 @@ export default defineConfig(({ mode }) => {
               return 'vendor';
             }
           },
-        },
+        } : {},
         // Tree-shake unused exports
         treeshake: {
           moduleSideEffects: 'no-external',
