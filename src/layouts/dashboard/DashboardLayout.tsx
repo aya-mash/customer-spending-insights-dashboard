@@ -12,6 +12,7 @@ import {
   TrendingUp,
   CreditCard,
   BarChart3,
+  User,
 } from "lucide-react";
 import {
   Navigation,
@@ -22,6 +23,7 @@ import {
   type BottomNavItem,
 } from "../../design-system/components/BottomNav";
 import { SettingsDrawer } from "../../design-system/components/SettingsDrawer";
+import { ProfileDrawer } from "../../features/profile/ProfileDrawer";
 import {
   spacingNum,
   // zIndex,
@@ -52,6 +54,7 @@ export function DashboardLayout() {
   const dash = useContext(DashboardContext);
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const {
     brand,
     surface,
@@ -106,7 +109,15 @@ export function DashboardLayout() {
     },
   ];
 
-  const bottomNavItems: BottomNavItem[] = navItems;
+  const bottomNavItems: BottomNavItem[] = [
+    ...navItems,
+    {
+      id: "profile",
+      label: t("nav.profile"),
+      href: "/profile",
+      icon: <User size={20} />,
+    },
+  ];
 
   let sidebarOffset: number | string;
   if (isMobile) {
@@ -220,6 +231,41 @@ export function DashboardLayout() {
           )}
           <h1 style={titleStyles}>{pageTitle}</h1>
         </div>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          {/* Avatar Button - Desktop only */}
+          {!isMobile && (
+            <button
+              type="button"
+              aria-label="Open profile"
+              style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '16px',
+                fontWeight: 600,
+                color: 'white',
+                cursor: 'pointer',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                boxShadow: 'var(--shadow-neumorphic-sm)',
+              }}
+              onClick={() => setProfileOpen(true)}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "var(--shadow-neumorphic-md)";
+                e.currentTarget.style.transform = "translateY(-1px) scale(1.05)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "var(--shadow-neumorphic-sm)";
+                e.currentTarget.style.transform = "translateY(0) scale(1)";
+              }}
+            >
+              {userFullName.charAt(0).toUpperCase()}
+            </button>
+          )}
         <button
           type="button"
           aria-label="Open settings"
@@ -244,6 +290,7 @@ export function DashboardLayout() {
         >
           <Settings2 size={20} />
         </button>
+        </div>
       </header>
 
       {/* Navigation (Desktop Sidebar / Mobile Bottom Nav) */}
@@ -267,6 +314,12 @@ export function DashboardLayout() {
         onModeChange={setMode}
         onSignOut={signOut}
         userEmail={userFullName}
+      />
+
+      {/* Profile Drawer */}
+      <ProfileDrawer
+        isOpen={profileOpen}
+        onClose={() => setProfileOpen(false)}
       />
     </>
   );

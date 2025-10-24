@@ -86,6 +86,13 @@ export const dashboardConfig: DashboardConfig = {
       prefetch: () => import("../routes/InsightsRoute"),
     },
     {
+      path: "/profile",
+      label: "Profile",
+      component: () =>
+        import("../../pages/Profile").then((m) => ({ default: m.Profile })),
+      prefetch: () => import("../../pages/Profile"),
+    },
+    {
       path: "/style-guide",
       label: "Style Guide",
       component: () =>

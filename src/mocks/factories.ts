@@ -23,6 +23,66 @@ const CATEGORY_DEFS = [
   { name: 'Utilities', color: '#06B6D4', icon: 'zap' },                // Cyan - bills, services
 ];
 
+// Realistic South African merchants per category
+const MERCHANTS_BY_CATEGORY: Record<string, string[]> = {
+  'Groceries': [
+    'Pick n Pay',
+    'Checkers',
+    'Woolworths Food',
+    'Shoprite',
+    'Spar',
+    'Food Lover\'s Market',
+  ],
+  'Entertainment': [
+    'Netflix',
+    'Showmax',
+    'Ster-Kinekor',
+    'Nu Metro',
+    'Spotify',
+    'Apple Music',
+    'DStv',
+  ],
+  'Transportation': [
+    'Uber',
+    'Bolt',
+    'Shell Fuel',
+    'Engen',
+    'BP Garage',
+    'Caltex',
+    'Gautrain',
+  ],
+  'Dining': [
+    'Nando\'s',
+    'Wimpy',
+    'Steers',
+    'KFC',
+    'McDonald\'s',
+    'Ocean Basket',
+    'Spur',
+    'Mugg & Bean',
+  ],
+  'Shopping': [
+    'Takealot',
+    'Woolworths',
+    'Mr Price',
+    'Edgars',
+    'Clicks',
+    'Dis-Chem',
+    'Game',
+  ],
+  'Utilities': [
+    'City Power',
+    'Eskom',
+    'Vodacom',
+    'MTN',
+    'Telkom',
+    'Rain',
+    'DStv',
+    'Discovery',
+  ],
+};
+
+
 export function makeProfile(customerId: string): CustomerProfileResponse {
   const rnd = seededRandom(hashString(customerId));
   return {
@@ -130,15 +190,31 @@ export function makeTransactions(limit: number, offset: number, category?: strin
   const list: TransactionItem[] = [];
   for (let i = 0; i < limit; i++) {
     const catDef = category ? CATEGORY_DEFS.find(c => c.name === category) || pick(CATEGORY_DEFS, rnd) : pick(CATEGORY_DEFS, rnd);
-    const amount = randomFloat(50, 500, rnd);
+    
+    // Get realistic merchant for this category
+    const merchantsForCategory = MERCHANTS_BY_CATEGORY[catDef.name] || ['Unknown Merchant'];
+    const merchant = pick(merchantsForCategory, rnd);
+    
+    // Vary amount based on category
+    const amountRanges: Record<string, [number, number]> = {
+      'Groceries': [150, 800],
+      'Entertainment': [99, 299],
+      'Transportation': [50, 400],
+      'Dining': [80, 350],
+      'Shopping': [100, 1200],
+      'Utilities': [200, 1500],
+    };
+    const [min, max] = amountRanges[catDef.name] || [50, 500];
+    const amount = randomFloat(min, max, rnd);
+    
     const date = new Date(Date.now() - i * 86400000 * rnd()).toISOString();
     list.push({
       id: generateId('txn', rnd),
       date,
-      merchant: pick(['Pick n Pay', 'Checkers', 'Netflix', 'Uber', 'Shell', 'Takealot'], rnd),
+      merchant,
       category: catDef.name,
       amount,
-      description: 'Mock transaction',
+      description: `${merchant} - ${catDef.name}`,
       paymentMethod: pick(['Credit Card', 'Debit Order', 'Cash', 'EFT'], rnd),
       icon: catDef.icon,
       categoryColor: catDef.color,

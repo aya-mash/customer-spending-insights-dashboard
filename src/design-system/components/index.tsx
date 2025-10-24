@@ -18,6 +18,7 @@ export { DonutChart, type DonutChartProps } from './DonutChart';
 export { Navigation, type NavigationProps, type NavItem } from './Navigation';
 export { BottomNav, type BottomNavProps, type BottomNavItem } from './BottomNav';
 export { SettingsDrawer, type SettingsDrawerProps } from './SettingsDrawer';
+export { FilterDrawer, type FilterDrawerProps } from './FilterDrawer';
 export { Pagination, type PaginationProps } from './Pagination';
 export { Select, type SelectProps, type SelectOption } from './Select';
 export { FilterChip, type FilterChipProps } from './FilterChip';

@@ -579,7 +579,6 @@ export function Overview() {
           setEditingGoal(null);
         }}
         onSave={() => {
-          // TODO: Integrate with backend API
           // Goal saving logic will be implemented when backend endpoint is available
           setShowGoalDialog(false);
           setEditingGoal(null);

@@ -211,7 +211,7 @@ export function Insights() {
                     onSegmentClick={(name: string) => 
                       navigate(`/transactions?category=${encodeURIComponent(name)}`)
                     }
-                    height={isMobile ? 280 : 450}
+                    height={isMobile ? 320 : 480}
                     showCount={true}
                     size="large"
                   />

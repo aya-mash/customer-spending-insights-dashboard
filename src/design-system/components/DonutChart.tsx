@@ -93,9 +93,10 @@ const LegendChip = ({ item, onSegmentClick, showCount = false, isLarge = false }
   const { text: textColors, isMobile } = useTheme();
   const [isHovered, setIsHovered] = useState(false);
   
-  const chipPadding = isLarge ? `${spacingNum[2]}px ${spacingNum[3]}px` : `${spacingNum[1]}px ${spacingNum[2]}px`;
-  const chipFontSize = isLarge ? '14px' : '12px';
-  const iconSize = isLarge ? 18 : 20; // Increased from 16 to 20 for better visibility
+  // Compact mobile chips: smaller padding, inline display
+  const chipPadding = isMobile ? `${spacingNum[1]}px ${spacingNum[2]}px` : (isLarge ? `${spacingNum[2]}px ${spacingNum[3]}px` : `${spacingNum[1]}px ${spacingNum[2]}px`);
+  const chipFontSize = isMobile ? '11px' : (isLarge ? '14px' : '12px');
+  const iconSize = isMobile ? 14 : (isLarge ? 18 : 20);
   
   // Get the icon component - always try to get an icon (from API or fallback)
   const Icon = getCategoryIcon(item.name, item.icon);
@@ -105,9 +106,9 @@ const LegendChip = ({ item, onSegmentClick, showCount = false, isLarge = false }
       type="button"
       onClick={onSegmentClick ? () => onSegmentClick(item.name) : undefined}
       style={createDynamicStyles({
-        display: 'flex',
+        display: 'inline-flex',
         alignItems: 'center',
-        gap: `${spacingNum[2]}px`,
+        gap: `${spacingNum[1]}px`,
         padding: chipPadding,
         borderRadius: radius.full,
         border: `1px solid ${item.color}`,
@@ -118,7 +119,7 @@ const LegendChip = ({ item, onSegmentClick, showCount = false, isLarge = false }
         fontWeight: 500,
         color: textColors.primary,
         whiteSpace: 'nowrap',
-        width: isLarge ? '100%' : 'auto',
+        width: isLarge && !isMobile ? '100%' : 'auto',
       })}
       onMouseEnter={(e) => {
         if (onSegmentClick) {
@@ -146,13 +147,15 @@ const LegendChip = ({ item, onSegmentClick, showCount = false, isLarge = false }
       </span>
       <span>{item.name}</span>
       {showCount && item.transactionCount !== undefined && isMobile && (
-        <span style={{ opacity: 0.7, fontSize: '11px' }}>
-          ({item.transactionCount})
+        <span style={{ opacity: 0.7, fontWeight: 600 }}>
+          {item.transactionCount}
         </span>
       )}
-      <span style={{ marginLeft: 'auto', fontWeight: 600 }}>
-        {formatCurrency(item.amount)}
-      </span>
+      {!isMobile && (
+        <span style={{ marginLeft: 'auto', fontWeight: 600 }}>
+          {formatCurrency(item.amount)}
+        </span>
+      )}
     </button>
   );
 };
@@ -192,9 +195,9 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
     const summaryId = 'category-donut-summary';
 
     const isLarge = size === 'large' && !isMobile;
-    const chartWidth = isMobile ? '100%' : (isLarge ? '450px' : '280px'); // Reduced default from 380px to 280px
-    const innerRadius = isLarge ? 100 : PIE_CONFIG.innerRadius;
-    const outerRadius = isLarge ? 150 : PIE_CONFIG.outerRadius;
+    const chartWidth = isMobile ? '100%' : (isLarge ? '500px' : '320px'); // Increased from 280px to 320px, 450px to 500px
+    const innerRadius = isLarge ? 110 : 80; // Increased from 70 to 80 for default
+    const outerRadius = isLarge ? 165 : 120; // Increased from 100 to 120 for default
     const containerGap = isLarge ? spacingNum[6] : spacingNum[4]; // 24px for large, 16px for default
 
     const containerStyles = createDynamicStyles({
@@ -222,7 +225,8 @@ export const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
 
     const legendStyles = createDynamicStyles({
       display: 'flex',
-      flexDirection: 'column',
+      flexDirection: isMobile ? 'row' : 'column',
+      flexWrap: isMobile ? 'wrap' : 'nowrap',
       gap: isLarge ? `${spacingNum[3]}px` : `${spacingNum[2]}px`,
       flex: 1,
       minWidth: 0,

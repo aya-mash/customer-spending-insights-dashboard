@@ -35,8 +35,7 @@ export default defineConfig(({ mode }) => {
       // Increase chunk size warning limit since we're code-splitting
       chunkSizeWarningLimit: 600,
       rollupOptions: {
-        // TEMPORARY: Code splitting disabled for deadline - causes AWS Amplify initialization race condition
-        // TODO: Re-enable after submission and fix module loading order
+        // Code splitting configuration
         output: env.VITE_DISABLE_CODE_SPLITTING === 'false' ? {
           manualChunks: (id) => {
             // Vendor chunks

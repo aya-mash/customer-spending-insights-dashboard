@@ -1,84 +1,157 @@
-# Testing Strategy
+# Testing Guide
 
-## Coverage Overview
+Tests use Vitest + Testing Library for units, Playwright for E2E.
 
-### Unit Tests
-**Location**: `src/__tests__/`, `src/design-system/__tests__/`
+## Running Tests
 
-**Focus**:
-- Design system components (Button, Card, Tabs, Table)
-- Utility functions (currency formatting, date helpers, contrast checker)
-- Custom hooks (useTheme, useResponsiveValue, useChartHeight)
-- Theme context (mode switching, breakpoint detection)
+```bash
+# Unit/integration tests
+yarn test          # Run once
+yarn test --watch  # Watch mode
+yarn test --coverage  # Coverage report
 
-**Tools**: Vitest + React Testing Library
-
-**Example**:
-```tsx
-// Button renders with correct variant styles
-// Tabs handle keyboard navigation (Arrow keys, Home, End)
-// useTheme returns correct breakpoint for window width
+# E2E tests
+npx playwright test
+npx playwright test --ui  # Interactive mode
+npx playwright test --headed  # See browser
 ```
 
-### Integration Tests
-**Location**: `src/__tests__/`
+## Test Structure
 
-**Focus**:
-- Theme toggle persistence (localStorage)
-- Layout responsiveness (sidebar collapse, bottom nav appearance)
-- Data fetching + error states (MSW mocked responses)
-- Filter/sort interactions in Transactions page
+```
+src/
+├── __tests__/         # Component tests
+├── test/
+│   ├── setup.ts       # Vitest setup
+│   └── utils.tsx      # Test helpers
+tests/e2e/             # Playwright E2E
+```
 
-**Tools**: Vitest + MSW (Mock Service Worker)
+## Unit/Integration Tests
 
-### E2E Tests (Playwright)
-**Location**: `tests/e2e/`
+### Test Setup (Vitest)
 
-**Focus**:
-- Auth flows (sign-up, sign-in, sign-out)
-- Theme persistence across page reloads
-- Language switcher updates UI text
-- Transaction filtering + pagination
-- Goal creation/edit/delete
-- Mobile navigation (bottom nav, drawer)
-- Contrast checker widget interactions
+```typescript
+// src/test/setup.ts
+import "@testing-library/jest-dom";
+import { vi } from "vitest";
 
-**Tools**: Playwright
+// Mock AWS Amplify
+vi.mock("@aws-amplify/ui-react", () => ({
+  Authenticator: ({ children }) => children({ user: mockUser }),
+  useAuthenticator: () => ({ user: mockUser, signOut: vi.fn() }),
+}));
+```
 
-**Smoke Test Outline**:
-1. Load dashboard → auth form appears
-2. Sign in → Overview page loads with data
-3. Toggle theme → colors update instantly
-4. Navigate to Insights → charts render
-5. Switch language → text changes
-6. Filter transactions → table updates
-7. Create goal → dialog opens, saves, closes
-8. Resize viewport → mobile bottom nav appears
+### Render Helper
 
-**Run**: `npm run test:e2e` (requires backend or MSW)
+```typescript
+// src/test/utils.tsx
+export function renderWithProviders(ui: ReactElement) {
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <BrowserRouter>
+          {ui}
+        </BrowserRouter>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+}
+```
 
-## Test Data Strategy
+### Component Test Example
 
-- **MSW Handlers**: `src/mocks/handlers.ts` provides consistent test data
-- **Factories**: `src/mocks/factories.ts` generates random transactions/goals
-- **Seeding**: Deterministic data for E2E (reset between tests)
+```typescript
+// src/__tests__/overview.spec.tsx
+import { renderWithProviders } from '../test/utils';
+import { Overview } from '../features/overview/Overview';
 
-## CI/CD Integration
+describe('Overview', () => {
+  it('renders summary cards', async () => {
+    const { getByText } = renderWithProviders(<Overview />);
 
-[TODO: Add GitHub Actions/GitLab CI config for running tests on PRs]
+    // Wait for API call (MSW responds)
+    await waitFor(() => {
+      expect(getByText('Total Spent')).toBeInTheDocument();
+    });
+  });
+});
+```
 
-**Ideal Pipeline**:
-1. Lint + Typecheck
-2. Unit + Integration tests (Vitest)
-3. E2E tests (Playwright on staging)
-4. Lighthouse CI (performance/a11y audit)
+### MSW in Tests
 
-## Writing New Tests
+```typescript
+// src/test/setup.ts
+import { server } from "../mocks/server";
 
-- **Unit**: Test logic, not implementation details. Use Testing Library queries (`getByRole`, `getByLabelText`).
-- **Integration**: Mock API calls with MSW. Test user workflows across multiple components.
-- **E2E**: Use `page.locator('[aria-label="..."]')` for robust selectors. Avoid CSS classes.
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+```
 
----
+## E2E Tests (Playwright)
 
-**Current Status**: Unit + integration tests implemented. E2E tests pending Playwright setup.
+### Configuration
+
+```typescript
+// playwright.config.ts
+export default defineConfig({
+  testDir: "./tests/e2e",
+  use: { baseURL: "http://localhost:5173" },
+  webServer: {
+    command: "npm run dev",
+    port: 5173,
+    reuseExistingServer: true,
+  },
+});
+```
+
+### Test Example
+
+```typescript
+// tests/e2e/navigation.spec.ts
+import { test, expect } from "@playwright/test";
+
+test("navigates between pages", async ({ page }) => {
+  await page.goto("/");
+
+  // Click Insights nav
+  await page.click('[aria-label="Insights"]');
+  await expect(page).toHaveURL("/insights");
+
+  // Check page content
+  await expect(page.getByRole("heading", { name: "Insights" })).toBeVisible();
+});
+```
+
+### Accessibility Testing
+
+```typescript
+// tests/e2e/accessibility.spec.ts
+import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+
+test("has no accessibility violations", async ({ page }) => {
+  await page.goto("/");
+
+  const results = await new AxeBuilder({ page }).analyze();
+  expect(results.violations).toEqual([]);
+});
+```
+
+## Coverage
+
+Run `yarn test --coverage` and check `coverage/index.html`.
+
+**Targets**:
+
+- Critical paths (data fetching, auth): 90%+
+- UI components: 80%+
+- Utils: 100%
+
+**Exclusions**: `src/mocks/`, `src/test/`, `*.config.ts`
+
+## Last Updated
+
+December 2024

@@ -1,342 +1,399 @@
 # Customer Spending Insights Dashboard
 
-A production-ready React TypeScript dashboard for analyzing customer spending patterns with neomorphic design, enterprise-grade performance, WCAG AA accessibility, and full i18n support (EN, AF, XH, ZU, ST).
+A financial analytics platform built with React and TypeScript that helps users understand their spending patterns through interactive visualizations.
 
-## 🎨 Design
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)
+![React](https://img.shields.io/badge/React-19.1-61DAFB)
+![Vite](https://img.shields.io/badge/Vite-7.1-646CFF)
 
-Built with a custom neomorphic design system featuring soft shadows, subtle depth, and a cohesive visual language. No UI library dependencies—every component optimized for performance and accessibility.
+## Table of Contents
 
-**Figma Design**: [FIGMA_LINK_HERE](https://www.figma.com/design/Wv6LZVoyoZ0FWvUldsv0h4/Customer-Spending-Insights-Dashboard?node-id=0-1&t=5iLYQKNA5CAdlzvP-1)
+- [Demo](#demo)
+- [Tech Stack & Trade-offs](#tech-stack--trade-offs)
+- [Quick Start](#quick-start)
+  - [Docker Quick Start](#docker-quick-start-recommended)
+  - [Development](#development)
+  - [Testing](#testing)
+  - [Production Build](#production-build)
+  - [AWS Amplify Deployment](#aws-amplify-deployment)
+- [Feature Overview](#feature-overview)
+- [API Usage](#api-usage)
+- [Accessibility](#accessibility)
+- [Performance](#performance)
+- [Security](#security)
+- [AI Use Disclaimer](#ai-use-disclaimer)
+- [Roadmap](#roadmap)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [License](#license)
 
-## 🚀 Quick Start
+## Demo
+
+### Desktop Light Theme
+
+![Desktop Overview](docs/screenshots/desktop-overview-light.png)
+
+### Mobile Dark Theme
+
+![Mobile Transactions](docs/screenshots/mobile-transactions-dark.png)
+
+### Features
+
+- Category breakdowns with interactive donut charts
+- Transaction filtering and server-side pagination
+- PDF receipt generation
+- Responsive design (works on all screen sizes)
+- Offline-capable PWA
+- Full keyboard navigation and screen reader support
+
+## Tech Stack & Trade-offs
+
+### Core
+
+- **React 19.1** with TypeScript 5.9 (strict mode)
+- **Vite 7.1** - Faster than Webpack, simpler config than CRA
+- **React Router 7.9** - File-based routing with lazy loading
+
+### State & Data
+
+- **React Query (TanStack Query 5)** - Handles all server state
+  - Chose this over Redux because we don't need global client state
+  - Better developer experience than SWR for our use case
+- **Axios** - HTTP client with request/response interceptors
+
+### Development
+
+- **MSW 2.11** - Mock API in browser and tests (same handlers everywhere)
+- **Vitest + Testing Library** - Fast unit tests
+- **Playwright** - E2E testing
+- **Husky** - Pre-commit hooks (lint, format, type-check)
+
+### UI
+
+- **Recharts 3.3** - D3-based charts (100KB bundle cost but worth it for the features)
+- **Lucide React** - Icon library
+- **Custom design system** - Token-based theming
+
+### Infrastructure
+
+- **Docker + nginx** - Multi-stage build with security headers
+- **AWS Amplify** - Hosting with branch deployments
+- **Sentry** - Error tracking (10% sampling in prod)
+- **Workbox** - Service worker for offline support
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 20+ and Yarn 1.22
+- Docker (for containerized deployment)
+
+### Docker Quick Start (Recommended)
+
+The fastest way to run the application in a production-like environment:
+
+```bash
+# Build the Docker image
+docker build -t spending-insights:latest .
+
+# Run the container
+docker run -p 8080:8080 spending-insights:latest
+
+# Open browser to http://localhost:8080
+
+# Verify health
+curl http://localhost:8080/health
+```
+
+**What's included:**
+
+- Multi-stage build (dev, build, production stages)
+- nginx web server with security headers
+- Production build with code splitting
+- Health check endpoint at `/health`
+- Non-root user
+- Gzip compression
+
+**Docker Compose (with hot-reload for development):**
+
+```bash
+# Start dev environment with live reload
+docker-compose -f docker-compose.dev.yml up
+
+# Access at http://localhost:5173
+```
+
+### Development
 
 ```bash
 # Install dependencies
-npm install
+yarn install
 
-# Initialize MSW (Mock Service Worker) - first-time setup
+# Initialize MSW (Mock Service Worker)
 npx msw init public
 
-# Start development server
-npm run dev
+# Start dev server (http://localhost:5173)
+yarn dev
 
-# Build for production  
-npm run build
-
-# Run tests
-npm test
-
-# Type check
-npm run typecheck
-
-# Lint
-npm run lint
+# Environment setup (optional)
+cp .env.example .env.development
 ```
 
-## 📚 Documentation
+**MSW Note**: API calls are mocked by default in development. See [docs/msw-mocking.md](docs/msw-mocking.md) for details.
 
-See **[docs/INDEX.md](docs/INDEX.md)** for comprehensive documentation including:
-- Architecture & data flow
-- Design system guidelines
-- Accessibility & performance targets
-- Testing strategy
-- Decision records (ADRs)
+### Testing
 
-## 🌍 Environments
-
-- **Local Development**: http://localhost:5173
-- **Integration**: [INT_URL_HERE]
-- **Production**: [PROD_URL_HERE]
-
-## ♿ Accessibility & Performance Targets
-
-- **WCAG AA Compliance**: 4.5:1 contrast ratios, keyboard navigation, screen reader support
-- **Lighthouse Scores**: Accessibility ≥95, Performance ≥90
-- **CLS Target**: ≤0.10 (reserved heights, skeleton screens)
-- **Touch Targets**: Minimum 44×44px (iOS/Android guidelines)
-
-## 📦 Deployment
-
-### AWS Amplify (Recommended)
-This project is configured for seamless deployment on AWS Amplify:
-
-1. Connect your repository to [AWS Amplify Console](https://console.aws.amazon.com/amplify/)
-2. Amplify will automatically detect the `amplify.yml` configuration
-3. Set up environment variables if needed (see Environment Configuration section)
-4. Deploy automatically on every push
-
-**Important**: Ensure `VITE_API_BASE_URL` is set to `/api` (not `/customers/api`) in Amplify environment variables.
-
-See [docs/deployment.md](docs/deployment.md) and [docs/amplify-setup.md](docs/amplify-setup.md) for detailed instructions.
-
-### Docker (Production & Development)
-
-#### Quick Start with Docker Compose
 ```bash
-# Production build
-docker-compose up --build
+# Unit/integration tests (Vitest)
+yarn test
 
-# Development with hot reload
-docker-compose -f docker-compose.dev.yml up
+# Watch mode
+yarn test --watch
+
+# Coverage report
+yarn test --coverage
+
+# E2E tests (Playwright)
+npx playwright test
+
+# E2E with UI
+npx playwright test --ui
 ```
 
-Access the application at http://localhost:3000 (production) or http://localhost:5173 (development).
+**Coverage**: Aiming for 80%+ on critical paths (data fetching, auth, calculations).
 
-#### Manual Docker Build
+### Production Build
+
+#### Docker Deployment
+
 ```bash
-# Build production image (~50MB)
-docker build -t customer-insights:latest .
+# Build production image
+docker build -t spending-insights:latest .
 
 # Run container
-docker run -p 3000:8080 customer-insights:latest
+docker run -p 8080:8080 spending-insights:latest
 
-# With custom environment variables
-docker run -p 3000:8080 \
-  -e VITE_API_BASE_URL=/api \
-  -e VITE_ENABLE_MOCKS=true \
-  customer-insights:latest
+# Healthcheck
+curl http://localhost:8080/health
 ```
 
-#### VS Code Dev Containers
-Open the project in VS Code and use the "Reopen in Container" command for a consistent development environment with all tools pre-installed.
+**Multi-stage build**: Dev stage with hot-reload, builder stage with optimizations, production stage with nginx.
 
-See [docs/docker-deployment.md](docs/docker-deployment.md) for comprehensive Docker documentation including security, health checks, and production deployment strategies.
+#### Local Production Preview
 
-## 📊 Features
+```bash
+# Build for production
+yarn build
 
-### Dashboard Views
-- **Overview**: 30-day spending summary with goals and quick actions
-- **Insights**: Interactive donut charts and trend analysis with drill-down
-- **Transactions**: Filterable, sortable, paginated transaction management
-
-### Performance & Accessibility
-- 🎯 **Lighthouse Scores**: A11y ≥95%, Perf ≥90%, CLS ≤0.10 (target metrics)
-- ♿ **WCAG AA**: Full keyboard navigation, screen reader support, `:focus-visible` indicators
-- 🎹 **Keyboard**: Tab/Shift+Tab, Enter/Space, Escape (modals), Arrow keys (tabs), skip links
-- 📱 **Responsive**: Mobile-first (320px+), touch-friendly (44px targets), safe-area support (iOS notch)
-- ⚡ **Optimized**: Code-split routes, lazy-loaded charts (DonutChart 26kB, TrendsChart 41kB)
-- 🎨 **Dark Theme**: Auto-detect via `prefers-color-scheme`, manual toggle, persisted to localStorage
-- 🔍 **Screen Readers**: ARIA labels, live regions (`aria-live="polite"`), chart summaries via `aria-describedby`
-- 🎭 **Animations**: Respect `prefers-reduced-motion` (disables chart animations, transforms)
-
-### Technology Stack
-- **Frontend**: Vite 7.1.7 + React 19.1.1 + TypeScript (strict mode)
-- **Routing**: React Router DOM 7.9.4 with lazy loading and prefetch
-- **Charts**: Recharts 3.3.0 with accessibility and lazy boundaries
-- **Icons**: Lucide React 0.546.0 (professional icon system, replaces emojis)
-- **Styling**: Native CSS only (Grid/Flex, custom properties, container queries, logical properties)
-- **State**: TanStack React Query 5.90.5 for server state
-- **Testing**: Vitest 3.2.4 + Testing Library + Playwright (E2E)
-- **Mocking**: MSW 2.11.5 with deterministic factories
-- **Storybook**: 8.2.9 for component-driven development
-- **Deployment**: AWS Amplify with automatic CI/CD
-
-## 🏗️ Architecture
-
-```
-src/
-├── app/              # Router, shell, config
-├── components/       # Reusable UI components 
-├── features/         # Feature-specific modules
-├── data/             # API client, models, mocks
-├── styles/           # Design tokens, base styles
-├── utils/            # Performance, accessibility utilities
-└── hooks/            # Custom React hooks
+# Preview build
+yarn preview
 ```
 
-## 🎨 Design System
+### AWS Amplify Deployment
 
-### Design Tokens (Production-Grade)
-All visual design decisions are centralized in `src/styles/tokens.css`:
-- **Colors**: Primary (#2F70EF blue), Secondary (#1E313E), semantic states, full neutral scale (50-900)
-- **Typography**: Scale from 11px→48px with semantic names (fs-caption, fs-body, fs-h1-h6)
-- **Spacing**: Consistent 4px-based scale (sp-1→sp-64) for margins, padding, gaps
-- **Shadows**: 6-level elevation system (shadow-xs→shadow-2xl) for depth hierarchy
-- **Radius**: Border radius tokens (radius-xs→radius-full) for consistent rounding
-- **Z-Index**: Layered scale (base→dropdown→sticky→fixed→modal→tooltip→toast→max)
-- **Transitions**: Timing tokens (fast 150ms, normal 250ms, slow 350ms) with easing curves
-- **Dark Theme**: Professional dark mode with WCAG AA contrast, optimized for low-light viewing
+Configured in `amplify.yml` with branch-based environments:
 
-### Components
-- **Cards**: Elevation levels 1-5, interactive variant with hover lift, consistent spacing
-- **Metric Cards**: 8-metric grid (2-col desktop, 4-col on 1440px+), category-specific icon colors
-- **Tables**: Zebra striping, sticky headers with shadow, right-aligned currency, sortable columns
-- **Charts**: 
-  - DonutChart: Inner label (Top category), rounded segments, click drill-down, SR summaries
-  - TrendsChart: Gradient area/line, compact ticks, tooltip with delta, textual summary
-- **Tabs**: Pill-style with robust ARIA, keyboard Left/Right, strong :focus-visible
-- **Navigation**: 
-  - Desktop: Collapsible sidebar (248px→72px) with icon-only mode, unified header toggle
-  - Mobile: Bottom nav with safe-area support, icon+label column layout
-- **Filters**: Removable category/period pills, "Clear all" button, URL-backed state
-- **Interactive States**: 
-  - Hover: Subtle transforms (translateY, translateX), shadow elevation
-  - Focus: Visible outlines (`:focus-visible` only, no sticky mouse outlines)
-  - Active: Tactile press feedback (reduced lift on buttons, cards)
+- `main` → Production (`yarn build`)
+- `develop` → Staging (`yarn build:staging`)
+- Feature branches → Development (`yarn build:dev`)
 
-### Responsive Spacing
-- **Page Padding**: Progressive 24px (mobile) → 32px (tablet) → 48px (desktop)
-- **Max Width**: 1600px with auto centering for large screens
-- **Touch Targets**: Minimum 44×44px enforced (buttons, nav links, chips)
+**Environment Variables** (set in Amplify Console):
 
-## 📈 Performance Features
-
-### Code Splitting
-- **Routes**: Each page lazy-loaded separately
-- **Charts**: DonutChart (26kB), TrendsChart (41kB) 
-- **Main Bundle**: 310kB optimized
-
-### Optimization
-- **LazyImage**: Intersection observer loading
-- **VirtualizedList**: Window-based rendering for large datasets
-- **Memoization**: Smart re-render prevention
-- **Bundle Analysis**: Performance monitoring utilities
-
-## Tests
-Run unit/integration (Vitest):
-```powershell
-yarn test
 ```
-Run Playwright smoke tests:
-```powershell
-yarn playwright test
+VITE_API_BASE_URL=https://api.example.com
+VITE_ENV=production
+VITE_SENTRY_DSN=https://...
+VITE_ENABLE_MOCKS=false
 ```
 
-## 🔧 Environment Configuration
+## Feature Overview
 
-This project uses environment-specific configuration files to manage different deployment environments:
+### 1. Overview Dashboard
 
-### Environment Files
-- **`.env.development`**: Local development (default when running `yarn dev`)
-- **`.env.staging`**: Integration/staging environment (deployed from `develop` branch)
-- **`.env.production`**: Production environment (deployed from `main` branch)
-- **`.env.example`**: Template file showing all available variables
+**Location**: `src/app/routes/OverviewRoute.tsx`, `src/features/overview/`
 
-### Available Variables
-All environment variables must be prefixed with `VITE_` to be exposed to the client:
+- 4-column summary cards (total spent, avg transaction, top category, transaction count)
+- Period selector (7d, 30d, 90d, 1y) with month-over-month comparison
+- Top 5 category breakdown with click-to-filter
+- Recent transactions list
+- Budget goals with progress indicators
 
-- `VITE_ENV`: Environment name (`development`, `staging`, `production`)
-- `VITE_API_BASE_URL`: Backend API base URL
-- `VITE_APP_NAME`: Application display name
-- `VITE_ENABLE_MOCKS`: Enable MSW mock service worker (`true`/`false`)
+**API**: `GET /customers/:id/spending/summary`, `GET /customers/:id/spending/categories`
 
-### Usage in Code
-Access environment variables through the type-safe config module:
+### 2. Insights Page
 
-```typescript
-import { config } from './config/env';
+**Location**: `src/app/routes/InsightsRoute.tsx`, `src/features/insights/`
 
-// Available properties:
-config.env              // 'development' | 'staging' | 'production'
-config.apiBaseUrl       // API base URL
-config.appName          // Application name
-config.enableMocks      // Boolean for MSW
-config.isDevelopment    // true if env === 'development'
-config.isStaging        // true if env === 'staging'
-config.isProduction     // true if env === 'production'
-```
+- Tabbed interface: Compare, Category, Trends, Monthly, Merchants
+- Interactive donut chart (click segment → filter transactions)
+- Month-over-month spending comparison with trend indicators
+- Line chart for 12-month spending patterns
+- Top 10 merchants with spending bars
 
-### Build Scripts
-- `yarn dev`: Start dev server with development env
-- `yarn dev:staging`: Start dev server with staging env
-- `yarn build`: Production build
-- `yarn build:staging`: Staging build
-- `yarn build:dev`: Development build
+**API**: `GET /customers/:id/spending/trends`, `GET /customers/:id/transactions`
 
-### AWS Amplify Configuration
-The `amplify.yml` file automatically detects the deployment branch and uses the appropriate build command:
-- `main` branch → `yarn build` (production)
-- `develop` branch → `yarn build:staging` (staging)
-- Other branches → `yarn build:dev` (development)
+### 3. Transactions Management
 
-## Local Development
-Install deps & start dev server:
-```powershell
-yarn
-yarn dev
-```
-Visit http://localhost:5173
+**Location**: `src/app/routes/TransactionsRoute.tsx`, `src/features/transactions/`
 
-## Performance & Loading
-- Route-level code splitting via `React.lazy` + Suspense fallbacks.
-- Hover prefetch warms next-route chunk before navigation.
-- Skeleton loader component (`AsyncSection`) keeps layout stable; replaces with live content using an aria-live region.
-- Minimal JS for initial paint; assets adapt (logo, favicon) to current theme to avoid layout shift.
+- Server-side pagination (20 per page, configurable)
+- Real-time filtering: category dropdown, date range, search
+- Sortable columns (date, amount) with `aria-sort` for accessibility
+- Mobile: Card-based layout with filter dialog
+- Desktop: Data table with inline filters
+- **Transaction Details Dialog**: Click row → PDF receipt download (jspdf lazy-loaded)
 
-## Routing Architecture
-All application routing is defined centrally in `src/app/router.tsx` using `createBrowserRouter`. Pages are declared in `dashboard.config.ts` as a list of `RouteConfig` objects:
+**API**: `GET /customers/:id/transactions?limit=20&offset=0&category=...&sortBy=date_desc`
 
-`{ path, label, component: () => import('...'), prefetch?, canActivate? }`
+### 4. Profile Management
 
-Key points:
-- Lazy loading: Each route component is wrapped with `React.lazy` and a Suspense fallback that includes `aria-busy="true"` and a route-specific `aria-label` when helpful (e.g. Overview route has `"Loading overview data"`).
-- Guards: Optional `canActivate` may return boolean or Promise<boolean>. Pending async guard states render a labeled busy indicator (`Checking access…`).
-- Provider composition: The router root wraps `DashboardLayout` with `DashboardProvider` so hooks relying on location/navigation context never mount outside a Router.
-- Error boundary: `errorElement` uses `ErrorFallback` for route-level errors.
+**Location**: `src/pages/Profile.tsx`, `src/features/profile/ProfileDrawer.tsx`
 
-### Test Router Helper
-Unit tests that need navigation or location context use the memory router helper:
+- Desktop: Avatar in header → profile drawer
+- Mobile: 4th bottom nav item → full-page profile
+- User info from AWS Amplify (`fetchUserAttributes`)
+- Sign out with cross-tab logout (BroadcastChannel)
 
-`buildTestRouter(initialEntries?: string[])` returns a `createMemoryRouter` instance preconfigured with the same route list & provider composition. Pass this into `<App router={testRouter} />` to avoid duplicate `<Router>` nesting.
+**API**: `GET /customers/:id/profile`
 
-This pattern ensures tests exercise the full layout shell (header, sidebar, bottom bar) while still allowing deterministic initial route entries.
+### 5. Self-Healing Retry
 
-## Accessible Loading Fallbacks
-Suspense fallbacks and initial data fetch placeholders follow a consistent pattern:
-- Include `aria-busy="true"` on the container.
-- Provide a descriptive `aria-label` (e.g. `"Loading overview data"`, `"Loading charts"`) instead of generic "Loading" so screen reader users understand context.
-- Use a polite live region (`aria-live="polite"`) only when incremental updates will announce; for simple skeleton-to-content swap, labeling + busy state is sufficient.
-- Test queries prefer `getByLabelText` for these containers to assert presence before data resolves.
+**Location**: `src/contexts/dashboard/DashboardProvider.tsx`
 
-Guideline: When adding a new page with a data-heavy initial load, supply a scoped label: `aria-label="Loading {page} data"` and reuse the `aria-busy` pattern for parity and testability.
+Detects idle 404s (MSW disabled after sleep), resets service worker, retries with exponential backoff. Prevents "blank screen" after laptop wake.
 
-## Using the Dashboard Layout
-The refactored shell exposes a provider + layout pair:
+### 6. Cross-Tab Logout
 
-`DashboardProvider` supplies config (branding, navigation, routes, slots, options). `DashboardLayout` renders Header, Sidebar (desktop), BottomBar (mobile), and wraps page content.
+**Location**: `src/layouts/dashboard/DashboardLayout.tsx`
 
-### Rollback Instructions
-If you need to revert to the pre-dashboard single layout implementation:
-1. Replace the contents of `src/App.tsx` with the prior simple route shell (remove `DashboardProvider` and `DashboardLayout` wrappers, render routes directly).
-2. Delete the `src/layouts/dashboard/` directory and remove any imports referencing it.
-3. Remove `dashboard.css` import from `main.tsx` and delete `src/styles/dashboard.css`.
-4. Remove dashboard-specific tokens only if unused elsewhere (keep base theme tokens to avoid breaking styling).
-5. Delete new types from `src/app/types/dashboard.ts` if they are no longer referenced (or keep if planning future re-introduction).
-6. Update `dashboard.config.ts` to original route list or delete it and inline routes where they were previously defined.
-7. Run `yarn lint` and `yarn test` to confirm no stale references remain.
-8. Clean up README sections referencing "Dashboard Layout" to avoid misleading documentation.
+Uses `BroadcastChannel` API to sync logout across tabs. Sign out in one tab → all tabs redirect to login.
 
-To reapply the dashboard later, restore the layout directory and wrap your routes with `DashboardProvider` and `DashboardLayout` again. Keep the contrast tooling as optional by gating with `import.meta.env.DEV`.
+## API Usage
 
-### Contrast Report CLI
-Run a lightweight contrast check on key color pairs:
-```powershell
-node ./scripts/contrast-report.mjs
-```
-Extend `pairs` inside `scripts/contrast-report.mjs` to add more token combinations.
+All 7 endpoints are documented in [docs/api-contract.md](docs/api-contract.md). High-level summary:
 
-Config lives in `src/app/config/dashboard.config.ts` and follows types in `src/app/types/dashboard.ts`:
-BrandingConfig: `{ title, logo?, homeUrl? }`  
-RouteConfig: `{ path, label, component: () => import(...), prefetch?, canActivate? }`  
-NavigationItem: discriminated union (`page | group | divider`).  
-Options: `{ brandVariant: 'capitec' | 'neutral', sidebarWidth, defaultSidebarCollapsed }`.
+| Endpoint                             | Method | Purpose                    | Used By                        |
+| ------------------------------------ | ------ | -------------------------- | ------------------------------ |
+| `/customers/:id/profile`             | GET    | User account info          | Profile page, header avatar    |
+| `/customers/:id/spending/summary`    | GET    | Period-based aggregates    | Overview dashboard cards       |
+| `/customers/:id/spending/categories` | GET    | Category breakdown         | Overview, Insights donut chart |
+| `/customers/:id/spending/trends`     | GET    | Monthly time series        | Insights trends chart          |
+| `/customers/:id/transactions`        | GET    | Paginated transaction list | Transactions page              |
+| `/customers/:id/goals`               | GET    | Budget goals               | Overview goals section         |
+| `/customers/:id/filters`             | GET    | Filter metadata            | Transaction filters            |
 
-To add a new page:
-1. Create page file under `src/pages/`.
-2. Append a `RouteConfig` entry + matching navigation item.
-3. (Optional) add a `prefetch` function for hover/focus warming.
+**Query Keys**: See [docs/state-management.md](docs/state-management.md) for React Query cache strategy.
 
-Brand variants adapt tokens only—components never hardcode hex values.
+## Accessibility
 
-## Future Improvements
-- Integrate real charts (e.g. Recharts or Visx) behind additional lazy boundaries.
-- Lighthouse CI & performance budget enforcement.
-- More Playwright scenarios (prefetch verification, keyboard nav, reduced-motion behavior).
-- Automated palette contrast audit in CI.
-- Internationalization (i18n) scaffolding.
+Built to WCAG 2.1 AA standards:
+
+- Keyboard navigation with visible focus indicators
+- Screen reader support with semantic HTML and ARIA labels
+- Color contrast ratios meet 4.5:1 minimum
+- Respects `prefers-reduced-motion` for animations
+- Form labels and error announcements
+- Sortable table columns with `aria-sort`
+
+Tested with axe DevTools and Playwright's accessibility scanner.
+
+## Performance
+
+### Targets
+
+- **LCP**: < 2.5s (Largest Contentful Paint)
+- **INP**: < 200ms (Interaction to Next Paint)
+- **CLS**: < 0.1 (Cumulative Layout Shift)
+
+### Optimizations
+
+- Code splitting with React Router lazy loading
+- Charts loaded on-demand
+- React Query caching with stale-while-revalidate
+- nginx cache headers for static assets
+- Bundle kept under 500KB gzipped
+
+Web Vitals are sent to Sentry for monitoring.
+
+## Security
+
+### Headers (nginx config)
+
+- `Content-Security-Policy` - Restricts script/style sources
+- `Strict-Transport-Security` - HSTS with 1-year max-age
+- `X-Frame-Options: SAMEORIGIN` - Clickjacking protection
+- `X-Content-Type-Options: nosniff`
+- `Permissions-Policy` - Disables camera, microphone, geolocation
+
+### Auth
+
+- AWS Amplify Cognito for user management
+- Session tokens in secure cookies
+- Cross-tab logout via BroadcastChannel API
+
+Run `yarn audit` before releases.
+
+## AI Use Disclaimer
+
+This app doesn't use AI to generate financial advice. All insights are calculated from your transaction data using standard formulas.
+
+**Planned features** (not implemented yet):
+
+1. Receipt OCR with Google Gemini Vision API
+2. Natural language chatbot for spending queries (e.g., "How much did I spend on groceries?")
+
+These will be opt-in features with clear data handling disclosures.
+
+## Roadmap
+
+### Next Up
+
+- Performance budgets in CI
+- More E2E test coverage
+- Analytics integration (PostHog or Mixpanel)
+
+### Later
+
+- AWS RUM for production metrics
+- Storybook for component docs
+- Advanced filtering (amount ranges, merchant search)
+
+### Future
+
+- Receipt scanning with Gemini Vision
+- Natural language chatbot
+- Multi-currency support
+
+## Documentation
+
+- [Architecture Overview](docs/architecture.md) - System design, data flow, Mermaid diagrams
+- [API Contract](docs/api-contract.md) - Endpoint specs, request/response examples
+- [State Management](docs/state-management.md) - React Query patterns, cache strategy
+- [Design System](docs/design-system.md) - Tokens, components, usage guidelines
+- [Testing Guide](docs/testing.md) - Unit, integration, E2E test patterns
+- [MSW Mocking](docs/msw-mocking.md) - Adding scenarios, simulating errors
+- [Accessibility](docs/accessibility.md) - Standards, testing, keyboard nav
+- [Performance](docs/performance.md) - Budgets, profiling, optimization checklist
+- [Security](docs/security.md) - Headers, CSP, auth, audit process
+- [Deployment](docs/deployment.md) - Docker, Amplify, production runbook
+- [Troubleshooting](docs/troubleshooting.md) - Common issues, retry flow, Docker gotchas
+
+**Architecture Decision Records**: See [docs/decisions/](docs/decisions/) for trade-offs and rationale.
 
 ## Contributing
-See `CONTRIBUTING.md` for setup, branch, and PR conventions. Run tests before submitting changes. For security concerns consult `SECURITY.md`.
+
+1. Branch from `develop`
+2. Run tests locally (`yarn test`, `npx playwright test`)
+3. Submit PR (CI will run lint, type-check, tests, build)
+
+Pre-commit hooks will run automatically via Husky.
 
 ## License
-Private / Internal usage only. Not licensed for external distribution.
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+---
+
+**Maintained by**: Aya Mahlat  
+**Last Updated**: December 2024

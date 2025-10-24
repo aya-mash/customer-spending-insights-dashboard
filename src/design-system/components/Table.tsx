@@ -59,6 +59,8 @@ export interface TableProps<T = any> {
   maxHeight?: string;
   /** Accessible label for the table */
   'aria-label'?: string;
+  /** Callback when a row is clicked */
+  onRowClick?: (row: T) => void;
 }
 
 export const Table = React.memo(
@@ -68,6 +70,7 @@ export const Table = React.memo(
       columns,
       data,
       keyExtractor,
+      onRowClick,
       onSort,
       sortKey,
       sortDirection,
@@ -236,7 +239,11 @@ export const Table = React.memo(
                 <Box
                   key={keyExtractor(row)}
                   as="tr"
-                  style={getRowStyle(idx)}
+                  style={{
+                    ...getRowStyle(idx),
+                    cursor: onRowClick ? 'pointer' : 'default',
+                  }}
+                  onClick={() => onRowClick?.(row)}
                 >
                   {columns.map((col) => {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any

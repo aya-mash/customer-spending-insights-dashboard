@@ -2,7 +2,8 @@
   "nav": {
     "overview": "Overview",
     "insights": "Insights",
-    "transactions": "Transactions"
+    "transactions": "Transactions",
+    "profile": "Profile"
   },
   "overview": {
     "title": "Spending Overview",
@@ -83,6 +84,7 @@
     "90days": "90 Days",
     "1year": "Year",
     "period": "Period",
+    "filters": "Filters",
     "filtersActive": "Filters active",
     "clearAll": "Clear all",
     "noTransactions": "No transactions found.",
@@ -128,6 +130,7 @@
     "error": "Error loading data",
     "retry": "Retry",
     "close": "Close",
+    "apply": "Apply",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
